@@ -1,0 +1,14 @@
+<div class="text-center double-tab">
+  <button class="btn result-prop result-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Numerical'">Results</button>
+  <button class="btn result-prop result-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Recommendation'">{{jsonBuilderHandler.getJSONBuilt().formula.length>1?'Outcomes':'Outcome'}}</button>
+  <button class="btn result-prop result-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Graded'">Score</button>
+  <button class="btn result-prop result-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Poll'">Poll Result</button>
+  <!-- <button class="btn result-prop result-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Ecom'">Ecom Outcome</button>-->
+  <button class="btn result-prop details-area" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType != 'Ecom'">Settings</button> 
+</div>
+
+<editor_outcome *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Recommendation'"></editor_outcome>
+<editor_numerical *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Numerical'"></editor_numerical>
+<editor_graded *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Graded'"></editor_graded>
+<editor_poll_result *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Poll'"></editor_poll_result>
+<editor_ecom *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Ecom'"></editor_ecom>

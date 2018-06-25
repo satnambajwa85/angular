@@ -1,0 +1,443 @@
+<div class="email-tabs">
+  <ul class="nav nav-tabs nav-justified">
+        <li class="active tab-one">
+            <a href="javascript:void(0);">Native <i class="material-icons">keyboard_arrow_right</i></a>
+        </li>
+		  <li class="tab-two zapier">
+            <a href="javascript:void(0);">Zapier
+				<i class="material-icons">keyboard_arrow_right</i>
+				<!-- <i *ngIf = "!_featureAuthService.features.integrations.zapier" class="material-icons icon-lock">lock</i> -->
+			</a>
+        </li>
+
+      <li class="tab-three webhook">
+        <a href="javascript:void(0);">
+          <i class="material-icons lock-icon" style="display:block;" *ngIf="!isWebhookAvailable">lock_outline</i>
+          Webhooks
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li class="tab-four customvarriable">
+        <a href="javascript:void(0);">Custom Variable
+          <!--<i class="material-icons lock-icon" *ngIf="!isWebhookAvailable">lock_outline</i>-->
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li class="tab-five messageApp hide">
+        <a href="javascript:void(0);">MessageApp
+          <span class="tag-beta"> Beta</span>
+        </a>
+      </li>
+    </ul>
+</div>
+<div id="integration-main" class="new-email-outr my-emailsetting">
+  <section class="integration-tab w750 tab-CustomVarriable hide">
+    <og-customvariable></og-customvariable>
+ </section>
+
+    <section class="integration-tab w750 tab-content-one">
+		<div class="integration-tab-top col-md-12" *ngIf = "!loader && ( isAppsumoUser || isFreeLancerUser || isEssentialUser) && !isAppsumoLimited">
+			<span class="lock-block"><i class="material-icons">lock_outline</i></span>
+			<div class="integration-tab-left col-md-11">
+				<p *ngIf="isAppsumoUser && !isAppsumoLimited">
+					Your Appsumo plan comes with lead integration only. You can send data like name &amp; email to other apps
+					but not other user details like calculator responses, location etc.
+				</p>
+
+				<p *ngIf="isEssentialUser && !isAppsumoLimited">
+					Your plan comes with lead integration only. You can send data like name &amp; email to other apps
+					but not other user details like calculator responses, location etc.
+				</p>
+				<span>Upgrade to get access to full integration features.
+					<button type="button" class="btn btn-upgrade btn-hover" (click)="premiumPopup('integrations')">Upgrade</button>
+				</span>
+			</div>
+
+			<!--<p class="analytics-upgradeText" *ngIf="!_featureAuthService.features.analytics.user_details" >
+				Your current plan comes with limited access to analytics <br>
+				Please upgrade to allow full access.
+				<button type="button" class="btn btn-upgrade"> Upgrade</button>
+			</p>-->
+
+		</div>
+		<div class="config-template-tabs">
+			<div class="col-xs-12 col-sm-12 no-padding">
+				<div class="col-xs-12 integration-top">
+					<h3>Integrations</h3>
+					<!-- <p *ngIf="isAppsumoUser">Automate your Email marketing with powerful integrations</p> -->
+					<p>Build integrations to send your Outgrow leads to other apps</p>
+        </div>
+
+				<div class="col-xs-12 col-md-12 col-sm-12 np">
+
+          <og-salesforce-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-salesforce-component>
+
+					<og-marketo-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-marketo-component>
+
+					<og-aweber-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-aweber-component>
+
+					<og-hubspot-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-hubspot-component>
+
+					<og-mailchimp-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-mailchimp-component>
+
+					<og-activecampaign-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-activecampaign-component>
+
+					<og-emma-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-emma-component>
+
+					<og-getresponse-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-getresponse-component>
+
+          <og-drip-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-drip-component>
+
+          <og-pardot-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-pardot-component>
+
+          <og-slack-component (notify)="childListener($event)" class="col-md-12 col-sm-12 col-xs-12"></og-slack-component>
+
+          <og-campaignmonitor-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-campaignmonitor-component>
+
+
+          <og-sendlane (notify)="childListener($event)" class="col-md-12 col-sm-12 col-xs-12"></og-sendlane>
+
+          <og-intercom-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-intercom-component>
+
+          <og-unbounce-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-unbounce-component>
+
+          <og-zoho-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-zoho-component>
+
+          <og-listrak-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-listrak-component>
+
+          <!-- <og-facebook-chatbot  (notify)="childListener($event)" class="col-md-12 col-sm-12 col-xs-12"></og-facebook-chatbot> -->
+
+					<og-mailerlite-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-mailerlite-component>
+
+          <og-convertkit-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-convertkit-component>
+
+          <!-- <og-autopilot-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-autopilot-component>
+
+          <og-infusionsoft-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-infusionsoft-component>
+
+          <og-constantcontact-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-constantcontact-component>
+
+          <og-sendgrid-component class="col-md-12 col-sm-12 col-xs-12" (notify)="childListener($event)"></og-sendgrid-component> -->
+
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="integration-tab w750 hide tab-zapier">
+		<div class="integration-tab-top col-md-12" *ngIf = "!loader && ( isAppsumoUser || isFreeLancerUser || isEssentialUser) && !_featureAuthService.features.integrations.zapier_loaded && _featureAuthService.features.integrations.zapier_limited ">
+			<span class="lock-block"><i class="material-icons">lock_outline</i></span>
+			<div class="integration-tab-left col-md-11">
+				<p *ngIf="isAppsumoUser && !_featureAuthService.features.integrations.zapier_loaded">
+					Your Appsumo plan comes with lead integration only. You can send data like name &amp; email to other apps
+					but not other user details like calculator responses, location etc.
+				</p>
+				<p *ngIf="isEssentialUser && !_featureAuthService.features.integrations.zapier_loaded">
+					Your plan comes with lead integration only. You can send data like name &amp; email to other apps
+					but not other user details like calculator responses, location etc.
+				</p>
+				<span>Upgrade to get access to full integration features.
+					<button type="button" class="btn btn-upgrade btn-hover" (click) = "checkFeatureAccess('zapier_loaded')">Upgrade</button>
+				</span>
+			</div>
+		</div>
+		<div class="zapier-upgrade" *ngIf = "!_featureAuthService.features.integrations.zapier_limited && !_featureAuthService.features.integrations.zapier_loaded && !loader">
+			<button class="btn zapier-upgrade-btn btn-hover" (click) = "checkFeatureAccess('zapier_loaded')"><i class="material-icons">lock_outline</i> &nbsp; Upgrade</button>
+		</div>
+		<div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf = "loader">
+			<i class="material-icons loader-plan">autorenew</i>
+		</div>
+		<div class="col-md-12 col-sm-12 col-xs-12">
+			<div class="zapier-int1">
+				<div class="col-md-6 np">
+					<h4><i class="material-icons">dialpad</i>Zapier Integrations</h4>
+					<p>
+						Collect priceless marketing leads with Outgrow and push <br/>them to over 500 tools with
+						<img src="assets/images/logo-zapier.png">
+					</p>
+				</div>
+				<div class="zapier-int1-bottom">
+					<div class="col-sm-9 np">
+						<i class="material-icons">vpn_key</i>
+						<span>API KEY:</span>
+						<span id="zapier-key">{{companyApi}}</span>
+					</div>
+					<button class="btn btn-copy" id="" type="button" (click)=copyApi() >Copy</button>
+				</div>
+			</div>
+		</div>
+		<div class="config-template-tabs new-email-outr integration-parent" id="zapier">
+
+		</div>
+		<div class="col-md-12 col-sm-12 col-xs-12 text-center zapier-bg">
+			<div class="">
+				<div class="zapier-int2">
+					<h4><i class="material-icons">dialpad</i>Didn’t find your tool here?</h4>
+					<a href="https://zapier.com/zapbook/outgrow/" target="_blank" class="btn zap-button">
+					Find More Tools <i class="material-icons">arrow_forward</i></a>
+					<span>Need help with Zapier? <a href="http://support.outgrow.co/v1.0/docs/third-party-integration" target="_blank" class="text-red">Read more here.</a></span>
+				</div>
+			</div>
+		</div>
+	</section>
+	<section class="integration-tab w750 hide tab-webhook">
+  	<div class="integration-tab-top col-md-12">
+    	<config-webhook></config-webhook>
+  	</div>
+	</section>
+	<!-- <section class="integration-tab hide tab-messageApp">
+	       <og-facebook-chatbot (notify)="childListener($event)" class="col-md-4 col-sm-6 col-xs-12"></og-facebook-chatbot>
+	</section> -->
+</div>
+
+<div id="syncError-modal" class="editor-modal bootbox modal modIntegration" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">
+          <i class='material-icons'>close</i>
+        </button>
+        <div class="bootbox-body">
+          <div class="bootbox-body-left">
+            <div class="mat-icon">
+              <i class="material-icons">error</i>
+            </div>
+          </div>
+          <div class="bootbox-body-right">
+            <p>Failed to Sync your lead(s). Please reconfigure to Sync</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn btn-ok btn-hover" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popup-block" class="editor-modal bootbox modal modIntegration" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">
+          <i class='material-icons'>close</i>
+        </button>
+        <div class="bootbox-body">
+          <div class="one-line-bootbox">
+            <div class="bootbox-body-left">
+              <div class="mat-icon">
+                <i class="material-icons">error</i>
+              </div>
+            </div>
+            <div class="bootbox-body-right">
+              <p>Umm, we think your browser does not allow pop-ups. Please allow pop-ups to load on the browser to configure this integration.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn btn-ok btn-hover" data-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div id="task" class="new-email-outr my-emailsetting hide">
+  <div class="integrationTab-outer">
+    <div class="col-md-12 col-sm-12 col-xs-12 np ">
+      <a (click)="goBack()" class="back-option back-link"><i class="material-icons">keyboard_backspace</i> Back</a>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 np">
+
+      <div class="col-md-7 col-sm-12 col-xs-12 np">
+        <h1 class="heading">Task History - {{currentIntegration}} integration</h1>
+        <div class="dropdown-outer">
+          <i class="material-icons">filter_list</i>
+          <select [(ngModel)]="syncStatus" (change)="getTasksList()">
+            <option value="all">All Status</option>
+            <option value="suc￼
+            cess">Synced Successfully</option>
+            <option value="failed">Failed to Sync</option>
+            <option value="waiting">Waiting for sync</option>
+          </select>
+          <div class="dp-outer" *ngIf="scriptLoaded">
+            <i class="material-icons icon-left">date_range</i>
+            <og-date-range-picker (date)="onDateSelect($event)">
+            </og-date-range-picker>
+          </div>
+
+        </div>
+      </div>
+      <div class="col-md-5 col-sm-12 col-xs-12 np ">
+        <div class="statusOuter-main">
+          <div class="status-outer">
+            <h2 class="success">{{tasksLeadStatus?.success}}</h2>
+            <div class="total-status"><i class="material-icons success ">check_circle</i> <span>Sent</span></div>
+          </div>
+          <div class="status-outer">
+            <h2 class="fail">{{tasksLeadStatus?.failed}}</h2>
+            <div class="total-status"><i class="material-icons fail">info</i> <span>Failed</span></div>
+          </div>
+          <div class="status-outer">
+            <h2 class="wait">{{tasksLeadStatus?.waiting}}</h2>
+            <div class="total-status"><i class="material-icons wait">query_builder</i> <span>Waiting</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="loading">
+      <i class="material-icons loader-plan">autorenew</i>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 np" *ngIf="!loading && taskListData?.length>0">
+      <div class="table-responsive table-margin">
+
+        <table id="example" class="display" cellspacing="0" width="100%">
+          <thead>
+          <tr>
+            <th>Lead Details</th>
+            <th>Status</th>
+            <th>Date</th>
+            <th>Details</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+
+          <tbody>
+          <tr *ngFor="let task of taskListData">
+            <td>
+              <div *ngIf="task.name">
+                {{task.name}}<br *ngIf="task.name!=''">
+                <span>{{task.email}}</span>
+              </div>
+              <div *ngIf="!task.name">
+                {{task.leadDetail}}<br>
+                <span>{{task.email}}</span>
+              </div>
+            </td>
+            <td>
+              <div *ngIf="task.status==='waiting'">
+                <i class="material-icons wait">query_builder</i> Waiting for Sync
+              </div>
+              <div *ngIf="task.status==='success'">
+                <i class="material-icons success">check_circle</i> Synced successfully
+              </div>
+              <div *ngIf="task.status==='failed'">
+                <i class="material-icons fail">info</i> Failed to Sync
+              </div>
+            </td>
+
+            <td>{{task.date}}
+              <div class="small-text">{{task.time}}</div>
+            </td>
+            <td><a href="javascript:void(0)" data-toggle="modal" data-target="#integration-popup"
+                   (click)="selectedTask=task">View</a></td>
+            <td>
+              <a class="sync" href="javascript:void(0)" *ngIf="(task.status==='waiting')
+              && !task.loading && !syncDisable"
+                 (click)="syncTask(task)">Sync Now</a>
+              <div class="process-outer" *ngIf="task.loading">
+                Please Wait...
+              </div>
+              <div *ngIf="!(task.status==='waiting') || task.isOptedDoubleOptin" >-</div>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+        <div  class="dataTables_info" id="table-datatable_info" role="status"
+             aria-live="polite"></div>
+        <div *ngIf="taskListData?.length>9" class="dataTables_paginate paging_simple_numbers custom-pager1" id="all-companies-datatable_paginate">
+          <a class="paginate_button previous " aria-controls="all-companies-datatable" data-dt-idx="0"
+             tabindex="0"
+             (click)="previous()"
+             id="all-companies-datatable_previous">Previous</a>
+          <span><a class="paginate_button" [ngClass]="1==current_page?'current':''"
+                   aria-controls="all-companies-datatable"
+                   (click)="paging(1)" tabindex="0">1</a></span>
+          <span *ngIf="current_page >= 5">...</span>
+          <span><a class="paginate_button" [ngClass]="num==current_page?'current':''"
+                   aria-controls="all-companies-datatable" (click)="paging(num)" tabindex="0"
+                   *ngFor="let num of arrayOf(total_pages)">{{num}}</a></span>
+          <span *ngIf="current_page <= total_pages - 5">...</span>
+          <span><a class="paginate_button" *ngIf="total_pages!=1 && total_pages!=0"
+                   [ngClass]="total_pages==current_page?'current':''"
+                   aria-controls="all-companies-datatable"
+                   (click)="paging(total_pages)" tabindex="0">{{total_pages}}</a></span>
+          <a class="paginate_button next" aria-controls="all-companies-datatable" tabindex="0"
+             (click)="next()"
+             id="all-companies-datatable_next">Next</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--<div class="div-with-bg" *ngIf="taskListData?.length===0">-->
+  <!--<div class="text-status-outer">No leads have been sent to {{jsonBuilderHelper.getJSONBuilt().name}} yet. Leads sent or waiting to be sent-->
+  <!--to{{jsonBuilderHelper.getJSONBuilt().name}}-->
+  <!--</div>-->
+  <!--</div>-->
+  <div class="no-data" *ngIf="taskListData?.length===0 && !loading">
+    No Data Available
+  </div>
+</div>
+
+
+<!-- Start: Modal Integration -->
+<div id="integration-popup" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-idea ">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-body">{{currentIntegration}}
+        <div class="modal-header">
+          <h4 class="modal-title">Data for {{selectedTask?.email}}</h4>
+        </div>
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons">close</i></button>
+        <div class="content-area">
+          <div class="json-outer scrollbar">
+            <div class="company-logo-outer">
+              <img src="assets/images/outgrow-logo.png" alt="Outgrow">
+            </div>
+            <div class="inner-section force-overflow slim-style" *ngIf="selectedTask">
+              <div *ngFor="let prop of keysGetter(selectedTask?.data)">
+                {{prop}}: {{selectedTask?.data[prop]}}
+                <br>
+              </div>
+            </div>
+          </div>
+          <div class="json-outer scrollbar">
+            <div class="company-logo-outer">
+              <img *ngIf="currentIntegration=='salesforce'" src="assets/images/salesforce.png" alt="Salesforce">
+              <img *ngIf="currentIntegration=='marketo'" src="assets/images/marketo.png" alt="Marketo">
+              <img *ngIf="currentIntegration=='aweber'" src="assets/images/aweber.png" alt="Aweber">
+              <img *ngIf="currentIntegration=='hubspot'" src="assets/images/hubspot.png" alt="Hubspot">
+              <img *ngIf="currentIntegration=='mailchimp'" src="assets/images/mail-chimp.png" alt="Mailchimp">
+              <img *ngIf="currentIntegration=='active_campaign'" src="assets/images/active-campaign.png"
+                   alt="Active Campaign">
+              <img *ngIf="currentIntegration=='emma'" src="assets/images/emma.png" alt="Emma">
+              <img *ngIf="currentIntegration=='getresponse'" src="assets/images/get-response.png" alt="Get Response">
+              <img *ngIf="currentIntegration=='drip'" src="assets/images/drip.jpg" alt="Drip">
+              <img *ngIf="currentIntegration=='pardot'" src="assets/images/pardot.png" alt="Pardot">
+              <img *ngIf="currentIntegration=='intercom'" src="assets/images/logo-intercom-04.png" alt="Intercom">
+              <img *ngIf="currentIntegration=='mailerlite'" src="assets/images/ml.png" alt="Mailerlite">
+              <img *ngIf="currentIntegration=='convertkit'" src="assets/images/ckin.png" alt="Convertkit">
+              <img *ngIf="currentIntegration=='autopilot'" src="assets/images/alto-int.png" alt="Autopilot">
+              <img *ngIf="currentIntegration=='infusionsoft'" src="assets/images/isoft-int.png" alt="Infusionsoft">
+              <img *ngIf="currentIntegration=='constantcontact'" src="assets/images/cc-int.png" alt="Constant Contact">
+
+
+
+            </div>
+            <div class="inner-section force-overflow slim-style">
+              Success: {{selectedTask?.success}}
+              <br>
+              Message: {{selectedTask?.message}}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal Integration -->

@@ -1,0 +1,331 @@
+<div class="">
+  <div class="main-side">
+    <div class="sidebar-topselector top-space1">
+      <div class="card-layout">
+        <span> Lead Generation Properties
+          <!-- <div class="switch" [class.alwaysOff]="!isLeadGenAvailable && !leadSection?.visible">
+            <label>
+              <input type="checkbox" name="multi-checkbox"
+              class="show-check"
+              [checked] = "leadSection?.visible"
+              (change) = "toggleLeadform($event);callGA('SHOWLEADFORMTOGGLE')"
+              data-size="mini" data-on-color="'blue'">
+              <span class="lever"></span>
+            </label>
+          </div> -->
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="type-details  has-content no-line" style="padding-bottom:15px;">
+  <!-- <span class="form-label" *ngIf="!leadSection?.visible">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!isLeadGenAvailable">lock_outline</i>
+    ENABLE LEAD GENERATION FORM
+    <div class="help-tip editor-helptip lead-tip">
+      <i class="material-icons">warning</i>
+      <div class="help-checktip">Enabling lead generation on the welcome page usually maximizes conversion. </div>
+    </div>
+  </span>
+  <div class="switch" [class.alwaysOff]="!isLeadGenAvailable && !leadSection?.visible" *ngIf="!leadSection?.visible">
+    <label>
+      <input type="checkbox" name="multi-checkbox" class="show-check" [checked]="leadSection?.visible" (change)="toggleLeadform($event);callGA('SHOWLEADFORMTOGGLE')"
+        data-size="mini" data-on-color="'blue'">
+      <span class="lever"></span>
+    </label>
+  </div> -->
+
+  <ng-container>
+    <div class="col-md-12 no-padding">
+      <span class="form-label">
+        Enable Lead Generation Form
+        <div class="help-tip editor-helptip lead-tip">
+          <i class="material-icons">warning</i>
+          <div class="help-checktip">Enabling lead generation on the welcome page usually maximizes conversion. </div>
+        </div>
+      </span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" name="multi-checkbox" class="show-check lead" [checked]="(editorControl.leadform_question?.props?.unit ==='' && !editorControl.leadform_question?.props?.postfix) || (editorControl.leadform_question?.props?.unit === 'changed' && editorControl.leadform_question?.props?.email_lead)"
+            (change)="changeLeadformtype('email', $event)" data-size="mini" data-on-color="'blue'">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+    <div class="col-md-12 no-padding top-space5">
+      <span class="form-label mb0">
+        Enable Facebook Login
+      </span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" name="multi-checkbox" class="show-check lead" [checked]="editorControl.leadform_question?.props?.postfix"
+            (change)="changeLeadformtype('fb', $event)" data-size="mini" data-on-color="'blue'">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+  </ng-container>
+
+  <div class="col-md-12 no-padding top-space10" *ngIf="leadSection?.visible && ['experian'].indexOf(_JSONBuilder.getJSONBuilt().template)==-1">
+    <select class="select-default " (change)="onChange($event)" data-width="fit" class="form-control">
+      <!-- <optgroup label="Lead Generation Form" [attr.fb]=false> -->
+      <option value="Landing">Welcome screen</option>
+      <!--<option  value="Questionnaire" [selected] = "_JSONBuilder.getSelectedPage().type ==='Questionnaire' && _JSONBuilder.getSelectedPage().sections[0].type === 'LeadFormQ'">Before Questions</option>-->
+      <option *ngIf="_JSONBuilder.getJSONBuilt().template !=='sound-cloud' ||
+          _JSONBuilder.getJSONBuilt().template !=='sound-cloud-new' ||
+          _JSONBuilder.getJSONBuilt().template !=='sound-cloud-v3' ||
+          _JSONBuilder.getJSONBuilt().template !=='template-seven'
+          " value="Questionnaire" selected>After Questions</option>
+      <option value="beforeResult" *ngIf="['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'].indexOf(_JSONBuilder.getJSONBuilt().template)>=0">
+        Before the Results </option>
+      <option value="withResult" *ngIf="['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'].indexOf(_JSONBuilder.getJSONBuilt().template)>=0 && !_JSONBuilder.isTempType(['Ecom'])">
+        With the Results </option>
+      <option *ngIf="!_JSONBuilder.isTempName(['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'])"
+        value="Result">Results Page</option>
+      <!-- </optgroup>
+        <optgroup label="Facebook Login for Lead Generation" [attr.fb]=true>
+          <option value="Landing">Welcome screen</option> -->
+      <!--<option  value="Questionnaire" [selected] = "_JSONBuilder.getSelectedPage().type ==='Questionnaire' && _JSONBuilder.getSelectedPage().sections[0].type === 'LeadFormQ'">Before Questions</option>-->
+      <!-- <option *ngIf="_JSONBuilder.getJSONBuilt().template !=='sound-cloud' ||
+           _JSONBuilder.getJSONBuilt().template !=='sound-cloud-new' ||
+           _JSONBuilder.getJSONBuilt().template !=='sound-cloud-v3' ||
+           _JSONBuilder.getJSONBuilt().template !=='template-seven'
+           " value="Questionnaire" [selected]="editorControl.leadform_question.props.postfix">After Questions</option>
+          <option value="beforeResult" *ngIf="['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'].indexOf(this._JSONBuilder.getJSONBuilt().template)>=0"> Before the Results </option>
+          <option value="withResult" *ngIf="['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'].indexOf(this._JSONBuilder.getJSONBuilt().template)>=0"> With the Results </option>
+          <option *ngIf="!_JSONBuilder.isTempName(['one-page-card-new','inline-temp-new','template-five','template-six','template-eight'])" value="Result">Results Page</option>
+          </optgroup> -->
+    </select>
+  </div>
+
+  <div class="col-md-12 no-padding top-space10 leadform-bulbtooltip hide">
+    <i class="material-icons">lightbulb_outline</i>
+    <p>Enabling lead generation on the welcome page usually maximizes conversion. </p>
+  </div>
+  <div class="col-md-12 no-padding top-space10 leadform-bulbtooltip hide">
+    <div class="help-tip editor-helptip right-tooltips">
+      <i class="material-icons">lightbulb_outline</i>
+      <div class="help-checktip">Enabling lead generation on the welcome page usually maximizes conversion. </div>
+    </div>
+  </div>
+
+</div>
+<div class="type-details" *ngIf="leadSection?.visible">
+  <div>
+    <span class="form-label">HEADING</span>
+    <!-- <input type="text" class="detail-text" [value]="leadSection.title" (keyup)="changeHeading($event)"> -->
+    <div class="wysiwyg" *ngIf="froalaHeader.options" [froalaEditor]="froalaHeader.options" [(froalaModel)]="leadSection.title"
+      (froalaModelChange)="changeHeading()"></div>
+  </div>
+  <div class="type-details-sub">
+    <span class="form-label" [class.no-margin]="leadSection.showDesc === false">Help Text</span>
+    <div class="icon-outer bottom" *ngIf="leadSection.showDesc">
+      <div class="char-count-limit" *ngIf="leadSection.description.length>62">{{leadSection.description.length}}</div>
+      <div class="help-text">Recommended limit of 62 characters is exceeded</div>
+    </div>
+    <div class="switch">
+      <label>
+        <input type="checkbox" name="properties-checkbox" class="show-check" [checked]="leadSection.showDesc" (change)="onChangeDescription(leadSection);callGA('HELPTEXT',leadSection)">
+        <span class="lever"></span>
+      </label>
+    </div>
+    <div class="col-xs-12 no-padding text-group div-check help-editor-outer" *ngIf="leadSection.showDesc">
+      <textarea class="form-text question-textarea" [(ngModel)]="leadSection.description"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="type-details has-content" *ngIf="leadSection?.visible && editorControl?.leadform_question?.props?.postfix">
+  <span class="form-label">
+    Facebook Button Text
+  </span>
+  <input type="text" class="detail-text" [(ngModel)]="_JSONBuilder.getJSONBuilt().fbBtnText" />
+</div>
+<ng-container *ngIf="leadSection?.visible && ((editorControl.leadform_question?.props?.unit ==='' && !editorControl.leadform_question.props.postfix) || (editorControl.leadform_question.props.unit === 'changed' && editorControl.leadform_question.props.email_lead))">
+  <div class="form-label type-details-head-no-collapse">FIELDS</div>
+  <div class="type-details" *ngIf="leadSection?.visible">
+    <div class="switch hide">
+      <label>
+        <input id="lead_gen_control" type="checkbox" class="" (change)="toggleLeadform($event);callGA('LEADGENTOGGLE')" [checked]="leadSection?.visible">
+        <span class="lever"></span>
+      </label>
+    </div>
+    <div class="div-check">
+      <div *ngFor="let field of editorControl.leadform_question?.fields ; let i = index">
+        <div class="lead-gen">
+          <selectize [field]="field" [control]="editorControl.leadform_question" [index]="i"></selectize>
+          <!-- <input class="file-input" placeholder="No file" readonly="" type="text" ng-reflect-value="https://cdn.filestackcontent.com/Cvj2tN3S7ikTu981vJVp"> -->
+          <div class="input-group top-space10" *ngIf="(field.type==='others') && (field.subType==='dropdown')">
+            <!-- <input class="file-input" placeholder="No file" readonly="" type="text" ng-reflect-value="https://cdn.filestackcontent.com/Cvj2tN3S7ikTu981vJVp"> -->
+            <label class="input-group-btn">
+              <input id="csvFileInput" (change)="handleFile($event,field,i)" accept=".csv" type="file" class="file-upload">
+              <span class="btn btn-basic2 upload-csvhover">
+                {{(!field.fieldsArray.length)?'UPLOAD CSV':'UPDATE CSV'}}
+                <i class="fa fa-circle-o-notch fa-spin  fa-fw spining{{i}} hide"></i>
+                <div class="help-tip editor-helptip upload-csv">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip"> Upload a CSV file to add the options to the dropdown</div>
+                </div>
+              </span>
+            </label>
+            <div class="col-md-10 " style="margin-top: 6px;">
+              <a class="default" href="https://cdn.filestackcontent.com/QUWpu4QeCXVOUQYYglcQ" target="_blank">Download Sample</a>
+            </div>
+          </div>
+          <!-- More button -->
+          <div class="btn-group icon-options" [class.hide]="field.icon === 'GDPR'">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="material-icons" style="margin-top: 12px;">more_vert</i>
+            </button>
+            <ul class="dropdown-menu">
+              <li>
+                <a href="javascript:void(0);" *ngIf="!field.validations.required.status" (click)="toggleRequired(field);callGA('SETMANDATE')">
+                  <i class="material-icons">done_all</i> Require</a>
+              </li>
+              <li>
+                <a href="javascript:void(0);" *ngIf="field.validations.required.status" (click)="toggleRequired(field);callGA('UNSETMANDATE')">
+                  <i class="material-icons">not_interested</i> Don't Require</a>
+              </li>
+              <li>
+                <a href="javascript:void(0);" class="form-leadform-icon" [class.hide]="editorControl.leadform_question.fields.length === 1"
+                  (click)="delete_Field_From_LeadForm(i);callGA('DeleteLeadGenField')">
+                  <i class="material-icons">clear</i> Delete</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12 no-padding mt-5">
+        <a href="javascript:void(0);" (click)="add_Field_In_LeadForm();callGA('ADDLEADFIELD')" class="default add_field_button">Add a Field
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="type-details-head" *ngIf="( _JSONBuilder.getJSONBuilt().template.split('-',2).join('-')=='inline-temp' || _JSONBuilder.getJSONBuilt().template=='one-page-slider') && leadSection?.visible && !editorControl.leadform_question.props.postfix">
+    <i class="material-icons"></i>
+    <span class="type-details-heading">CALL TO ACTION</span>
+  </div>
+  <div class="type-details no-border" *ngIf="( _JSONBuilder.getJSONBuilt().template.split('-',2).join('-')=='inline-temp' || _JSONBuilder.getJSONBuilt().template=='one-page-slider') && leadSection?.visible && !editorControl.leadform_question.props.postfix">
+    <span class="form-label">Button</span>
+    <input type="text" class="detail-text" [(ngModel)]="editorControl.leadform_question.props.title" />
+  </div>
+</ng-container>
+<div class="type-details-head-no-collapse no-mrgin" *ngIf="leadSection?.visible">
+  <span class="form-label">Settings</span>
+</div>
+
+<div class="type-details no-line bottom-space0" *ngIf="leadSection?.visible" style="padding-top: 16px;padding-bottom: 15px !important;">
+  <i class="material-icons"></i>
+  <span class="form-label mb0">Allow URL Redirect on Submit</span>
+  <div class="switch">
+    <label>
+      <!-- <input class="show-check" type="checkbox" (click)="toggleCTA($event); _editorService.scrollToTop();" [checked]="editorControl.click_button.visible || editorControl.cta_shares.visible || editorControl.cta_likes.visible"> -->
+      <input class="show-check" type="checkbox" (click)="callToAction()" [checked]="editorControl.leadform_question?.postfix == 'true'"
+      />
+      <span class="lever"></span>
+    </label>
+  </div>
+  <div class="col-xs-12 np" *ngIf="editorControl?.leadform_question?.postfix == 'true'">
+    <div class="col-xs-12 np share">
+      <div class="col-md-12 col-xs-12 no-padding full-check-value mt5" style="margin-bottom: 8px;">
+        <label class="check-value">
+          <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+        </label>
+        <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+          placeholder="http://" (focusout)="checkUrl()" [(ngModel)]="editorControl.leadform_question.redirect_url" (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck()"
+        />
+      </div>
+      <div>
+        <div class="custom-switch">
+          <label class="check check-mandatory form-label">
+            <input id="check_k11" type="checkbox" [checked]="editorControl.leadform_question.imageName == 'true'" (change)="setUrlTab()">
+            <label for="check_k11"> </label> Open url in new tab
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="type-details no-border bottom-space0" *ngIf="leadSection?.visible && ((editorControl.leadform_question?.props?.unit ==='' && !editorControl.leadform_question?.props?.postfix) || (editorControl.leadform_question?.props?.unit === 'changed' && editorControl.leadform_question?.props?.email_lead))">
+  <i class="material-icons lock-icon bookmark-icon" *ngIf="!restrictDup">lock_outline</i>
+  <span class="form-label no-margin">Do not allow duplicate Leads</span>
+  <div class="help-tip editor-helptip right-tooltips">
+    <i class="material-icons">info_outline</i>
+    <div class="help-checktip">Toggle on to add a check that the same email address is not submitted more than once.</div>
+  </div>
+
+  <div class="switch">
+    <label>
+      <input type="checkbox" name="properties-checkbox" class="show-check" [(ngModel)]="editorControl.leadform_question.hideDuplicates"
+        (click)="onChangeDuplicates(editorControl.leadform_question, $event)">
+      <span class="lever"></span>
+    </label>
+  </div>
+  <div class="col-md-12 no-padding" *ngIf="editorControl.leadform_question.hideDuplicates">
+    <span class="form-label lower-case">Select the fields to check for dupicates</span>
+    <div class="div-check new-dup">
+      <label class="check top-space10" *ngFor="let field of fieldsForDup() ; let i = index">
+        <input id="checkboxlead{{i}}" type="checkbox" [(ngModel)]="field.unique">
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='fullName'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='fullName'">Full Name</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='email'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='email'">Email</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='firstName'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='firstName'">First Name</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='lastName'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='lastName'">Last Name</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='tel'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='tel'">Phone Number</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='tel_us'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.type=='tel_us'">Phone Number(US)</span>
+        <label for="checkboxlead{{i}}" *ngIf="field.type=='others'"></label>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.subType=='others'">{{field.placeholder}}</span>
+        <span class="label-style newt7-checkbox-label" [innerHTML]="field.placeholder | removeTags" *ngIf="field.subType=='checkbox'"></span>
+        <span class="label-style newt7-checkbox-label" *ngIf="field.subType=='dropdown'">Dropdown</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="type-details powered" *ngIf="editorControl.leadform_question.visible">
+  <div class="col-xs-12 no-padding setting-detail-box powered">
+    <span class="form-label">Allow to Skip </span>
+    <div class="switch">
+      <label>
+        <input type="checkbox" name="multi-checkbox" class="show-check" [checked]="editorControl.leadform_question?.props?.scale" (change)="editorControl.leadform_question?.props.scale = !editorControl.leadform_question?.props.scale"
+          data-size="mini" data-on-color="'blue'">
+        <span class="lever"></span>
+      </label>
+    </div>
+  </div>
+</div>
+<!--<div class="type-details" *ngIf="_JSONBuilder.getJSONBuilt().templateType !== 'Recommendation'">
+    <div *ngIf="editorControl.leadform_question.visible || editorControl.click_button.visible">
+      <span class="form-label">Call To Action</span>
+      <div class="help-tip editor-helptip">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">You can send the user to a website for further action.</div>
+      </div>
+      <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-bottom: 10px;">
+        <label class="check-value">TEXT</label>
+        <input class="form-text value-text" *ngIf="editorControl.leadform_question.visible" [(ngModel)]="editorControl.leadform_question.props.title"
+          [readonly]="!isCtaAccessible" (click)="ctaCheck()">
+        <input class="form-text value-text" *ngIf="editorControl.click_button.visible" [(ngModel)]="editorControl.click_button.props.title"
+          [readonly]="!isCtaAccessible" (click)="ctaCheck()">
+      </div>
+      // <input type="text" class="detail-text" *ngIf="editorControl.leadform.visible" [(ngModel)]="editorControl.leadform.props.title"
+                //  [readonly]="!isCtaAccessible" (click)="ctaCheck()" />
+      <div class="col-md-12 col-xs-12 no-padding full-check-value">
+        <label class="check-value">URL</label>
+        <input type="text" class="form-text value-text" placeholder="http://" [(ngModel)]="_JSONBuilder.getJSONBuilt().navigate_Url"
+          [readonly]="!isCtaAccessible" (click)="ctaCheck()" />
+      </div>
+     // <input type="text" class="detail-text" *ngIf="editorControl.click_button.visible" [(ngModel)]="editorControl.click_button.props.title"
+               //   [readonly]="!isCtaAccessible" (click)="ctaCheck()" />
+    </div>
+
+  </div>-->

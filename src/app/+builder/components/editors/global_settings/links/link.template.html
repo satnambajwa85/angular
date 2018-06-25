@@ -1,0 +1,179 @@
+<div class="div-check">
+  <div *ngIf="type !='Footer'">
+    <div class="type-details">
+      <div class="HF-top-align hide">
+        <label class="form-label">Align</label>
+        <ul class="HF-align">
+          <li>
+            <a href="javascript:void(0);" (click)="changeAlign('left')" [class.active]="control?.postfix==='left'">
+              <i class="material-icons">format_align_left</i>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" (click)="changeAlign('center')" [class.active]="control?.postfix==='center'">
+              <i class="material-icons">format_align_center</i>
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0);" (click)="changeAlign('right')" [class.active]="control?.postfix==='right'">
+              <i class="material-icons">format_align_right</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="HF-top-bar">
+        <label class="form-label">Link Name</label>
+        <label class="form-label">URL</label>
+      </div>
+      <div class="HF-bot-bar" *ngFor="let link of links ; let i = index">
+        <div class="HF-bot-bar-inner">
+          <input class="detail-text" type="text" [(ngModel)]="link.label ">
+        </div>
+        <div class="HF-bot-bar-inner">
+          <input class="detail-text" type="text" [(ngModel)]="link.value" (focusout)="checkUrlFormat(i)">
+        </div>
+        <div class="HF-bot-bar-inner2">
+          <span class="option">
+            <a href="javascript:void(0);" (click)="deleteLink(i)" *ngIf="this.links.length>1">
+              <i class="material-icons">close</i>
+            </a>
+            <div class="help-text">Delete</div>
+          </span>
+          <!-- <a href="javascript:void(0);" *ngIf="links.length>1">
+            <i class="material-icons">more_vert</i>
+            <ul class="HF-tooltip">
+              <li class="hide">
+                <a href="javascript:void(0);">
+                  <label>Align</label>
+                  <div class="HF-tooltip-action">
+                    <a (click)="textAlign('left', i, 'id')" [class.active]="link.type==='left'" href="javascript:void(0);">
+                      <i class="material-icons">format_align_left</i>
+                    </a>
+                    <a (click)="textAlign('center', i, 'id')" [class.active]="link.type==='center'" href="javascript:void(0);">
+                      <i class="material-icons">format_align_center</i>
+                    </a>
+                    <a (click)="textAlign('right', i, 'id')" [class.active]="link.type==='right'" href="javascript:void(0);">
+                      <i class="material-icons">format_align_right</i>
+                    </a>
+                  </div>
+                </a>
+              </li>
+              <li *ngIf="links.length>1">
+                <a href="javascript:void(0);">
+                  <label>Move</label>
+                  <div class="HF-tooltip-action HF-move">
+                    <a href="javascript:void(0)" (click)="upHeaderFun(i)" *ngIf="i!=0">
+                      <i class="material-icons">keyboard_arrow_up</i>
+                    </a>
+                    <a href="javascript:void(0)" (click)="downHeaderFun(i)" *ngIf="i < links.length -1">
+                      <i class="material-icons">keyboard_arrow_down</i>
+                    </a>
+                  </div>
+                </a>
+              </li>
+              <li *ngIf="links.length>1" class="delet">
+                <a href="javascript:void(0);" (click)="deleteLink(i)">
+                  <i class="material-icons">close</i> Delete</a>
+              </li>
+            </ul>
+          </a> -->
+        </div>
+      </div>
+      <div class="col-md-12 no-padding ">
+        <a href="javascript:void(0); " (click)="addLink('0') " class="default add_field_button ">Add Link
+        </a>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="type =='Footer'">
+    <div class="HF-top-align HF-align-footer hide">
+      <label class="form-label">Align</label>
+      <ul class="HF-align">
+        <li>
+          <a href="javascript:void(0);" (click)="changeAlign('left')" [class.active]="control?.postfix==='left'">
+            <i class="material-icons">format_align_left</i>
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0);" (click)="changeAlign('center')" [class.active]="control?.postfix==='center'">
+            <i class="material-icons">format_align_center</i>
+          </a>
+        </li>
+        <li>
+          <a href="javascript:void(0);" (click)="changeAlign('right')" [class.active]="control?.postfix==='right'">
+            <i class="material-icons">format_align_right</i>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="type-details" *ngFor="let col of cols">
+      <p class="form-label RC-newstyle">{{(coltype == '1')?'Row':'Column'}} {{col}}</p>
+      <div class="type-details" style="padding-top:5px;">
+        <div class="HF-top-bar">
+          <label class="form-label">Link Name</label>
+          <label class="form-label">URL</label>
+        </div>
+        <div *ngFor="let link of links;let i = index;">
+          <div class="HF-bot-bar" *ngIf="link.title == col">
+            <div class="HF-bot-bar-inner">
+              <input class="detail-text" type="text" [(ngModel)]="link.label ">
+            </div>
+            <div class="HF-bot-bar-inner">
+              <input class="detail-text" type="text" [(ngModel)]="link.value" (focusout)="checkUrlFormat(i)">
+            </div>
+            <div class="HF-bot-bar-inner2">
+              <span class="option">
+                <a href="javascript:void(0);" (click)="deleteLink(i)" *ngIf="checkItem(col)!= 'o'">
+                  <i class="material-icons">close</i>
+                </a>
+                <div class="help-text">Delete</div>
+              </span>
+              <!-- <a href="javascript:void(0);" *ngIf="checkItem(col)!= 'o'">
+                <i class="material-icons">more_vert</i>
+                <ul class="HF-tooltip">
+                  <li class="hide">
+                    <a href="javascript:void(0);">
+                      <label>Align</label>
+                      <div class="HF-tooltip-action">
+                        <a (click)="textAlign('left', i)" [class.active]="link.type==='left'" href="javascript:void(0);">
+                          <i class="material-icons">format_align_left</i>
+                        </a>
+                        <a (click)="textAlign('center', i)" [class.active]="link.type==='center'" href="javascript:void(0);">
+                          <i class="material-icons">format_align_center</i>
+                        </a>
+                        <a (click)="textAlign('right', i)" [class.active]="link.type==='right'" href="javascript:void(0);">
+                          <i class="material-icons">format_align_right</i>
+                        </a>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);">
+                      <label>Move</label>
+                      <div class="HF-tooltip-action HF-move">
+                        <a href="javascript:void(0)" (click)="upFun(col, i)" *ngIf="checkIndex(col, i) !='f'">
+                          <i class="material-icons">keyboard_arrow_up</i>
+                        </a>
+                        <a href="javascript:void(0)" (click)="downFun(col, i)" *ngIf="checkIndex(col, i) !='l'">
+                          <i class="material-icons">keyboard_arrow_down</i>
+                        </a>
+                      </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="javascript:void(0);" (click)="deleteLink(i)">
+                      <i class="material-icons">close</i> Delete</a>
+                  </li>
+                </ul>
+              </a> -->
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 no-padding ">
+          <a href="javascript:void(0);" (click)="addLink(col)" class="default add_field_button">Add Link</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

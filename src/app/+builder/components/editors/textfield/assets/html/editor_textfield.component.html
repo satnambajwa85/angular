@@ -1,0 +1,145 @@
+<div class="type-details pad5 no-line" style="padding-bottom:15px; padding-top:15px;" >
+  <div class="col-md-12 no-padding horz-group validate-outer">
+    <span class="form-label no-padding col-md-12" style="margin-bottom: 5px;">Validate as</span>
+    <div class="help-tip editor-helptip validate-helptip bottom-space10">
+      <i class="material-icons">warning</i>
+      <div class="help-checktip">Only numeric inputs can be used in formulae.</div>
+    </div>
+  </div>
+   <div class="col-md-12 col-sm-12 horz-control no-padding ">
+      <select
+        class="select-default"
+        data-width="fit"
+        class="form-control"
+        (change) = "typeChange()"
+        [(ngModel)] = "control.config.type"
+      >
+        <option value="text" selected>Alphanumeric</option>
+        <option value="number">Numeric Only</option>
+        <option value="email">Email Address</option>
+      </select>
+    </div>
+  <div class="col-md-12 no-padding leadform-bulbtooltip hide">
+    <i class="material-icons">lightbulb_outline</i>
+    <p>Only numeric inputs can be used in formulae.</p>
+  </div>
+</div>
+<!-- Common Component -->
+<div class="type-details"> 
+  <common-editor [control]="control"></common-editor>
+  <div class="type-details bottom-space0">
+  <span class="form-label" [class.no-margin]="control.config.showHelp === false">Help Text</span>
+  <div class="icon-outer bottom" *ngIf="control.config.showHelp">
+    <div class="char-count-limit" *ngIf="froalaHelpText.textCount>90">{{froalaHelpText.textCount}}</div>
+    <div class="help-text">Recommended limit of 90 characters is exceeded</div>
+  </div>
+  <div class="switch">
+    <label>
+      <input type="checkbox" name="properties-checkbox"
+             class="show-check"
+             [checked]="control.config.showHelp"
+             (change)="onChangeDescription(control);callGA('HELPTEXT',control)"
+             data-size="mini" data-on-color="'blue'"
+      >
+      <span class="lever"></span>
+    </label>
+  </div>
+  <div class="col-xs-12 no-padding text-group div-check help-editor-outer"
+       *ngIf="control.config.showHelp"
+  >
+    <div class="form-text question-textarea helptext-control"  *ngIf="froalaHelpText.options && !jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])" [froalaEditor]="froalaHelpText.options" [(froalaModel)]="control.props.helpText">
+  </div>
+  <textarea class="form-text question-textarea helptext-control" *ngIf="jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])" [(ngModel)]="control.props.helpText"></textarea>
+</div>
+</div>
+</div>
+<!-- Common Component-->
+<div class="type-details pb15">
+  <div class="col-xs-12 no-padding text-group horz-group">
+    <span class="col-md-4 col-xs-4 no-padding form-label">Placeholder</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="text" class="form-text" [(ngModel)] = "control.config.placeholder">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Default Text</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="text" class="form-text" [value]="control.props.defaultValue" (change)="changeDefaultValue($event)">
+    </div>
+  </div>
+  <span *ngIf = "control.config.type === 'text'">
+        <div class="col-xs-12 no-padding text-group  horz-group">
+            <span class=" col-md-4 col-xs-4 no-padding form-label">Min. Characters</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)] = "control.props.minVal">
+            </div>
+        </div>
+        <div class="col-xs-12 no-padding text-group  horz-group">
+            <span class=" col-md-4 col-xs-4 no-padding form-label">Max. Characters</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)] = "control.props.maxVal">
+            </div>
+        </div>
+    </span>
+  <span *ngIf = "control.config.type === 'number'">
+        <div class="col-xs-12 no-padding text-group horz-group ">
+            <span class="col-md-4 no-padding form-label">Min Value</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)]="control.props.minVal">
+            </div>
+        </div>
+        <div class="col-xs-12 no-padding text-group horz-group ">
+            <span class="col-md-4 no-padding form-label">Max Value</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)]="control.props.maxVal">
+            </div>
+        </div>
+    <div class="col-xs-12 no-padding text-group horz-group ">
+            <span class="col-md-4 no-padding form-label">Prefix</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)]="control.config.attr.style">
+            </div>
+        </div>
+
+     <div class="col-xs-12 no-padding text-group horz-group ">
+            <span class="col-md-4 no-padding form-label">Suffix</span>
+            <div class="col-md-7 col-xs-7 no-padding horz-control">
+                <input type="text" class="form-text" [(ngModel)]="control.postfix">
+            </div>
+        </div>
+    </span>
+</div>
+<div class="form-label type-details-head-no-collapse" *ngIf="jsonBuilderHelper.editors('MarkAsMandate') || (jsonBuilderHelper.editors('logicJump') && !jsonBuilderHelper.editors('sectionalLogicJump'))">SETTINGS</div>
+
+<question-redirect-url [control]="control"></question-redirect-url>
+
+<div class="type-details no-border bottom-space0" *ngIf="jsonBuilderHelper.editors('MarkAsMandate')">
+  <label class="check check-mandatory form-label">
+    <!--<input type="checkbox" value="Value1" name="checkbox1" id="check1"
+           [disabled]="isQuestionInFormula()"
+           [checked]="control.config.validations.required.status"
+           (change)="onChange(control);callGA('MANDATE',control)"
+    >-->
+    <!--<label for="check1" > </label>-->
+    Mark as Mandatory
+  </label>
+   <div class="switch">
+     <label>
+      <input type="checkbox" value="Value1" name="checkbox1" id="check1"
+           [disabled]="isQuestionInFormula()"
+           [checked]="control.config.validations.required.status"
+           (change)="onChange(control);callGA('MANDATE',control)">
+          <span class="lever"></span>
+     </label>
+    </div>
+  <!--<div class="help-tip editor-helptip" *ngIf="isQuestionInFormula()">
+    <i class="material-icons">info_outline</i>
+    <div class="help-checktip">Since this question has been used in the formula, it is required that it be kept mandatory.</div>
+  </div>-->
+  <span class="mandatory-info" *ngIf="isQuestionInFormula()"><p>Since this question has been used in the formula, it is required that it be kept mandatory.</p></span>
+</div>
+<div class="type-details" *ngIf="jsonBuilderHelper.editors('logicJump') && !jsonBuilderHelper.editors('sectionalLogicJump')">
+<span class="form-label"><i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.logic_jump.active">lock_outline</i>LOGIC JUMP</span>
+<div class="col-md-12 no-padding">
+    <a class="btn btn-default btn-flat btn-basic2" href="javascript:void(0);"  (click)="openLogicPopup()">{{control.condition?'EDIT':'ADD'}} LOGIC JUMP</a>
+</div></div>

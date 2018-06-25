@@ -1,0 +1,7 @@
+<div class="type-details custom-editor">
+    <textarea class=" form-text question-textarea ques-title2" *ogIf="['one-page-card', 'one-page-card-new', 'one-page-card-oldresult', 'template-six','template-eight']"
+        (keyup)="textAreaAdjust($event)" [(ngModel)]="control.props.currentValue"></textarea>
+    <textarea class=" form-text question-textarea ques-title2" *ogIf="['inline-temp-new','template-five','template-five-oldresult']"
+        (keyup)="textAreaAdjust($event)" [(ngModel)]="section.items[0].props.currentValue"></textarea>
+    <question-redirect-url *ngIf="_JSONBuilder.isTempName(['template-eight', 'one-page-card-new', 'template-six'])" [control]="control"></question-redirect-url>
+</div>

@@ -1,0 +1,41 @@
+<span class="section-help">You can group your questions in sections to make it simple for the users to follow.</span>
+<div class="type-details" style="padding-bottom:15px;">
+  <div>
+    <span class="form-label">Section Title</span>
+    <textarea class="wysiwyg question-textarea" *ngIf="tempName !== 'template-five'" [(ngModel)]="section.title"></textarea>
+  </div>
+  <div [froalaEditor]="froalaSectionTitle.options"
+   *ngIf="froalaSectionTitle.options && tempName === 'template-five'"
+    [(froalaModel)]="section.title"></div>
+  
+</div>
+<div class="type-details top-space0" style="padding-bottom: 15px;">
+  <span class="form-label" [class.no-margin]="section.showDesc === false">Help Text</span>
+  <div class="icon-outer bottom" *ngIf="section.showDesc">
+    <div class="char-count-limit" *ngIf="section.description?.length>80">{{section.description?.length}}</div>
+    <div class="help-text">Recommended limit of 80 characters is exceeded</div>
+  </div>
+  <div class="switch">
+    <label>
+      <input type="checkbox" name="properties-checkbox"
+             class="show-check"
+             [checked]="section.showDesc"
+             (change)="onChangeDescription(section);callGA('HELPTEXT',section)"
+      >
+      <span class="lever"></span>
+    </label>
+  </div>
+  <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+    <textarea class="form-text question-textarea" *ngIf="section.showDesc" [(ngModel)]="section.description"></textarea>
+  </div>
+</div>
+<div class="type-details top-space0" *ngIf="_JSONBuilder.getJSONBuilt().template == 'one-page-slider' || _JSONBuilder.getJSONBuilt().template.split('-',2).join('-') == 'inline-temp'">
+  <div>
+    <span class="form-label">Button Text</span>
+    <div class="help-tip editor-helptip">
+      <i class="material-icons">info_outline</i>
+      <div class="help-checktip">This will come after the last question in the section.</div>
+    </div>
+    <input type="text" class="form-text" [(ngModel)]="section.buttonTitle" />
+  </div>
+</div>

@@ -1,0 +1,217 @@
+<div class="native-int-box links-outer" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')">
+  <div class="logo-sec ml10">
+    <img class="img-responsive" src="assets/images/intercom-new.png" />
+  </div>
+  <div class="integration-name">
+    Intercom
+  </div>
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div class="i-outer-red">
+          <a href="javascript:void(0)">
+            <i class="material-icons small-icon">lock_outline</i>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="native-int-box" [class.links-outer]="isConfigured" *ngIf="returnFeatureAccess()">
+  <div *ngIf="isConfigured && !config.active" class="red-bar"></div>
+  <div *ngIf="isConfigured && config.active" class="green-bar"></div>
+  <div class="logo-sec">
+    <img class="img-responsive" src="assets/images/intercom-new.png" />
+  </div>
+  <div class="integration-name">
+    Intercom
+  </div>
+  <button *ngIf="!isConfigured" (click)="openAuthModal()" class="btn configure-btn " type="submit">Configure</button>
+
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div *ngIf="isConfigured && !config.active" class="i-outer-red">
+          <i class="material-icons">error</i>
+        </div>
+        <div *ngIf="isConfigured && config.active" class="i-outer-green">
+          <i class="material-icons">check_circle</i>
+        </div>
+      </li>
+
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <img class="img-responsive" src="assets/images/config-icon-active.png" />
+        </a>
+        <div class="help-checktip config-tip">Test</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured">
+        <a href="javascript:void(0)" (click)="getAccounts()">
+          <img class="img-responsive" src="assets/images/config-icon.png" />
+        </a>
+        <div class="help-checktip config-tip">Reconfigure</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active && isLeadsPending">
+        <a href="javascript:void(0)" (click)="sync()">
+          <i class="material-icons">autorenew</i>
+        </a>
+        <div class="help-checktip config-tip">Sync</div>
+      </li>
+      <li class="help-tip" (click)="syncTask()" *ngIf="config?.map_fields?.length > 0  && isConfigured && config.active">
+        <a href="javascript:void(0)">
+          <i class="material-icons">restore</i>
+        </a>
+        <div class="help-checktip config-tip">Task History</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="updateIntegrationStatus(false)">
+          <i class="material-icons ">do_not_disturb_alt</i>
+        </a>
+        <div class="help-checktip config-tip">Deactivate</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && !config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <i class="material-icons">playlist_add_check</i>
+        </a>
+        <div class="help-checktip config-tip">Activate</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div id="intercom-new" class="modal fade integration-modal" role="dialog">
+  <div class="modal-dialog ">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons modal-close">close</i>
+        </button>
+        <img src="assets/images/intercom.png">
+        <h4>Send Outgrow lead data to Intercom</h4>
+      </div>
+      <div class="modal-body">
+        <!-- MultiStep Form -->
+        <form>
+          <!-- progressbar -->
+          <ul class="progressbar">
+            <li class="active threeOption" [class.icon]="isConnected">Configure
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="threeOption" [class.active]="isConnected && isAccountSelected " [class.icon]="isMapped">Map fields
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="threeOption" [class.active]="isMapped" [class.icon]="isDoubleOptin">Test connection
+              <i class="material-icons">check_circle</i>
+            </li>
+            <!-- <li class="fourOption" [class.active]="isDoubleOptin">Double Optin<i class="material-icons">check_circle</i></li> -->
+
+          </ul>
+          <!-- fieldsets -->
+          <fieldset class="btn-center-outer" *ngIf="!isConnected">
+            <h5>Allow Outgrow to access Intercom</h5>
+            <div class="circle-outer">
+              <div class="circle">
+                <img class="outgrow-logo" src="assets/images/og-symbol.png">
+              </div>
+              <div class="divider">
+                <img src="assets/images/inv-arrow.png">
+              </div>
+              <div class="circle">
+                <img src="assets/images/intercom-new.png">
+              </div>
+            </div>
+
+            <input type="button" name="submit" class="submit action-button button btn" value="Authenticate with Intercom" (click)="connect()"
+            />
+          </fieldset>
+          <fieldset *ngIf="!isAccountSelected &&  !isMapped">
+            <div class="error-main" *ngIf="isMapError">
+              <i class="material-icons">check_circle</i> {{mapError}}
+            </div>
+						<h5 class="align-left">Choose Intercom account you want to use for this integration</h5>
+						<h6>Select a Salesforce Connection</h6>
+						<div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+							<i class="material-icons loader-plan">autorenew</i>
+						</div>
+						<div class="radio-o" [class.active]="account.key==activeAccount" *ngFor="let account of accounts; let i = index">
+							<input type="radio" [id]="account.name" (click)="setAccount(account.key,account.name, 'edit')" name="radio-group" [checked]="account.status">
+							<label [for]="account.name">{{account.name}}</label>
+							<a *ngIf="accounts.length!=1 && account.key!==activeAccount" href="javascript:void(0);" class="after-test-link" (click)="setAccount(account.key,account.name,'delete')">Delete</a>
+							<!-- <a href="javascript:void(0);" class="after-test-link" (click)="editAccount(account.key,account.name)">Edit</a> -->
+              <a href="javascript:void(0);" *ngIf="account.key!==activeAccount" class="after-test-link" (click)="testAccount('account'+i,account.access_token)">Test</a>
+							<div [id]="'account'+i" class="after-test hide"><i class="material-icons">check</i> Success</div>
+              
+						</div>
+						<a href="javascript:void(0);" (click)="connect()" class="single-link align-left mt5">Add another Intercom connection</a>
+						<input type="button" name="submit" class="submit action-button button btn" (click)="getFields()" value="Proceed" />
+					</fieldset>
+
+          <fieldset *ngIf="isAccountSelected && isConnected && !isMapped">
+            <div class="error-main" *ngIf="isMapError">
+              <i class="material-icons">check_circle</i> {{mapError}}
+            </div>
+            <div class="error-main" *ngIf="isLeadGenError">
+              <i class="material-icons">check_circle</i> {{mapError}}
+            </div>
+            <h5 class="align-left">Enter Intercom fields where you want to send Outgrow {{calcType}} data </h5>
+            <div class="table-outer intercom">
+              <div class="row-outer header align-left" *ngIf="!isLoading && selectedlistId!='' && !isMapError">
+                <div class="col-outer-half">Outgrow Field</div>
+                <div class="col-outer-half">Intercom Field</div>
+                <!-- <div class="col-outer">Type</div> -->
+              </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+                <i class="material-icons loader-plan">autorenew</i>
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calcfields of calcAllFileds">
+                  <div class="col-outer-half">{{calcfields.calc_name}}</div>
+                  <div class="col-outer-half ">
+                    <input placeholder="Type the field Name" type="text" (change)="selectedMapFields(calcfields.calc_key,$event)" [value]="calcfields.crm_key"
+                      [disabled]="isLeadGenError">
+                  </div>
+                  <!-- <div class="col-outer">Type</div> -->
+                </div>
+              </div>
+              <!-- <p>Send Outgrow leads to different lists based on results</p> -->
+            </div>
+            <!-- <input type="button" name="previous" class="previous action-button-previous btn button-light" value="Previous"/> -->
+            <!-- <input type="button" (click)="test()" class="action-button button btn btn-test"  value="Test Connection"/> -->
+            <button (click)="test()" class="action-button button btn btn-test" [disabled]="isLeadGenError">TEST CONNECTION</button>
+          </fieldset>
+          <fieldset *ngIf="isMapped && !isDoubleOptin">
+            <div class="success">
+              <i class="material-icons">check_circle</i> MAPPING SUCCESSFUL.
+            </div>
+            <h6>Following test record will be pushed to Intercom to test the connection</h6>
+            <div class="table-outer">
+              <div class="row-outer header align-left">
+                <div class="col-outer-half">Intercom Field</div>
+                <div class="col-outer-half">Intercom Field value</div>
+
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calc of viewMappedData">
+                  <div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.key}}</div>
+                  <div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.value}}</div>
+                </div>
+              </div>
+
+              <!-- <p>Send Outgrow leads to different lists based on results</p> -->
+            </div>
+            <input type="button" class="action-button-previous btn button-light-back" (click)="back()" value="Back" />
+            <input type="button" name="submit" class="submit action-button button btn" (click)="close()" value="Finish" />
+          </fieldset>
+
+
+
+        </form>
+        <!-- /.MultiStep Form -->
+      </div>
+    </div>
+
+  </div>
+</div>

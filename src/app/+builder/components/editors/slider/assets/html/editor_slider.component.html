@@ -1,0 +1,96 @@
+<!-- Common Component -->
+<div class="type-details"><common-editor
+  [control]="control"
+>
+</common-editor>
+<div class="type-details bottom-space0">
+  <span class="form-label" [class.no-margin]="control.config.showHelp === false">Help Text</span>
+  <div *ngIf="control.config.showHelp" class="icon-outer bottom" >
+    <div class="char-count-limit" *ngIf="froalaHelpText.textCount>90">{{froalaHelpText.textCount}}</div>
+    <div class="help-text">Recommended limit of 90 characters is exceeded</div>
+  </div>
+  <div class="switch">
+    <label>
+      <input type="checkbox" name="properties-checkbox"
+             class="show-check"
+             [checked]="control.config.showHelp"
+             (change)="onChangeDescription(control);callGA('HELPTEXT',control)"
+             data-size="mini" data-on-color="'blue'">
+      <span class="lever"></span>
+    </label>
+  </div>
+  <!--//on/off-->
+  <div class="col-xs-12 no-padding text-group div-check help-editor-outer"
+       *ngIf="control.config.showHelp"
+  >
+    <div class="form-text question-textarea helptext-control"  *ngIf="froalaHelpText.options && !jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])" [froalaEditor]="froalaHelpText.options" [(froalaModel)]="control.props.helpText">
+  </div>
+  <textarea class="form-text question-textarea helptext-control" *ngIf="jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])" [(ngModel)]="control.props.helpText"></textarea>
+</div>
+</div>
+</div>
+<!-- Common Component-->
+<div class="type-details pb15">
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Unit of Variable</span>
+    <div class="col-md-7 col-xs-4 no-padding horz-control">
+      <div class="input-group input-drop">
+        <select class="select-default" data-width="82px" (change)="onPostfixChange($event)">
+          <option value="prefix" [selected]="!control.props.postfix">Prefix</option>
+          <option value="postfix" [selected]="control.props.postfix">Suffix</option>
+        </select>
+        <input type="text" [(ngModel)] = "control.props.unit" class="form-control" placeholder="Value" (change)="onSliderValChange($event, 'unit')">
+      </div>
+      <!-- <input type="text" class="form-text" placeholder="value" [(ngModel)] = "control.props.unit" (change)="onSliderValChange()"> -->
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Min Value</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="number" class="form-text" [value]="control.props.minVal" (change)="onSliderValChange($event, 'minVal')">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Max Value</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="number" class="form-text" [value]="control.props.maxVal" (change)="onSliderValChange($event, 'maxVal')">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Step Length</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="number" class="form-text"  [value] = "control.props.steps" (change)="onSliderValChange($event, 'steps')">
+    </div>
+  </div>
+  
+  <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Default Value</span>
+    <div class="col-md-7 col-xs-7 no-padding horz-control">
+      <input type="number" class="form-text" [value]="control.props.defaultValue" (change)="onSliderValChange($event, 'defaultValue')">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group">
+    <span class="col-md-4 no-padding form-label no-margin" [class.no-margin]="control.props.scale === false">Show Scale</span>
+    <div class="col-md-2 no-padding horz-control">
+      <div class="switch">
+        <label>
+          <input type="checkbox" name="properties-checkbox"
+                 class="show-check"
+                 [checked]="control.props.scale"
+                 (change)="toggleScale($event,control);callGA('SCALE')"
+                 data-size="mini" data-on-color="'blue'"
+          >
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="form-label type-details-head-no-collapse" *ngIf="jsonBuilderHelper.editors('logicJump')">SETTINGS</div>
+
+<question-redirect-url [control]="control"></question-redirect-url>
+<div class="type-details" *ngIf="jsonBuilderHelper.editors('logicJump')">
+<span class="form-label"><i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.logic_jump.active">lock_outline</i>LOGIC JUMP</span>
+<div class="col-md-12 no-padding">
+    <a class="btn btn-default btn-flat btn-basic2" href="javascript:void(0);"  (click)="openLogicPopup()">{{control.condition?'EDIT':'ADD'}} LOGIC JUMP</a>
+</div></div>

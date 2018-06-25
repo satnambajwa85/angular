@@ -1,0 +1,538 @@
+.prom-checklist {
+    padding: 40px 35px 30px !important;
+    position: relative;
+    margin-left: 0px;
+    width: calc(100% - 0px) !important;
+    float: left;
+}
+.prom-checklist .no-items {
+    text-align: center;
+    color: #fb5f66;
+    display: table;
+    width: 100%;
+    height: 200px;
+    background: rgba(255,255,255,0.7);
+    font-size: 14px;
+}
+.prom-checklist .no-items .no-items-inner {
+    display: table-cell;
+    vertical-align: middle;
+    float: none;
+}
+.prom-checklist h3 {
+    color: #62696d;
+    font-family: "montserratlight";
+    font-size: 22px;
+    display: block;
+    margin-bottom: 3px;
+    margin-top: 0px;
+}
+.prom-checklist p {
+    color: #8e989f;
+    font-family: montserratlight;
+    font-size: 13px;
+    display: block;
+    /* line-height: 22px; */
+    margin-bottom: 25px;
+}
+
+/* start: prom-filter multiple checkbox */
+    .prom-filter {
+        float: left;
+        display: inline-block;
+        margin-top: 10px;
+    }
+    .prom-filter span {
+        float: left;
+        margin-top: 4px;
+        margin-right: 10px;
+    }
+    .prom-filter .check-icon {
+        font-size: 10px;
+        font-weight: 400;
+        cursor: pointer;
+        float: left;
+        margin-right: 5px;
+        color: #fff;
+        font-family: montserratlight;
+        width: auto;
+    }
+    .prom-filter .check-icon input[type=checkbox], .prom-filter .check-icon input[type=radio] {
+        left: -9999px;
+        position: absolute;
+    }
+    .prom-filter .check-icon input[type=checkbox]:checked+label {
+        background-color: #23a0d6;
+        border: none;
+        color: #fff;
+        line-height: 25px;
+       
+       
+    }
+    .prom-filter .check-icon label {
+        content: "";
+        display: inline-block;
+        width: auto;
+        height: 25px;
+        border: 1px solid #bec5c9;
+        border-radius: 3px;
+        margin: 0 auto;
+        margin-bottom: 10px;
+        cursor: pointer;
+        background: #fff;
+        text-align: center;
+        padding: 0 10px;
+        padding-right: 13px;
+        line-height: 23px;
+        color: #62696d;
+      border-radius: 50px;
+        font-size: 10px; 
+    }
+    .prom-filter .check-icon input[type="checkbox"]:checked + label::after {
+        font-family: "Material Icons";
+        content: "\e5ca";
+    }
+    .prom-filter .check-icon label::after {
+        display: inline-block;
+        position: relative;
+        top: 0px;
+        font-size: 12px;
+        color: #fff;
+        float: left;
+        padding-right: 5px;
+        height: auto;
+    }
+    .prom-filter span.clearAll {
+        margin: 0px;
+        display: inline-block;
+        border-radius: 3px;
+        padding: 0;
+        border: 1px solid #bec5c9;
+        background-color: #fff;
+        border-color: #fb5f66;
+        cursor: pointer;
+    }
+    .prom-filter span.clearAll a {
+        color: #fb5f66;
+        line-height: 28px;
+        padding: 0 20px;
+        font-size: 13px;
+        text-transform: none;
+        vertical-align: middle;
+    }
+
+/* end: prom-filter multiple checkbox */
+
+/* start: prom-table */
+    .prom-table {
+        margin-top: 25px;
+    }
+    .prom-table table thead tr th {
+        color: #8e989f;
+        font-size: 11px;
+        font-weight: normal;
+        font-family: montserratregular;
+        text-transform: uppercase;
+        border-bottom: 1px solid #ddd;
+        width: 400px;
+    }
+    .prom-table td a {
+        font-size: 11px;
+        color: #23a0d6;
+    }
+    .prom-table td a i.material-icons {
+        font-size: 16px;
+        color: #23a0d6;
+        vertical-align: middle;
+    }  
+    .prom-table .table>thead>tr>td, .prom-table .table>thead>tr>th
+    .prom-table .table>tfoot>tr>td, .prom-table .table>tfoot>tr>th,{
+        padding: 10px;
+    }
+    .prom-table .table>tbody>tr>td, .prom-table .table>tbody>tr>th{
+        padding: 15px 10px;
+        border-bottom: 1px solid #ddd;
+        color: #62696d;
+        border-top: none;
+    }
+    .prom-table .table>tbody>tr>td{font-size: 12px; max-width: 155px; font-family: montserratlight;}
+    td.strategy_outer {width: 50%; /*cursor: pointer; float: left; border-bottom: 1px solid #F6F8F9!important;*/}
+    td.strategy_outer i.material-icons{
+        font-size: 14px;
+        color: #62696d;
+        vertical-align: middle;
+        position: relative;
+        top: -1px;
+    }
+    .hiddenCell {
+        font-size: 12px;
+        color: #8e989f;
+        line-height: 20px;
+        padding-left: 17px;
+    }
+    .hiddenCell .collapse.in {
+        /*padding-bottom: 15px;*/
+    }
+    .icon-sort{
+        background-image: url("../../../../../../../../../assets/images/icon-sort.png");
+        cursor: pointer;
+        background-position: right 2px;
+        background-repeat: no-repeat;
+        padding-right: 12px;
+    }
+    .prom-table .table {
+        display: inline-block; 
+    }
+    .table>tbody>tr:first-child>td.strategy_outer {
+        border-top: none;
+    }
+    .prom-table .table tbody {
+        /*float: left;
+        width: 100%;
+        height: 340px;*/
+    }
+
+/* end: prom-table */
+
+/* start: prom-table checkbox */
+    .prom-table .check-icon {
+        font-size: 12px;
+        font-weight: 400;
+        cursor: pointer;
+        float: none;
+        color: #fff;
+        font-family: montserratregular;
+        margin-right: 12px;
+    }
+    .prom-table .check-icon input[type=checkbox], .prom-table .check-icon input[type=radio] {
+        left: -9999px;
+        position: absolute;
+    }
+    .prom-table .check-icon input[type=checkbox]:checked+label {
+        background-color: #23a0d6;
+        border-color: #23a0d6;
+        color: #fff;
+        line-height: 32px;
+    }
+    .prom-table .check-icon label {
+        content: "";
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+        margin: 0 auto;
+        cursor: pointer;
+        background: transparent;
+        text-align: center;
+        color: #62696d;
+        float: left;
+        padding: 0px;
+    }
+    .prom-table .check-icon input[type=checkbox]:checked+label:after {
+        font-family: Material Icons;
+        content: "\e5ca";
+    }
+    .prom-table .check-icon label:after {
+        display: inline-block;
+        top: -7px;
+        color: #fff;
+        position: relative;
+        font-size: 14px;
+        left: 1px;
+        padding-right: 0px;
+    }
+    #promotion-checkList {
+        display: -webkit-box;
+    }
+    .prom-table .table>tbody>tr>td.td-check{text-align: center;}
+
+/* end: prom-table checkbox */
+
+/* circular progress bar */
+    .progress-outer{
+        /*background: #fff;
+        border: 1px solid #dae2e6;
+        padding: 30px;
+        text-align: center;*/
+        /*box-shadow: 0px 0 10px rgba(0, 0, 0, 0.1);*/        
+        float: right;
+    }
+    #container {
+        width: 120px;
+        height: 120px;
+        position: relative;
+        margin: 0px auto;
+    }
+    .progress-outer h3{
+        color: #62696d;
+        font-size: 16px;
+        font-family: montserratregular;
+        margin: 12px 0px 10px;
+    }
+    .progress-outer p{
+        font-size: 11px;
+        color: #8e989f;
+        line-height: 16px;
+        margin: 0;
+        /* padding: 0px 20px; */
+    }
+
+    /**********/
+        .progress-outer .progress-bar {
+            position: relative;
+            height: 120px;
+            width: 100%;
+            background: none;
+            color: #62696d;
+            box-shadow: none;
+            float: none;
+        }
+
+        .progress-outer .progress-bar div {
+            position: absolute;
+            height: 120px;
+            width: 120px;
+            border-radius: 50%;
+            left: 40px;
+            /*background: #bec5c9;*/
+        }
+
+        .progress-outer .progress-bar div span {
+            position: absolute;
+            font-family: montserratregular;
+            font-size: 24px;
+            line-height: 114px;
+            height: 114px;
+            width: 114px;
+            left: 3px;
+            top: 3px;
+            text-align: center;
+            border-radius: 50%;
+            background-color: white;
+            font-weight: normal;
+        }
+
+        .progress-outer .progress-bar .background { 
+            /*background-color: #bec5c9 !important; */
+        }
+
+        .progress-outer .progress-bar .rotate {
+            clip: rect(0 60px 200px 0);
+            /*background-color: #23a0d6 !important;*/
+        }
+
+        .progress-outer .progress-bar .left {
+            clip: rect(0 60px 120px 0);
+            opacity: 1;
+            /*background-color: #bec5c9;*/
+        }
+
+        .progress-outer .progress-bar .right {
+            clip: rect(0 60px 120px 0);
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+            opacity: 0;
+            /*background-color: #23a0d6 !important;*/
+        }
+        @keyframes 
+            toggle {  0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    /**********/
+
+/* circular progress bar */
+
+/* start: responsive */
+    @media (min-width: 1920px) {
+        .progress-outer .progress-bar div { left: 120px;}
+    }
+    @media screen and (min-width: 1920px) and (max-width: 1920px) {
+        .progress-outer .progress-bar div { left: 110px;}
+    }  
+    @media screen and (min-width: 1680px) and (max-width: 1680px) {
+        .progress-outer .progress-bar div { left: 80px;}
+    }  
+    @media screen and (min-width: 1440px) and (max-width: 1440px) {
+        .progress-outer .progress-bar div { left: 50px;}
+    }  
+
+/* end: responsive */
+
+/* scrollbar */
+    .scrollbar {
+        overflow-y: scroll;
+    }
+
+    .scrollbar::-webkit-scrollbar-track {
+        border-radius: 0;
+        background-color: #f5f5f5;
+    }
+
+    .scrollbar::-webkit-scrollbar {
+        width: 6px;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .scrollbar::-webkit-scrollbar:horizontal {
+        height: 6px;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    .scrollbar::-webkit-scrollbar-thumb {
+        border-radius: 4px;
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+/* end: scrollbar */
+
+/* Preloader */
+    .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #fff;
+        /* change if the mask should be a color other than white */
+        z-index: 9;
+        /* makes sure it stays on top */
+    }
+
+    .status {
+        width: 200px;
+        height: 200px;
+        position: absolute;
+        left: 60%;
+        /* centers the loading animation horizontally on the screen */
+        top: 55%;
+        /* centers the loading animation vertically on the screen */
+        background-image: url("../../../../../../../../../assets/images/loaders/logoAnim.gif");
+        /* path to your loading animation */
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: -100px 0 0 -100px;
+        /* is width and height divided by two */
+    }
+
+/* end: Preloader */
+
+
+.stick {
+    position: fixed;
+    top: 130px;
+    right: 35px;
+    width: 230px;
+}
+.progress-inner {
+    background: #fff;
+    border: 1px solid #dae2e6;
+    padding: 15px !important;
+    text-align: center;
+    box-shadow: 0px 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    float: right;
+}
+.row.progress-text  h3{margin: 0 0 3px 0 !important}
+
+.progress-cricle {
+    float: left;
+    margin: 0;
+}
+.row.progress-text {
+    float: left;
+    width: calc(100% - 60px);
+    margin: 0;
+    text-align: left;
+    padding-left: 10px;
+}
+.prom-left {
+    padding-right: 60px;
+}
+.prom-checklist.w750{max-width: 850px !important} 
+
+
+.webhook-request.prom-table{margin-top: 10px;}
+.webhook-request.prom-table table{ background: #fff;}
+.webhook-request.prom-table .table-responsive .table tbody {
+    background: #fff
+}
+.webhook-request.prom-table.table>tbody>tr>td,
+.webhook-request.prom-table .table>tbody>tr>th,
+.webhook-request.prom-table .table>tfoot>tr>td,
+.webhook-request.prom-table .table>tfoot>tr>th,
+.webhook-request.prom-table .table>thead>tr>td,
+.webhook-request.prom-table .table>thead>tr>th {
+    border-bottom: 1px solid transparent !important;
+    font-weight: 100;
+    line-height: 18px;
+    border-bottom: none;
+    color: #fff;
+    font-size: 11px;
+    border-top: none;
+    font-family: montserratregular;
+    padding: 10px 15px;
+    vertical-align: middle;
+}
+.webhook-request.prom-table .table>thead>tr>th {
+    border-bottom: 1px solid transparent
+}
+.webhook-request.prom-table .table>th {
+    border-bottom: none!important
+}
+.webhook-request.prom-table thead {
+    background: #90999d
+}
+/* .webhook-request.prom-table tbody tr {
+    padding: 8px 30px;
+    line-height: 40px;
+    cursor: pointer;
+} */
+.webhook-request.prom-table tbody tr td{
+    padding: 10px 15px !important;
+    color: #666;
+    font-size: 11px;
+    border-top: none;
+    font-family: montserratlight;
+}
+/* .webhook-request.prom-table tbody tr:last-child td {
+  padding-bottom: 30px !important;
+} */
+.webhook-request.prom-table tbody tr td span.date-time {
+    display: block;
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: 3px;
+}
+.webhook-request tbody tr td .table-content span {
+    font-size: 11px;
+    display: block;
+    opacity: 0.6;
+    margin-top: 3px;
+}
+/*.webhook-request tbody tr td span.active {*/
+    /*color: #fb5f66;*/
+/*}*/
+/* .webhook-request tbody tr.activeHover:hover > .webhook-request tbody tr td span.active {
+  color: #fb5f66;
+}
+.webhook-request tbody tr td i.material-icons {
+    font-size: 16px;
+    color: #28a900;
+    float: left;
+    margin-right: 10px;
+}
+.webhook-request tbody tr td i.material-icons.i-red{
+  color: #fb5f66;
+} */
+.webhook-request tbody tr td .table-content {
+    float: left;
+    width: auto;
+}
+/* .webhook-request tbody tr td:hover span.active {
+    color: #fb5f66;
+} */

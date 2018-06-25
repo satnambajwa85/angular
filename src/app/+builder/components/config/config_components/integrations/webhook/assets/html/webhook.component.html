@@ -1,0 +1,303 @@
+<div class="col-xs-10 col-sm-12 new-webhook-outr ">
+  <div class="row">
+    <div class="col-md-12" id="webhook-heading">
+      <div class="col-md-12 col-sm-12 col-xs-12 np">
+        <h3>Webhook Settings</h3>
+        <!-- <p>Use Webhooks to send Outgrow data to a compatible web app or URL as soon as a submission is made.
+          <a href="https://support.outgrow.co/v1.0/docs/webhooks" target="_blank" class="text-red">
+            <i class="material-icons">info_outline</i> Click here</a> for more info
+        </p>  -->
+        <div class="webhook-subheading">Use Webhooks to send Outgrow data to a compatible web app or URL as soon as a submission is made.
+          <div class="help-tip editor-helptip">
+            <a href="https://support.outgrow.co/v1.0/docs/webhooks" target="_blank" class="">
+            <i class="material-icons">help_outline</i>
+            <div class="help-checktip">
+              Click here for more info
+            </div>
+            </a>
+          </div>
+        </div>
+      </div>
+      <!-- <div class="col-md-1 col-sm-12 col-xs-12 webtoggle  confir-pad np" *ngIf="webhookForm.value.webhookUrl">
+        <div class="switch left">
+          <label>
+            <input type="checkbox" class="show-check" id="activateWebhook" (change)="activeWebhook()" [checked]="webhookActivate">
+            <span class="lever"></span>
+          </label>
+        </div>
+
+      </div> -->
+    </div>
+  </div>
+  <div class=" col-md-12 col-sm-12 col-xs-12 np">
+    <div class="error-notice" *ngIf="error?.code">
+      <div class="oaerror danger">
+        <i class="material-icons">cancel</i>
+        Received error code {{error.code}} from server. {{error.err_message}}
+      </div>
+    </div>
+    <div class="error-notice" *ngIf="success">
+      <div class="oaerror success">
+        <i class="material-icons">check_circle</i> {{success}}
+        Successfully received response from the webhook.
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" id="webhook-form">
+      <div class="sahil-material">
+        <form id="webhookForm" [formGroup]="webhookForm" (ngSubmit)="testWebhook()">
+          <div class="row">
+              <div class="col-xs-12 logo-branding-outer status-outer" *ngIf="webhookSet">
+                  <span class="form-label">Status
+                      <div class="help-tip" *ngIf="webhookActivate">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip config-tip">Your Outgrow lead data is currently being sent to the Webhook URL</div>
+                      </div>
+                  </span>
+                       <div class="switch left">
+                           <div class="onoffswitch">
+                               <input type="checkbox" [checked]="webhookActivate" (change)="activeWebhook()"  class="onoffswitch-checkbox" id="activateWebhook">
+                               <label class="onoffswitch-label" for="activateWebhook">
+                                   <span class="onoffswitch-inner"></span>
+                                   <span class="onoffswitch-switch"></span>
+                               </label>
+                           </div>
+                       </div>
+               </div>
+            <div class="col-md-12 col-sm-12 col-xs-12">
+              <div class="input-url-outer">
+                <div class="form-group label-floating name webhookUrl">
+                  <label class="g-upload-label control-label" for="webhookUrl">Webhook URL</label>
+                  <input (focus)="addfocus()" formControlName="webhookUrl" placeholder="http://yoursite.com/calc_webhook" id="webhookUrl"
+                         name="webhookUrl" type="text" class="form-control web-url"/>
+                </div>
+              </div>
+              <div
+                *ngIf="webhookForm.controls.webhookUrl.touched && !webhookForm.controls.webhookUrl.valid"
+                class="alert alert-danger">
+                <p *ngIf="webhookForm.controls.webhookUrl.errors.required">
+                  <span class="mat-icon"><i class="material-icons">report_problem</i></span>Webhook url is required.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- <div class="col-md-12 col-sm-12 col-xs-12 np basicAuth">
+            <input type="checkbox" class="filled-in" id="filled-in-box" [checked]="basicAuth" (click)="basicAuthChange()"/>
+            <label for="filled-in-box">Require Basic Authentication</label>
+          </div> -->
+
+          <div class="col-xs-12 no-padding basicAuth logo-branding-outer">
+             <span class="form-label">Require Basic Authentication</span>
+                  <div class="switch left">
+                      <div class="onoffswitch">
+                          <input type="checkbox" [checked]="basicAuth" (click)="basicAuthChange()" class="onoffswitch-checkbox"
+                              id="basicAuth">
+                          <label class="onoffswitch-label" for="basicAuth">
+                              <span class="onoffswitch-inner"></span>
+                              <span class="onoffswitch-switch"></span>
+                          </label>
+                      </div>
+                  </div>
+          </div>
+          <div class="col-md-12 np webhook-input-outr" *ngIf="basicAuth">
+            <div class="row">
+              <div class="col-md-6 fields-width">
+                <div class="form-group label-floating webhookUserName" id="webhookUnameDiv">
+                  <label class="g-upload-label control-label" for="webhookUname">Enter User Name</label>
+                  <input (focus)="addfocus1()" formControlName="webhookUname" id="webhookUname" name="webhookUname" type="text"
+                         class="form-control upload-placeholder"/>
+                </div>
+                <div
+                  *ngIf="webhookForm.controls.webhookUname.touched && !webhookForm.controls.webhookUname.valid"
+                  class="alert alert-danger">
+                  <p *ngIf="webhookForm.controls.webhookUname.errors.required">
+                    <span class="mat-icon"><i class="material-icons">report_problem</i></span>Webhook auth username is required.
+                  </p>
+                </div>
+              </div>
+              <div class="col-md-6 fields-width">
+                <div class="form-group label-floating webhookUserPassword" id="webhookPasswordDiv">
+                  <label class="g-upload-label control-label" for="webhookPassword">Enter Password</label>
+                  <input (focus)="addfocus2()" formControlName="webhookPassword" id="webhookPassword" name="webhookPassword" type="password"
+                         class="form-control upload-placeholder"/>
+                </div>
+                <div
+                  *ngIf="webhookForm.controls.webhookPassword.touched && !webhookForm.controls.webhookPassword.valid"
+                  class="alert alert-danger">
+                  <p *ngIf="webhookForm.controls.webhookPassword.errors.required">
+                    <span class="mat-icon"><i class="material-icons">report_problem</i></span>Webhook auth password is required.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12 col-sm-12 col-xs-12 np ">
+            <button type="submit" [disabled]="!webhookForm.valid" class="btn testNsave border-btn margin-top15"
+                    id="testNsave">
+              <span *ngIf="!webhookSet">Send test JSON and enable</span>
+              <span *ngIf="webhookSet">Send Test JSON & Save</span>
+            </button>
+          </div>
+          <div class="col-md-9 col-sm-12 col-xs-12 np no-request-info hide" *ngIf="!error?.code && !success">
+            <div class="no-request-info-inner">
+              Recent requests and response sent to the destination URL will be shown here.
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class=" col-md-12 col-sm-12 col-xs-12 np hide">
+    <div class="content-area" *ngIf="success">
+      <div class="col-md-6 first-child">
+        <div class="header">Recent Request</div>
+        <div class="json-outer scrollbar">
+          <pre class="inner-section force-overflow slim-style">
+            <span class="title">Headers</span>
+            <div id="requestHeader" [innerHTML]="webhookRequestHeader | prettyprintjson"></div>
+            <span class="title">Body</span>
+            <div id="requestBody" [innerHTML]="webhookRequestBody | prettyprintjson"></div>
+          </pre>
+        </div>
+      </div>
+      <div class="col-md-6 last-child">
+        <div class="header">Recent Response</div>
+        <div class="json-outer scrollbar">
+          <pre class="inner-section force-overflow slim-style">
+          <span class="title">Headers</span>
+          <div id="responseHeader" [innerHTML]="webhookResponseHeader | prettyprintjson"></div>
+          <span class="title">Body</span>
+          <div id="responseBody" [innerHTML]="webhookResponseBody | prettyprintjson"></div>
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-12 col-sm-12 col-xs-12 np webhook-request">
+  <div class="col-md-12 col-sm-12 col-xs-12 np">
+    <h3>Recent Request & Response</h3>
+    <div class="dp-outer">
+        <i class="material-icons icon-left">date_range</i>
+        <input id="webhookLogDate" class="input-daterange-datepicker datepicker-outer" type="text" name="daterange"/>
+        <i class="material-icons icon-right">keyboard_arrow_down</i>
+    </div>
+  </div>
+  <div class="col-md-12 col-sm-12 col-xs-12 np">
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Request Id</th>
+            <th>Type</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="webhookLogs && webhookLogs?.length">
+            <tr class="activeHover" *ngFor="let webhooklog of webhookLogs;let i = index" (click)="showWebhookDetail(webhooklog)">
+              <td>
+                <span class="active">{{webhooklog._id}}</span>
+                <span class="date-time">{{date(webhooklog.createdAt).format('HH:mm:ss DD-MM-YYYY')}}</span>
+              </td>
+              <td style="text-transform: capitalize">{{(webhooklog.type === 'TEST LEADS')? 'Test Lead' : 'Lead'}}</td>
+              <td>
+                <ng-container *ngIf="webhooklog && JSON.parse(webhooklog?.response).statusCode >= 400">
+                  <i class="material-icons i-red">warning</i>
+                  <div class="table-content">
+                    {{JSON.parse(webhooklog?.response).statusCode}}
+                    <span>Failed to sent</span>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="JSON.parse(webhooklog?.response).statusCode >= 200 && JSON.parse(webhooklog?.response).statusCode < 300">
+                  <i class="material-icons">check_circle</i>
+                  <div class="table-content">
+                    {{JSON.parse(webhooklog?.response).statusCode}}
+                    <span>Sent successfully and recieved response</span>
+                  </div>
+                </ng-container>
+              </td>
+            </tr>
+        </tbody>
+      </table>
+      <!--table mess outer-->
+      <div class="res-mess-outer" *ngIf="!webhookLogs?.length">
+          <span>
+            <i class="material-icons">warning</i> Your Webhook is not activated yet. Send Test JSON to enable the Webhook
+          </span>
+      </div>
+       <!--table mess outer end-->
+    </div>
+    <div *ngIf="webhookLogs?.length" class="dataTables_paginate paging_full_numbers" id="lead_Table_paginate">
+      <a class="paginate_button previous disabled" aria-controls="lead_Table" data-dt-idx="1" tabindex="0" id="lead_Table_previous" (click)="oldWLog()" *ngIf="webhookLogsOffset > 0">
+        <i class="material-icons">skip_previous</i>
+      </a>
+      <span>
+        <a class="paginate_button current" aria-controls="lead_Table" data-dt-idx="2" tabindex="0">
+          <i class="material-icons loader-plan" *ngIf="loadingLogs">autorenew</i>
+          {{!loadingLogs?pageNumber:''}}
+        </a>
+      </span>
+      <a class="paginate_button next disabled" aria-controls="lead_Table" data-dt-idx="3" tabindex="0" id="lead_Table_next" (click)="newWLog()" *ngIf="webhookLogsOffset < webhookLogsCount-5">
+        <i class="material-icons">skip_next</i>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+<!-- <div id="webhookLogModal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content modal-bg">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+        <h5 class="modal-title">Webhook detail</h5>
+      </div>
+      <div class="modal-body col-md-12 np og-message" *ngIf="webhooklogDetail">
+        <pre [innerHTML]="webhooklogDetail | prettyprintjson">
+        </pre>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div id="view-webhook-req" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content modal-bg">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+        <h5 class="modal-title">Request & Response JSON</h5>
+      </div>
+      <div class="modal-body col-md-12 np og-message">
+        <div class=" col-md-12 col-sm-12 col-xs-12 np">
+          <div class="content-area">
+            <div class="col-md-6 first-child">
+              <div class="header">Request JSON</div>
+              <div class="json-outer scrollbar">
+                <pre class="inner-section force-overflow slim-style">
+                  <span class="title">Body</span>
+                  <div [innerHTML]="webhooklogDetailRequest | prettyprintjson"></div>
+                </pre>
+              </div>
+            </div>
+            <div class="col-md-6 last-child">
+              <div class="header">Response JSON</div>
+              <div class="json-outer scrollbar">
+                <pre class="inner-section force-overflow slim-style">
+                  <span class="title">Body</span>
+                  <div [innerHTML]="webhooklogDetailResponseBody | prettyprintjson"></div>
+                </pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

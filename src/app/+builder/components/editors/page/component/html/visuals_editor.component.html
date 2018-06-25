@@ -1,0 +1,147 @@
+<div *ngIf="jsonBuilderHelper.getJSONBuilt().formula[controlIndex].visuals">
+  <div class="type-details no-content bottom-space0">
+    <span class="form-label"><i class="material-icons lock-icon bookmark-icon" *ngIf="isDualGraph && !_featureAuthService.features.charts.active">lock_outline</i>Add Media</span>
+    <div class="help-tip editor-helptip" *ngIf="getType()=='image'&& isEnabled">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Recommended Dimensions are 500px by 320px.</div><!-- 570px for t8 -->
+    </div>
+    <div class="switch" [class.alwaysOff]="isDualGraph && !_featureAuthService.features.charts.active" >
+      <label>
+            <input type="checkbox"
+                   [checked]="toggleOn"
+                   name="media-checkbox" class="show-check" (click)="mediaToggle()">
+            <span class="lever"></span>
+        </label>
+    </div>
+    <div class="addmedia-outer" *ngIf="toggleOn">
+      <!-- <div class="addmedia addmedia-container" [class.active]="getType()=='' && isEnabled">
+        <div class="add-outer" (click)="toggleType('')">
+          <i class="material-icons addmedia-icon">block</i>
+          <span class="media-name ellipsis">None</span>
+        </div>
+      </div> -->
+      <div class="addmedia addmedia-container" [class.hide]="jsonBuilderHelper.isTempName(['experian','template-seven'])" [class.active]="getType()=='image'&& isEnabled">
+        <div class="add-outer" (click)="toggleType('image')">
+          <i class="material-icons addmedia-icon">photo_camera</i>
+          <!--<i class="material-icons close-media">close</i>-->
+          <span class="media-name ellipsis">Image</span>
+          <!--<div class="locked-feature">
+            <i class="material-icons">lock_outline</i>
+        </div>-->
+        </div>
+      </div>
+      <!-- <div class="addmedia addmedia-container" [class.hide]="jsonBuilderHelper.isTempName(['experian','template-seven'])" [class.active]="getType()=='image' && imageExt=='gif' && isEnabled">
+          <div class="add-outer" (click)="toggleType('gif')">
+            <i class="material-icons addmedia-icon">GIF</i>
+            <span class="media-name ellipsis">GIF</span>
+          </div>
+        </div> -->
+      <div class="addmedia addmedia-container" [class.hide]="jsonBuilderHelper.isTempName(['experian','template-seven'])" [class.active]="getType()=='video' && isEnabled">
+        <div class="add-outer" (click)="toggleType('video')">
+          <i class="material-icons addmedia-icon">movie_creation</i>
+          <!--<i class="material-icons close-media">close</i>-->
+          <span class="media-name ellipsis">Video</span>
+          <!--<div class="locked-feature">
+            <i class="material-icons">lock_outline</i>
+        </div>-->
+        </div>
+      </div>
+      <div class="addmedia addmedia-container" [class.hide]="jsonBuilderHelper.isTempType(['Poll'])" *ngIf="!isConditional" [class.active]="(getType()=='graph'||isTypes('graph')) && isEnabled" [class.right-space]="jsonBuilderHelper.isTempName(['experian','template-seven'])">
+        <div class="add-outer" (click)="toggleType('graph')" data-toggle="modal" [attr.data-target]="(isEnabled && _featureAuthService.features.charts.active)?'#graph-modal-new':''">
+          <i class="material-icons addmedia-icon">equalizer</i>
+          <!--<i class="material-icons close-media">close</i>-->
+          <span class="media-name ellipsis">Chart</span>
+          <div class="locked-feature" *ngIf="!_featureAuthService.features.charts.active">
+            <i class="material-icons">lock_outline</i>
+          </div>
+        </div>
+      </div>
+      <div class="addmedia addmedia-container" [class.hide]="jsonBuilderHelper.isTempType(['Poll'])" *ngIf="!isConditional" [class.active]="(getType()=='table'||isTypes('table')) && isEnabled">
+        <div class="add-outer" (click)="toggleType('table')" data-toggle="modal" [attr.data-target]="isEnabled?'#table-modal':''">
+          <i class="material-icons addmedia-icon">grid_on</i>
+          <!--<i class="material-icons close-media">close</i>-->
+          <span class="media-name ellipsis">Table</span>
+          <div class="locked-feature" *ngIf="!_featureAuthService.features.charts.active">
+            <i class="material-icons">lock_outline</i>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+
+    <div *ngIf="getType()=='image' && isEnabled && toggleOn">
+      <div class="col-xs-12 no-padding" style="margin-top:10px;">
+        <div class="input-group">
+          <input type="text" class="file-input" value="{{isConditional?option.visuals.imageName:formulaNow.visuals.imageName}}" placeholder="No file"
+            readonly>
+          <!-- <div class="dropdown custom-select-temp top-space10">
+              <button class="btn dropdown-toggle btn-basic2" type="button" data-toggle="dropdown">
+                  UPLOAD
+                  <!-- <span style="margin-right:12px; float:left;">
+                      UPLOAD
+                  </span>
+                  <div class="help-tip editor-helptip pull-right upload-helptip">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">Recommended Dimensions are 640px by 290px.</div>
+                  </div> ->
+                  <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                  <li>
+                      <a href="javascript:void(0);" class="btn btn-default btn-flat btn-basic2" (click)="UploadImage('jpg');">
+                        Image
+                      </a>
+                  </li>
+                  <li>
+                      <a href="javascript:void(0);" class="btn btn-default btn-flat btn-basic2" (click)="UploadImage('gif');">
+                        GIF
+                      </a>
+                  </li>
+              </ul>
+          </div> -->
+          <label class="input-group-btn">
+              <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="UploadImage('jpg');">
+                  UPLOAD
+              </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="getType()=='video' && isEnabled && toggleOn">
+      <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-top:10px;">
+        <label class="check-value">Video Link </label>
+        <input type="text" class="form-text value-text" placeholder="https://youtu.be/CGrdWRQqN1I" (blur)="videoLinkUpdate()" [(ngModel)]="videoLink"
+        />
+      </div>
+    </div>
+    <div class="exp-media" *ngIf="!isConditional && (getType()=='graph'||(getType()!='' && isTypes('graph'))) && jsonBuilderHelper.getJSONBuilt().formula[0].visuals.visible && isEnabled && _featureAuthService.features.charts.active">
+      <div class="col-xs-12 no-padding" style="margin-top:10px;">
+        <div class="input-group">
+          <input type="text" class="file-input" [value]="formulaNow.visuals.graph.title" placeholder="Chart Title" readonly>
+          <label class="input-group-btn">
+            <span class="btn btn-basic2" (click)="graph();" data-toggle="modal" [attr.data-target]="isEnabled?'#graph-modal-new':''">
+                {{formulaNow.visuals.graph.rawJSON || jsonBuilderHelper.isTempType(['Graded'])?'EDIT':'INSERT'}} CHART
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="exp-media" *ngIf="!isConditional && (getType()=='table'||(getType()!='' && isTypes('table'))) && jsonBuilderHelper.getJSONBuilt().formula[0].visuals.visible && isEnabled && _featureAuthService.features.charts.active">
+      <div class="col-xs-12 no-padding" style="margin-top:10px;">
+        <div class="input-group">
+          <input type="text" class="file-input" [value]="jsonBuilderHelper.isTempType(['Graded'])?formulaNow.visuals.table.tableTitle:formulaNow.visuals.table.title"
+            placeholder="Table Title" readonly>
+          <label class="input-group-btn">
+            <span class="btn btn-basic2" (click)="table();" data-toggle="modal"
+                [attr.data-target]="isEnabled?'#table-modal':''">
+                {{formulaNow.visuals.table.rawJSON || jsonBuilderHelper.isTempType(['Graded'])?'EDIT':'INSERT'}} TABLE
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="panel-body">
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='overview')}" class="circle"></span>
+    <a (click)="onSelect('overview')" href="#overview" data-toggle="tab" class="section-head gen-setting">
+            <span class="analytics-icon">
+            <i class="material-icons">dialpad</i>
+        </span>
+      <div class="heading" [ngClass]="{active: (selected=='overview')}">
+        <span class="main">Overview</span>
+        <span class="sub">Get an overview of your visitors and conversions.</span>
+      </div>
+    </a>
+  </div>
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='user_detail')}" class="circle">&nbsp;</span>
+    <a (click)="onSelect('user_detail')" href="#person" data-toggle="tab" class="section-head gen-setting">
+            <span class="analytics-icon">
+            <i class="material-icons">person</i>
+        </span>
+      <div class="heading" [ngClass]="{active: (selected=='user_detail')}">
+        <span class="main">User Details</span>
+        <span class="sub">See detailed analytics and user responses.</span>
+      </div>
+    </a>
+  </div>
+  <!--<div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='traffic_detail')}" class="circle"></span>
+    <a (click)="onSelect('traffic_detail')" href="#traffic" data-toggle="tab" class="section-head gen-setting">
+            <span class="analytics-icon">
+            <i class="material-icons">traffic</i>
+        </span>
+      <div class="heading" [ngClass]="{active: (selected=='traffic_detail')}">
+        <span class="main">Traffic Details <i class="material-icons lock-icon" *ngIf="!isTrafficDetailAvailable">lock_outline</i></span>
+        <span class="sub">Get deeper insights about your calculator's traffic data.</span>
+      </div>
+    </a>
+  </div>-->
+   <div class="ed-sidebar editor-tab ">
+    <span [ngClass]="{active: (selected=='funnel')}" class="circle"></span>
+    <a (click)="onSelect('funnel')" href="#traffic" data-toggle="tab" class="section-head gen-setting">
+            <span class="analytics-icon">
+            <i class="material-icons">filter_list</i>
+        </span>
+      <div class="heading" [ngClass]="{active: (selected=='funnel')}">
+        <span class="main"><i class="material-icons lock-icon" *ngIf="!isFunnelAvailable">lock_outline</i>User Funnels </span>
+        <span class="sub">Get detailed metrics on user flows.</span>
+      </div>
+    </a>
+  </div>
+</div>

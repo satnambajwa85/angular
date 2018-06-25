@@ -1,0 +1,257 @@
+<div class="native-int-box links-outer" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')">
+	<div class="logo-sec ml10">
+		<img class="img-responsive" src="assets/images/cc-int.png" />
+	</div>
+	<div class="integration-name">
+		Constant Contact
+	</div>
+	<div class="links-inner">
+		<ul>
+			<li>
+				<div class="i-outer-red">
+					<a href="javascript:void(0)">
+						<i class="material-icons small-icon">lock_outline</i>
+					</a>
+				</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<div class="native-int-box" [class.links-outer]="isConfigured" *ngIf="returnFeatureAccess()">
+	<div *ngIf="isConfigured && !config.active" class="red-bar"></div>
+	<div *ngIf="isConfigured && config.active" class="green-bar"></div>
+	<div class="logo-sec">
+		<img class="img-responsive" src="assets/images/cc-int-small.png" />
+	</div>
+	<div class="integration-name">
+		Constant Contact
+	</div>
+	<button *ngIf="!isConfigured" (click)="openAuthModal()" class="btn configure-btn " type="submit">Configure</button>
+
+	<div class="links-inner">
+		<ul>
+			<li>
+				<div *ngIf="isConfigured && !config.active" class="i-outer-red">
+					<i class="material-icons">error</i>
+				</div>
+				<div *ngIf="isConfigured && config.active" class="i-outer-green">
+					<i class="material-icons">check_circle</i>
+				</div>
+			</li>
+
+			<li class="help-tip" *ngIf="isConfigured && config.active">
+				<a href="javascript:void(0)" (click)="activate(true)">
+					<img class="img-responsive" src="assets/images/config-icon-active.png" />
+				</a>
+				<div class="help-checktip config-tip">Test</div>
+			</li>
+			<li class="help-tip" *ngIf="isConfigured">
+				<a href="javascript:void(0)"  (click)="getAccounts()">
+					<img class="img-responsive" src="assets/images/config-icon.png" />
+				</a>
+				<div class="help-checktip config-tip">Reconfigure</div>
+			</li>
+			<li class="help-tip" *ngIf="isConfigured && config.active && isLeadsPending">
+				<a href="javascript:void(0)" (click)="sync()">
+					<i class="material-icons">autorenew</i>
+				</a>
+				<div class="help-checktip config-tip">Sync</div>
+			</li>
+			<li class="help-tip" (click)="syncTask()" *ngIf="config?.map_fields?.length > 0  && isConfigured && config.active">
+				<a href="javascript:void(0)">
+					<i class="material-icons">restore</i>
+				</a>
+				<div class="help-checktip config-tip">Task History</div>
+			</li>
+			<li class="help-tip" *ngIf="isConfigured && config.active">
+				<a href="javascript:void(0)" (click)="updateIntegrationStatus(false)">
+					<i class="material-icons ">do_not_disturb_alt</i>
+				</a>
+				<div class="help-checktip config-tip">Deactivate</div>
+			</li>
+			<li class="help-tip" *ngIf="isConfigured && !config.active">
+				<a href="javascript:void(0)" (click)="activate(true)">
+					<i class="material-icons">playlist_add_check</i>
+				</a>
+				<div class="help-checktip config-tip">Activate</div>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="constantcontact-new" class="modal fade integration-modal" role="dialog">
+	<div class="modal-dialog ">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+					<i class="material-icons modal-close">close</i>
+				</button>
+				<img src="assets/images/cc-int.png">
+				<h4>Send Outgrow lead data to Constant Contact</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+          <ul class="progressbar">
+            <li class="active fourOption" [class.icon]="isConnected">Configure
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isConnected" [class.icon]="isListSelected">Select List
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isListSelected " [class.icon]="isMapped">Map Fields
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isMapped" [class.icon]="isMapped">Test Connection
+              <i class="material-icons">check_circle</i>
+            </li>
+            <!-- <li class="fiveOption" [class.active]="isDoubleOptin">Double Optin<i class="material-icons">check_circle</i></li> -->
+          </ul>
+          <fieldset *ngIf="!isAccountSelected && !isConnected && !isListSelected && !isMapped">
+            <div class="error-main" *ngIf="isError">
+              <i class="material-icons">check_circle</i> {{errorMsg}}
+            </div>
+						<h5 class="align-left">Choose Constant Contact account you want to use for this integration</h5>
+						<h6>Select a Constant Contact Connection</h6>
+						<div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+							<i class="material-icons loader-plan">autorenew</i>
+						</div>
+						<div class="radio-o" [class.active]="account.key==activeAccount" *ngFor="let account of accounts; let i = index">
+							<input type="radio" [id]="account.name" (click)="setAccount(account.access_token,'edit')" name="radio-group" [checked]="account.status">
+							<label [for]="account.name">{{account.name}}</label>
+							<a *ngIf="accounts.length!=1 && account.key!==activeAccount" href="javascript:void(0);" class="after-test-link" (click)="setAccount(account.access_token,'delete')">Delete</a>
+							<!-- <a href="javascript:void(0);" class="after-test-link" (click)="editAccount(account.access_token)">Edit</a> -->
+							<a href="javascript:void(0);" *ngIf="account.key!==activeAccount" class="after-test-link" (click)="testAccount('account'+i,account.access_token)">Test</a>
+							<div [id]="'account'+i" class="after-test hide"><i class="material-icons">check</i> Success</div>
+						</div>
+						<a href="javascript:void(0);" (click)="connect()" class="single-link align-left mt5">Add another Constant Contact connection</a>
+						<input type="button" name="submit" class="submit action-button button btn" (click)="showList()" value="Proceed" />
+          </fieldset>
+
+          <fieldset *ngIf="isAccountSelected && !isConnected && !isListSelected && !isMapped">
+						<h5>Allow Outgrow to access Constant Contact</h5>
+						<div class="circle-outer">
+							<div class="circle">
+								<img class="outgrow-logo" src="assets/images/og-symbol.png">
+							</div>
+							<div class="divider">
+								<img src="assets/images/inv-arrow.png">
+							</div>
+							<div class="circle">
+								<img src="assets/images/cc-int-small.png">
+							</div>
+						</div>
+						<input type="button" name="submit" class="submit action-button button btn right20" value="Authenticate with Constant Contact" (click)="connect()"
+						/>
+					</fieldset>
+          <fieldset *ngIf="isConnected && !isListSelected && !isMapped">
+            <div class="error-main" *ngIf="isError">
+              <i class="material-icons">check_circle</i> {{errorMsg}}
+            </div>
+            <h5 class="align-left">Choose Constant Contact list where you want to add subscribers from this {{calcType}}</h5>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+              <i class="material-icons loader-plan">autorenew</i>
+            </div>
+            <div class="dropdown-outer">
+              <div class="heading">Select a Constant Contact List</div>
+              <select class="listName" id="mlt" (change)="selectedList($event.target.value)">
+                <option value="0"> Select </option>
+                <option *ngFor="let lists of crmList" [selected]="lists.id == selectedListId" [value]="lists.id">{{lists.name}}</option>
+              </select>
+            </div>
+            <button (click)="saveList()" name="submit" class="submit action-button button btn" id="btnConstantContactList">Proceed</button>
+          </fieldset>
+
+					<fieldset *ngIf="isConfigured && isListSelected && !isMapped">
+						<div class="error-main" *ngIf="isMapError">
+							<i class="material-icons">check_circle</i> {{mapError}}
+						</div>
+						<div class="error-main" *ngIf="isLeadGenError">
+							<i class="material-icons">check_circle</i> {{mapError}}
+						</div>
+
+						<h5 class="align-left">To send data from Outgrow to Constant Contact, map the fields from your Outgrow {{calcType}} to Constant Contact  fields</h5>
+						<div class="table-outer constantcontact">
+							<div class="row-outer header align-left" *ngIf="!isLoading && selectedlistId!='' && !isMapError">
+								<div class="col-outer-half">Outgrow Field</div>
+								<div class="col-outer-half">Constant Contact Field</div>
+							</div>
+							<div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+								<i class="material-icons loader-plan">autorenew</i>
+							</div>
+							<div class="table-outer-in scrollbar">
+								<div class="row-outer align-left" *ngFor="let calcfields of calcAllFileds">
+									<div class="col-outer-half">{{calcfields.calc_name}}</div>
+									<div class="col-outer-half">
+										<select (change)="selectedMapFields(calcfields.calc_key,$event)" [disabled]="isLeadGenError">
+											<option value="0">Not mapped</option>
+											<option *ngFor="let crmfields of crmAllFileds" [selected]="crmfields.calc_key == calcfields.calc_key" [value]="crmfields.crm_key">{{crmfields.crm_name}}</option>
+										</select>
+									</div>
+								</div>
+							</div>
+						</div>
+						<button (click)="test()" class="action-button button btn btn-test">TEST CONNECTION</button>
+					</fieldset>
+					<fieldset *ngIf="isMapped">
+						<div class="success">
+							<i class="material-icons">check_circle</i> MAPPING SUCCESSFUL.
+						</div>
+						<h6>A test record will be pushed to Constant Contact to test connection with these mapping.</h6>
+						<div class="table-outer">
+
+							<div class="row-outer header align-left">
+								<div class="col-outer-half">Constant Contact Field</div>
+								<div class="col-outer-half">Constant Contact Field value</div>
+							</div>
+							<div class="table-outer-in scrollbar">
+								<div class="row-outer align-left" *ngFor="let calc of viewMappedData">
+									<div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.key}}</div>
+									<div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.value}}</div>
+								</div>
+							</div>
+						</div>
+						<input type="button" class="action-button-previous btn button-light-back" (click)="back()" value="Back" />
+						<input type="button" name="submit" class="submit action-button button btn" (click)="close()" value="Finish" />
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="constantcontact-auth" class="configure-modal modal fade modIntegration mapping-int-toAccess" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content modal-custom">
+			<div class="col-md-12 col-xs-12 col-sm-12 np">
+				<div class="col-md-5 np img-style hide">
+					<img class="int-bg" src="assets/images/cc-int.png">
+					<!--<img class="int-img" src="assets/images/int-marketo.png">-->
+					<img class="int-img" src="assets/images/cc-int.png">
+				</div>
+				<div class="col-md-12 np modal-background access-popup text-center">
+					<div id="connect-constantcontact">
+						<div class="modal-header">
+							<button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+								<i class="material-icons modal-close">close</i>
+							</button>
+							<h5 class="modal-title">AUTHORIZE ACCESS to YOUR CONSTANT CONTACT ACCOUNT</h5>
+						</div>
+						<div class="modal-body">
+							<!--<a href="javascript:void(0);" class="text-red"> View Marketo entry</a>-->
+							<img class="" src="assets/images/access-pop-1.png">
+						</div>
+						<div class="modal-footer">
+							<a (click)="connect()" class="btn btn-basic configure-btn btn-red btn-hover" href="javascript:void(0);" type="button">
+								Yes, Continue
+							</a>
+							<a id="btn-marketo-test" (click)="close()" class="btn btn-basic configure-btn btn-grey" href="javascript:void(0);" type="button">
+								NO
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+

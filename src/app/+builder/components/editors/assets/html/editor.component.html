@@ -1,0 +1,222 @@
+<div class="sidebar-layout scrollbar" [class.side-scroll]="jsonBuilderHelper.getSelectedPage().type != 'Result'" [class.no-scroll]="jsonBuilderHelper.getSelectedPage().type == 'Result'">
+  <div class="main-side">
+    <div class="sidebar-topselector" [class.top-space1]="jsonBuilderHelper.getSelectedModel() && jsonBuilderHelper.getSelectedModel() === 'Global_Settings'">
+      <div class="card-layout" *ngIf="jsonBuilderHelper.getSelectedModel() !== 'Global_Settings' && jsonBuilderHelper.getSelectedModel() !== 'Section' && jsonBuilderHelper.getSelectedPage()">
+        <!-- <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Landing'"> WELCOME SCREEN </span> -->
+        <span class="border-white"></span>
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Questionnaire' && jsonBuilderHelper.getSelectedModel() !== 'Control'">QUESTION PROPERTIES </span>
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Questionnaire' && jsonBuilderHelper.getSelectedModel() == 'Control' && jsonBuilderHelper.getSelectedControl().type!=='leadform_question'  && jsonBuilderHelper.getSelectedControl().type!=='custom_html'">
+          QUESTION {{jsonBuilderHelper.getQuestionNo()}}
+        </span>
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Questionnaire' && jsonBuilderHelper.getSelectedModel() == 'Control' && jsonBuilderHelper.getSelectedControl().type==='custom_html'">
+          Custom Html
+        </span>
+        <!-- <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Result' && jsonBuilderHelper.getSelectedModel()=='Control'"> Lead Generation Properties </span> -->
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Result' && jsonBuilderHelper.getSelectedModel()=='Page' && jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll'])">
+          RESULT PAGE PROPERTIES </span>
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Result' 
+            && jsonBuilderHelper.getSelectedModel()=='Page' 
+            && jsonBuilderHelper.getJSONBuilt().templateType == 'Recommendation' && _outcomeService.getSelectedFormula()">
+          OUTCOME PROPERTIES
+        </span>
+        <span *ngIf="jsonBuilderHelper.getSelectedPage().type == 'Result' 
+        && jsonBuilderHelper.getSelectedModel()=='Page' 
+        && jsonBuilderHelper.getJSONBuilt().templateType == 'Ecom' && _outcomeService.getSelectedFormula()">
+          ECOM PROPERTIES
+        </span>
+        <span *ngIf="jsonBuilderHelper.getSelectedModel()=='Outcome_Settings' &&  jsonBuilderHelper.getSelectedPage().type == 'Result' && jsonBuilderHelper.getJSONBuilt().templateType == 'Recommendation'">OUTCOME {{(_outcomeService.getSelectedFormula())?'SETTINGS':''}}</span>
+
+      </div>
+      <div class="card-layout" *ngIf="jsonBuilderHelper.getSelectedModel() === 'Section' && jsonBuilderHelper.getSelectedPage()">
+        <span *ngIf="jsonBuilderHelper.getSelectedSection().type !=='LeadFormQ' && jsonBuilderHelper.getSelectedSection().type !=='LeadForm' && jsonBuilderHelper.getSelectedSection().type !=='Content Area'">
+          SECTION </span>
+        <!-- <span *ngIf="jsonBuilderHelper.getSelectedSection().type ==='LeadFormQ' || jsonBuilderHelper.getSelectedSection().type ==='LeadForm' || jsonBuilderHelper.getSelectedSection().type ==='Content Area' ">
+        Lead Generation Properties </span> -->
+      </div>
+      <div class="card-layout" *ngIf="jsonBuilderHelper.getSelectedModel() && jsonBuilderHelper.getSelectedModel() === 'Global_Settings'">
+        <span>Display Settings</span>
+      </div>
+    </div>
+    <div class="sidebar-bottomselector editor">
+      <!-- For Control sected in Editor -->
+      <div class="type-details no-line" style="padding-bottom:0" *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedSection()?.type !=='LeadFormQ' &&
+                    jsonBuilderHelper.getSelectedControl().type !=='custom_html' &&
+                    jsonBuilderHelper.getSelectedPage().type == 'Questionnaire'">
+        <div class="col-md-12 no-padding horz-group">
+          <span class="form-label" style="margin-bottom:5px;">
+            Type
+            <div class="help-tip editor-helptip poll-tip" *ngIf="jsonBuilderHelper.getJSONBuilt().templateType == 'Poll'">
+              <i class="material-icons">warning</i>
+              <div class="help-checktip">Only a single select will act as a poll question</div>
+            </div>
+          </span>
+          <div class="col-md-12 horz-control no-padding">
+            <switch *ngIf="jsonBuilderHelper.getSelectedControl()">
+            </switch>
+          </div>
+          <!--<div class="col-md-12 no-padding top-space10 leadform-bulbtooltip" *ngIf="jsonBuilderHelper.getJSONBuilt().templateType == 'Poll'">
+            <i class="material-icons">lightbulb_outline</i>
+            <p>Only a single select will act as a poll question</p>
+          </div>-->
+        </div>
+      </div>
+      <!-- For Langding page editor -->
+      <editor-page *ngIf="jsonBuilderHelper.getSelectedModel()=='Page' &&
+                jsonBuilderHelper.getSelectedPage().type == 'Landing'">
+      </editor-page>
+      <!-- For Langding page editor end  -->
+      <!-- For Result page editor -->
+      <editor_result_page *ngIf="jsonBuilderHelper.getSelectedModel()=='Page' &&
+                jsonBuilderHelper.getSelectedPage().type == 'Result'">
+      </editor_result_page>
+      <!-- For Result page editor end -->
+      <editor_RT_result_page *ngIf="jsonBuilderHelper.getSelectedModel()=='Page' &&
+                jsonBuilderHelper.getSelectedPage().type == 'Questionnaire'" [page]="jsonBuilderHelper.getSelectedPage()">
+      </editor_RT_result_page>
+      <!-- For section editor -->
+      <editor-section *ngIf="jsonBuilderHelper.getSelectedModel() == 'Section' &&
+                 (jsonBuilderHelper.getSelectedSection().type !=='LeadFormQ' &&
+                 jsonBuilderHelper.getSelectedSection().type !=='Content Area' &&
+                 jsonBuilderHelper.getSelectedSection().type !=='CustomHtml' && 
+                  jsonBuilderHelper.getSelectedSection().type !=='LeadForm')" [section]="jsonBuilderHelper.getSelectedSection()">
+      </editor-section>
+      <editor-section-leadform *ngIf="jsonBuilderHelper.getSelectedModel() == 'Section' &&
+                    jsonBuilderHelper.getSelectedSection().type =='LeadFormQ'">
+      </editor-section-leadform>
+
+      <editor-section-leadform-page *ngIf="jsonBuilderHelper.getSelectedModel() == 'Section' &&
+                     (jsonBuilderHelper.getSelectedSection().type =='Content Area' ||
+                      jsonBuilderHelper.getSelectedSection().type =='LeadForm')" [page]="jsonBuilderHelper.getSelectedPage()">
+      </editor-section-leadform-page>
+      <editor-section-leadform-page *ngIf="jsonBuilderHelper.getSelectedModel() == 'Control' &&
+                            jsonBuilderHelper.getSelectedControl() &&
+                            jsonBuilderHelper.getSelectedControl().type == 'leadform'" [page]="jsonBuilderHelper.getSelectedPage()">
+      </editor-section-leadform-page>
+      <!-- For section editor end -->
+      <!-- recommendation calc common  editor-->
+      <editor-recommendation *ngIf="jsonBuilderHelper.getSelectedModel()=='Control'
+                    && jsonBuilderHelper.getJSONBuilt().templateType == 'Recommendation'
+                    && jsonBuilderHelper.getSelectedControl() &&
+                    (jsonBuilderHelper.getSelectedControl().type=='selectbox'
+                    || jsonBuilderHelper.getSelectedControl().type=='radio_button'
+                     || jsonBuilderHelper.getSelectedControl().type=='checkbox'
+                     || jsonBuilderHelper.getSelectedControl().type=='checkbox_new'
+                     || jsonBuilderHelper.getSelectedControl().type=='radio_button_new'
+                    )
+                    " [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-recommendation>
+
+      <!-- recommendation calc common  editor-->
+      <editor-graded-control *ngIf="jsonBuilderHelper.getSelectedModel()=='Control'
+                    && (jsonBuilderHelper.isTempType(['Graded','Ecom'])) 
+                    && jsonBuilderHelper.getSelectedControl() &&
+                    (jsonBuilderHelper.getSelectedControl().type=='selectbox'
+                    || jsonBuilderHelper.getSelectedControl().type=='radio_button'
+                     || jsonBuilderHelper.getSelectedControl().type=='checkbox'
+                     || jsonBuilderHelper.getSelectedControl().type=='checkbox_new'
+                     || jsonBuilderHelper.getSelectedControl().type=='radio_button_new'
+                    )
+                    " [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-graded-control>
+      <!-- poll editor -->
+      <editor-poll *ngIf="jsonBuilderHelper.getSelectedModel()=='Control'
+        && jsonBuilderHelper.isTempType(['Poll'])
+        && jsonBuilderHelper.getSelectedControl() &&
+        (jsonBuilderHelper.getSelectedControl().type=='selectbox'
+        || jsonBuilderHelper.getSelectedControl().type=='radio_button'
+         || jsonBuilderHelper.getSelectedControl().type=='checkbox'
+         || jsonBuilderHelper.getSelectedControl().type=='checkbox_new'
+         || jsonBuilderHelper.getSelectedControl().type=='radio_button_new'
+        )
+        " [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-poll>
+      <!-- poll editor End-->
+
+      <editor-outcome-settings *ngIf="jsonBuilderHelper.getSelectedModel()=='Outcome_Settings'
+                 &&  jsonBuilderHelper.getSelectedPage().type == 'Result'
+                 && jsonBuilderHelper.getJSONBuilt().templateType == 'Recommendation'
+                ">
+      </editor-outcome-settings>
+      <global_settings *ngIf="jsonBuilderHelper.getSelectedModel() && jsonBuilderHelper.getSelectedModel()=='Global_Settings'">
+      </global_settings>
+      <editor-textfield *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedControl() &&
+                    jsonBuilderHelper.getSelectedControl().type=='textfield'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-textfield>
+      <editor-textarea *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='text-area'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-textarea>
+      <editor-textfield *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='file'">
+      </editor-textfield>
+      <editor_custom_html *ngIf="(jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='custom_html') ||
+                 (jsonBuilderHelper.getSelectedModel() == 'Section' &&
+                jsonBuilderHelper.getSelectedSection().type =='CustomHtml')" [control]="jsonBuilderHelper.getSelectedControl()"
+        [section]="jsonBuilderHelper.getSelectedSection()">
+      </editor_custom_html>
+      <editor-textfield *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='emailfield'" [control]="jsonBuilderHelper.getSelectedControl()"></editor-textfield>
+      <editor-numerictextfield *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='numerictextfield'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-numerictextfield>
+      <editor-date *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='date_picker'">
+      </editor-date>
+      <editor-selectbox *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedControl()
+                    && jsonBuilderHelper.getJSONBuilt().templateType == 'Numerical'
+                    && jsonBuilderHelper.getSelectedControl().type=='selectbox'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-selectbox>
+      <editor-selectbox *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedControl() &&
+                    jsonBuilderHelper.getSelectedControl().type=='dropdown'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-selectbox>
+      <editor-selectbox *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='switchbox'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-selectbox>
+      <editor-checkbox *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl()
+                && jsonBuilderHelper.getJSONBuilt().templateType == 'Numerical' &&
+                jsonBuilderHelper.getSelectedControl().type=='checkbox'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-checkbox>
+      <editor-checkbox *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl()
+                && jsonBuilderHelper.getJSONBuilt().templateType == 'Numerical'
+                && jsonBuilderHelper.getSelectedControl().type=='radio_button'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-checkbox>
+      <editor-header *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='header'">
+      </editor-header>
+      <editor-logo *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                jsonBuilderHelper.getSelectedControl() &&
+                jsonBuilderHelper.getSelectedControl().type=='logo'"></editor-logo>
+      <editor-slider *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedControl() &&
+                    jsonBuilderHelper.getSelectedControl().type=='slider'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-slider>
+      <editor-counter *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                    jsonBuilderHelper.getSelectedControl() &&
+                    jsonBuilderHelper.getSelectedControl().type=='counter'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-counter>
+      <editor-rating *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                  jsonBuilderHelper.getSelectedControl() &&
+                  jsonBuilderHelper.getSelectedControl().type=='rating'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-rating>
+      <editor-calendar *ngIf="jsonBuilderHelper.getSelectedModel()=='Control' &&
+                  jsonBuilderHelper.getSelectedControl() &&
+                  jsonBuilderHelper.getSelectedControl().type=='calendar'" [control]="jsonBuilderHelper.getSelectedControl()">
+      </editor-calendar>
+      <!-- setting   -->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,249 @@
+<div id="logic-jump" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content modal-bg">
+            <div class="modal-header" *ngIf="!loading">
+                <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons">close</i>
+                </button>
+                <h5 class="modal-title">
+                    <i _ngcontent-xmq-116="" class="material-icons">redo</i> {{(buttonText=='Update')?buttonText:'Add'}} Logic Jump
+                    <a href="https://support.outgrow.co/docs/logic-jump" target="_blank">
+                        <i class="material-icons icon-help">help_outline</i>
+                    </a>
+                </h5>
+            </div>
+            <div class="modal-body logic-jump-editor-new scrollbar">
+                <div class="preloader" *ngIf="loading">
+                    <div class="status">&nbsp;</div>
+                </div>
+                <span class="alert alert-danger" *ngIf="appCondition && !loading && (!appCondition.available || appCondition.status=='INVALID')">
+                    <p>
+                        <i class="material-icons">report_problem</i> &nbsp;Logic Jump conditions defined might lead to an infinite loop, please make
+                        required changes in the conditions.</p>
+                </span>
+                <div class="addCondition-body" *ngIf="!appCondition && !loading">
+                    <div class="addCondition-table">
+                        <!--<button class="btn btn-red-outline btn-hover" type="submit" (click)="addNewAppCondition();">Add Condition</button>-->
+                        <div class="addCondition-table-inner">
+                            <a class="addCondition-circle" href="javascript:void(0);" (click)="addNewAppCondition()">
+                                <i class="material-icons">add_circle_outline</i>
+                                Add
+                                <br/>Condition
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="appCondition && !loading">
+                    <div *ngFor="let questionCondition of  appCondition.questionConditions; let i = index" class="col-md-12 np posr">
+                        <div class="white-block" (mousedown)="newQuestionCondition = questionCondition" [class.active]="newQuestionCondition == questionCondition">
+                            <div class="col-md-12 np" *ngFor="let condition of  questionCondition.conditions; let j = index">
+                                <div class="col-md-11 np">
+                                    <!-- dropdown for any and or  -->
+                                    <select class="col-md-1 np form-select fsddrrow-twoOption" *ngIf="j!=0" [(ngModel)]="condition.operator">
+                                        <option value="&">And</option>
+                                        <option value="|">Or</option>
+                                    </select>
+                                    <span class="col-md-1 np label-head" *ngIf="j==0"> If response to</span>
+                                    <select class="col-md-5 np form-select form-select-ddarrow form-ques-title" [(ngModel)]="condition.question" (change)="checkstatus()">
+                                        <option [value]="question._id" *ngFor="let question of questionInCondition; let i=index" [innerHtml]="(question.type!='custom_html' ? ('Q'+( jsonBuilderHelper.getTemplateQuestionareWithEmittedLeadFormQuestion().indexOf(question) +1)+'. '+ question.props.title): + question.props.title +' ' + (customHtmls.indexOf(question) + 1)  | uppercase)  | removeTags">
+                                        </option>
+                                        <option value="device">User's device type</option>
+                                        <option value="browser">User's web browser</option>
+                                    </select>
+
+                                    <select class="col-md-2 np form-select" *ngIf="(['custom_html'].indexOf(filterItem(condition.question).type) == -1)" [(ngModel)]="condition.operation"
+                                        (change)="($event.target.value=='e' || $event.target.value=='ne' )?(condition.options=condition.value=''):'';checkstatus() ">
+                                        <option value="==">is equal to</option>
+                                        <option value="!=">is not equal to</option>
+                                        <option value="<" *ngIf="operatorsFilter(condition.question)">is less than</option>
+                                        <option value=">" *ngIf="operatorsFilter(condition.question)">is greater than</option>
+                                        <option value="ne" *ngIf="analyticalLogicType.indexOf(condition.question) == -1">is filled</option>
+                                        <option value="e" *ngIf="analyticalLogicType.indexOf(condition.question) == -1">is empty</option>
+                                    </select>
+
+                                    <!-- when Not analytical type -->
+                                    <div *ngIf="(condition.operation!='e' && condition.operation!='ne' && analyticalLogicType.indexOf(condition.question) == -1)">
+                                        <!-- editor  selectize textbox -->
+                                        <select (change)="condition.options = util.unEscapeDOM($event.target.selectedOptions[0].innerHTML); checkstatus()" class="col-md-3 np form-select form-select-last-field"
+                                            [(ngModel)]="condition.options" *ngIf="(['selectbox','radio_button','checkbox'].indexOf(filterItem(condition.question).type)!= -1)">
+                                            <option value="" selected="selected">Select</option>
+                                            <option [value]="option.label" *ngFor="let option of filterItem(condition.question).options;let optionIndex = index">{{option.label}}</option>
+                                        </select>
+                                        <!-- editor  selectize textbox -->
+                                        <input type="text" [(ngModel)]="condition.value" placeholder="Answer or Other Value" class="col-md-3 np form-select" *ngIf="(['textfield','slider','rating'].indexOf(filterItem(condition.question).type)!= -1)"
+                                        />
+                                    </div>
+                                    <!-- when analytical type -->
+                                    <div *ngIf="analyticalLogicType.indexOf(condition.question) !== -1">
+                                        <select [(ngModel)]="condition.value" class="col-md-3 np form-select form-select-last-field" [(ngModel)]="condition.options">
+                                            <!-- Device Type -->
+                                            <option value="" selected="selected">Select</option>
+                                            <option value="tablet" *ngIf="condition.question=='device'">Tablet</option>
+                                            <option value="mobile" *ngIf="condition.question=='device'">Mobile</option>
+                                            <option value="desktop" *ngIf="condition.question=='device'">Desktop</option>
+
+                                            <!-- Browser Type -->
+                                            <option *ngIf="condition.question=='browser'" value="Opera">Opera</option>
+                                            <option *ngIf="condition.question=='browser'" value="Chrome">Chrome</option>
+                                            <option *ngIf="condition.question=='browser'" value="Firefox">Firefox</option>
+                                            <option *ngIf="condition.question=='browser'" value="Safari">Safari</option>
+                                            <option *ngIf="condition.question=='browser'" value="UC Browser">UC Browser</option>
+                                            <option *ngIf="condition.question=='browser'" value="IE">IE</option>
+                                            <option *ngIf="condition.question=='browser'" value="Others">Others</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 np icons-list">
+                                    <span class="" (click)="addCondition(questionCondition)">
+                                        <div class="help-tip">
+                                            <span class="icon-add">
+                                                <i class="material-icons">add</i>
+                                            </span>
+                                            <div class="help-checktip">Add</div>
+                                        </div>
+                                    </span>
+                                    <span class="icon-dlt" (click)="removeCondition(questionCondition,j)" *ngIf="j!=0">
+                                        <div class="help-tip">
+                                            <span class="icon-remove">
+                                                <i class="material-icons">remove</i>
+                                            </span>
+                                            <div class="help-checktip">Remove </div>
+                                        </div>
+                                    </span>
+                                    <span class="" *ngIf="j!==0">
+                                        <div class="help-tip">
+                                            <!--<span class="up-arrow" (click)="conditionSwap(questionCondition,j,j-1)"></span>-->
+                                            <span class="icon-up-arrow" (click)="conditionSwap(questionCondition,j,j-1)">
+                                                <i class="material-icons">expand_less</i>
+                                            </span>
+                                            <div class="help-checktip">Move up</div>
+                                        </div>
+                                    </span>
+                                    <span class="" *ngIf="j!==questionCondition.conditions.length-1" (click)="conditionSwap(questionCondition,j,j+1)">
+                                        <div class="help-tip">
+                                            <!--<span class="down-arrow"></span>-->
+                                            <span class="icon-down-arrow">
+                                                <i class="material-icons">expand_more</i>
+                                            </span>
+                                            <div class="help-checktip">Move down</div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-md-11 np">
+                                <span class="col-md-1 np label-head">Jumps to</span>
+                                <select class="col-md-7 np form-select form-select-ddarrow form-jump" (change)="changeCondition(questionCondition, $event);checkstatus()">
+                                    <option value="" selected="selected">Select</option>
+                                    <!-- QUESTIONS logic jump -->
+                                    <optgroup label="Questions" *ngIf="questionLogicJump">
+                                        <option [value]="question._id" *ngFor="let question of questions; let optionInx =index" [class.hide]="optionInx==questionIndex && question.type!='custom_html'"
+                                            [innerHtml]="(question.type!='custom_html' ? ('Q'+( jsonBuilderHelper.getTemplateQuestionareWithEmittedLeadFormQuestion().indexOf(question) +1)+'. '+ question.props.title): + question.props.title +' ' + (customHtmls.indexOf(question) + 1)  | uppercase)  | removeTags"
+                                            [selected]="questionCondition.outcome == question._id">
+                                        </option>
+                                    </optgroup>
+                                    <!-- QUESTIONS logic jump End -->
+
+                                    <!-- SECTIONS logic jump -->
+                                    <optgroup label="Sections" *ngIf="!questionLogicJump">
+                                        <option [value]="section._id" *ngFor="let section of sections; let optionInx = index" [class.hide]="optionInx==sectionIndex"
+                                            [innerHtml]="(section.type!='CustomHtml' ? ('Sec'+ (templateSectionsWithEmittedLeadFormQuestion.indexOf(section) + 1) +'. ' +(section.title | uppercase)): (section.title +' '+(customHtmls.indexOf(section) + 1)  | uppercase)| removeTags)"
+                                            [selected]="questionCondition.outcome == section._id">
+                                        </option>
+                                    </optgroup>
+                                    <!-- SECTIONS logic jump End-->
+                                <ng-container *ngIf="template!=='experian'">
+                                    <optgroup *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Recommendation'" label="Outcome">
+                                        <option *ngIf="jsonBuilderHelper.getJSONBuilt().formula.length>1" value="r" [selected]="questionCondition.outcome == 'r' && questionCondition.result == ''">
+                                            Default Outcome
+                                        </option>
+                                        <option *ngFor="let formulaResult of jsonBuilderHelper.getJSONBuilt().formula; let indexopt=index;" [value]="formulaResult.value"
+                                            [innerHtml]="'Outcome '+ (indexopt+1) +': '+ formulaResult.name |removeTags" [selected]="questionCondition.result == formulaResult.value">
+                                        </option>
+                                        <option *ngIf="leadBeforeResult" value="beforeResult" [selected]="questionCondition.outcome == 'r' && questionCondition.result == 'leadformBeforeResult'">
+                                            Lead Generation
+                                        </option>
+                                    </optgroup>
+                                    <optgroup *ngIf="jsonBuilderHelper.getJSONBuilt().templateType!='Recommendation'" label="Result">
+                                        <option value="r" [selected]="questionCondition.outcome == 'r' && questionCondition.result != 'leadformBeforeResult'">
+                                            Default Result Page
+                                        </option>
+                                        <option *ngIf="leadBeforeResult" value="beforeResult" [selected]="questionCondition.outcome == 'r' && questionCondition.result == 'leadformBeforeResult'">
+                                            Lead Generation
+                                        </option>
+                                    </optgroup>
+                                </ng-container>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="float-icons">
+                            <span class="" (click)="addQuestionaCondition()">
+                                <i class="material-icons">add_circle_outline</i>
+                            </span>
+                            <span class="" (click)="removeQuestionaCondition(i)" *ngIf="i!=0">
+                                <i class="material-icons">remove_circle_outline</i>
+                            </span>
+                            <span class="" *ngIf="i!==0" (click)="questionSwap(i,i-1)">
+                                <img src="assets/images/fIcon-up-arrow.png" class="">
+                            </span>
+                            <span class="" *ngIf="i!==appCondition.questionConditions.length-1" (click)="questionSwap(i,i+1)">
+                                <img src="assets/images/fIcon-down-arrow.png" class="">
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col-md-12 np posr" (mousedown)="newQuestionCondition = undefined">
+                        <div class="white-block" style="width:100%;">
+                            <span class="col-md-2 np">In all other cases jump to</span>
+                            <select class="col-md-10 np form-select form-select-ddarrow form-jump" (change)="changeAppCondition($event);checkstatus();">
+                                <option value="" selected="selected">Select</option>
+                                <optgroup label="Questions" *ngIf="questionLogicJump">
+                                    <option [value]="question._id" *ngFor="let question of questions; let i=index" [class.hide]="i==questionIndex" [innerHtml]="(question.type!='custom_html' ? ('Q'+( jsonBuilderHelper.getTemplateQuestionareWithEmittedLeadFormQuestion().indexOf(question) +1)+'. '+ question.props.title): + question.props.title +' ' + (customHtmls.indexOf(question) + 1)  | uppercase)  | removeTags"
+                                        [selected]="appCondition.else == question._id">
+                                    </option>
+                                </optgroup>
+
+                                <!-- SECTIONS logic jump -->
+                                <optgroup label="Sections" *ngIf="!questionLogicJump">
+                                    <option [value]="section._id" *ngFor="let section of sections; let optionInx = index" [class.hide]="optionInx==sectionIndex"
+                                        [innerHtml]="(section.type!='CustomHtml' ? ('Sec'+ (templateSectionsWithEmittedLeadFormQuestion.indexOf(section) + 1) +'. ' +(section.title | uppercase)): (section.title +' '+(customHtmls.indexOf(section) + 1)  | uppercase)| removeTags)"
+                                        [selected]="appCondition.else == section._id">
+                                    </option>
+                                </optgroup>
+                                <!-- SECTIONS logic jump End-->
+                             <ng-container *ngIf="template!=='experian'">
+                                <optgroup *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Recommendation'" label="Outcome">
+                                    <option *ngIf="jsonBuilderHelper.getJSONBuilt().formula.length>1" value="r" [selected]="appCondition.else == 'r' && appCondition.result == ''">
+                                        Default Outcome
+                                    </option>
+                                    <option *ngFor="let formulaResult of jsonBuilderHelper.getJSONBuilt().formula; let indexopt=index;" [value]="formulaResult.value"
+                                        [innerHtml]="'Outcome '+ (indexopt+1) +': '+ formulaResult.name |removeTags" [selected]="appCondition.result == formulaResult.value">
+                                    </option>
+                                    <option *ngIf="leadBeforeResult" value="beforeResult" [selected]="appCondition.else == 'r' && appCondition.result == 'leadformBeforeResult'">
+                                        Lead Generation
+                                    </option>
+                                </optgroup>
+                                <optgroup *ngIf="jsonBuilderHelper.getJSONBuilt().templateType!='Recommendation'" label="Result">
+                                    <option value="r" [selected]="appCondition.else == 'r' && appCondition.result != 'leadformBeforeResult'">
+                                        Default Result Page
+                                    </option>
+                                    <option *ngIf="leadBeforeResult" value="beforeResult" [selected]="appCondition.else == 'r' && appCondition.result == 'leadformBeforeResult'">
+                                        Lead Generation
+                                    </option>
+                                </optgroup>
+                            </ng-container>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-red-outline btn-reset" id="" *ngIf="appCondition" type="submit" (click)="deleteAllCondition();">
+                    <i class="material-icons">refresh</i> Reset all the conditions</button>
+                <button class="btn btn-grey-outline" id="" type="submit" data-dismiss="modal" *ngIf="appCondition && !loading">Cancel</button>
+                <button class="btn btn-red-outline btn-hover" id="" *ngIf="appCondition" type="submit" [disabled]="builderService.isDemo"
+                    (click)="saveCondition();">{{saveButtonText}}</button>
+            </div>
+
+        </div>
+    </div>
+</div>

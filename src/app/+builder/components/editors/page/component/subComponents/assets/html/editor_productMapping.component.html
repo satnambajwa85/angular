@@ -1,0 +1,150 @@
+<div id="productEcomMapping" class="modal fade stage2-popup stage4-mapping" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content ">
+            <div class="modal-body">
+                <button type="button" (click)="openEcomMapPopupClose()" class="close" data-dismiss="modal">
+                    <i class="material-icons">close</i>
+                </button>
+                <div class="stage2-mid-outr">
+                    <div class="stage4-mapping-left">
+                        <div class="stage4-left-heading">
+                            Select the question
+                        </div>
+                        <div class="stage4-left-listingOutr scrollbar">
+                            <a href="javascript:void(0);" class="stage4-left-listing" (click)="_ItemTrackService.setUnSavedItems(question); selectObj.option = question.options[0]; selectObj.control = question; selectObj.conditions = getOptionCondition(question.options[0])"
+                                [class.active]="selectObj.control == question" *ngFor="let question of questions; let i = index;">
+                                <div class="stage4-left-numbering">
+                                    {{i + 1}}
+                                </div>
+                                <div class="stage4-left-numberingtext" [innerHTML]="question.props.title"></div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="stage4-mapping-left2">
+                        <div class="stage4-left2-heading">Select the responses to map</div>
+                        <div class="stage4-left2-listingOutr scrollbar">
+                            <a class="stage4-left2-listing" (click)="selectObj.option = option; selectObj.conditions = getOptionCondition(option)" [class.active]="selectObj.option == option"
+                                href="javascript:void(0);" *ngFor="let option of selectObj.control.options; let i = index;">
+                                <label [innerHtml]="optionLabel(option)"></label>
+                                <span>{{ option.value }}</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="stage4-mapping-right">
+                        <div class="stage4-mapping-outr scrollbar">
+                            <div class="stage4-mapping-heading">
+                                Define the mapping parameters
+                            </div>
+                            <div class="stage4-mapping-inner">
+
+                                <div class="stage4-mapping-row" *ngFor="let condition of selectObj.conditions;let i = index">
+                                    <p *ngIf="!i">When</p>
+                                    <div class="ecom-select-caret" *ngIf="i">
+                                        <select [(ngModel)]="condition.operation" (change)="(selectObj.conditions.length>1 && i==1)? selectObj.conditions[0].operation=selectObj.conditions[1].operation : 'DoNothing'">
+                                            <option value="$and">and</option>
+                                            <option value="$or">or</option>
+                                        </select>
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </div>
+                                    <div class="ecom-select-caret">
+                                        <select [(ngModel)]="condition.fieldName">
+                                            <option value="title">Title</option>
+                                            <option value="price">Price</option>
+                                            <option value="tags">Tag</option>
+                                        </select>
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </div>
+                                    <div class="ecom-select-caret">
+                                        <select [(ngModel)]="condition.operator">
+                                            <option value="$eq" *ngIf="['title','price','tags'].indexOf(condition.fieldName) !== -1">is equal to</option>
+                                            <option value="$ne" *ngIf="['title'].indexOf(condition.fieldName) !== -1">is not equal to</option>
+                                            <option value="$in" *ngIf="['tags','title'].indexOf(condition.fieldName) !== -1">{{(condition.fieldName=='title')?'contains':'in'}}</option>
+                                            <option value="$gt" *ngIf="['price'].indexOf(condition.fieldName) !== -1">is greater than</option>
+                                            <option value="$lt" *ngIf="['price'].indexOf(condition.fieldName) !== -1">is lesser than</option>
+                                            <option value="$nin" *ngIf="['tags'].indexOf(condition.fieldName) !== -1">not in</option>
+                                        </select>
+                                        <i class="material-icons">keyboard_arrow_down</i>
+                                    </div>
+                                    <input type="text" [(ngModel)]="condition.value">
+                                    <a class="ecom-addIcon" href="javascript:void(0);" *ngIf="(i == (selectObj.conditions.length - 1))" (click)="addOrDeleteCondition('add',i)">
+                                        <i class="material-icons">add_circle_outline</i>
+                                        <div class="help-checktip">Add Parameter</div>
+                                    </a>
+                                    <a class="ecom-deltIcon" href="javascript:void(0);" *ngIf="i" (click)="addOrDeleteCondition('delete',i)">
+                                        <i class="material-icons">highlight_off</i>
+                                        <div class="help-checktip">Remove</div>
+                                    </a>
+                                </div>
+                                <div class="mapproduct-outr">
+                                    <p>{{selectObj.option.value}} {{(selectObj.option.value>1) ? 'products':'product'}} found</p>
+                                    <a class="map-productbutn" href="javascript:void(0);" [class.disabled]="selectObj.fetchData" [class.loading]="selectObj.fetchData"
+                                        (click)="selectObj.fetchData = true; findProducts()">Map Products</a>
+                                </div>
+                            </div>
+                            <div class="stage4-mappingProducts">
+                                <div class="stage4-mappingProducts-inner">
+                                    <h4>Preview of {{mappedProducts.length}} products mapped</h4>
+                                    <div class="preview-product-list">
+                                        <div class="preview-product" *ngFor="let product of mappedProducts">
+                                            <a href="javascript:void(0);">
+                                                <div class="stage2-productImg">
+                                                    <img [attr.src]="product.editableDetails.images[0]">
+                                                </div>
+                                                <div *ngIf="product.editableDetails.tags.length">
+                                                    <div class="product-tags" *ngFor="let tag of product.editableDetails.tags;let ind = index;">
+                                                        <ng-container *ngIf="!ind">
+                                                            <i class="material-icons">local_offer</i>
+                                                            <span>{{tag}}</span>
+                                                        </ng-container>
+                                                        <ng-container *ngIf="ind">
+                                                            <em>
+                                                                <i class="material-icons">fiber_manual_record</i>
+                                                            </em>
+                                                            <span>{{tag}}</span>
+                                                        </ng-container>
+                                                    </div>
+                                                </div>
+                                                <label [innerHTML]="product.editableDetails.title"></label>
+                                                <h5>{{product.editableDetails.price}}</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="stage2-right-paginationOutr">
+                                    <div class="satge2-pagination-left">
+                                        <label>Page</label>
+                                        <p>{{math.ceil(((selectObj.limit)?selectObj.limit:0) / 12)}}</p>
+                                        <label>of</label>
+                                        <p>{{math.ceil(((mappedProducts.length)? mappedProducts.length : 0) / 12) }}</p>
+                                    </div>
+                                    <div class="satge2-pagination-right" *ngIf="math.ceil(((selectObj.limit)? selectObj.limit : 0) / 12) !== math.ceil(((mappedProducts.length)? mappedProducts.length : 0)/ 12)">
+                                        <a href="javascript:void(0);" (click)="selectObj.limit = selectObj.limit+10">Load More</a>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="stage2-import">
+                        <button class="btn btn-default" type="button">Import
+                            <em>(0)</em> Selected</button>
+                    </div> -->
+                </div>
+                <!-- <input [(ngModel)]="searchText" placeholder="search text goes here">
+                <input type="checkbox" (change)="selectAllProducts($event.target.checked)" />
+                <ul>
+                    <li *ngFor="let product of fetchedProducts | filter : searchText">
+                        <input type="checkbox" [value]="product.id" [checked]="product.checked" (change)="product.checked=!product.checked;" />
+                        <img [attr.src]="product.image.src" height="50" width="70" />
+                        <span *ngFor="let tag of product.tags.split(',')">{{tag}}</span>
+                        {{ product.title }}
+                    </li>
+                </ul> -->
+
+            </div>
+            <div class="modal-footer">
+                <!-- <button type="button" class="btn btn-default" (click)="importProducts()">Import Products</button> -->
+                <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
+            </div>
+        </div>
+    </div>
+</div>

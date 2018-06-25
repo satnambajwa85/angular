@@ -1,0 +1,1856 @@
+<!-- OUTCOME EDITOR -->
+<div class="col-xs-12 no-padding result-area-tab">
+  <div *ngIf="(_outcomeService.getSelectedFormula())" class="main-result-parent">
+    <div class="type-details">
+      <div class="flip flip-container" *ngFor="let formulaResult of jsonBuilderHandler.getJSONBuilt().formula; let i=index;" [class.hover]="_outcomeService.getSelectedFormula() == formulaResult"
+        (click)="_outcomeService.setSelectedFormula(formulaResult); initWysiwyg();">
+        <!-- <span class="result-name ellipsis">{{ (jsonBuilderHandler.getJSONBuilt().formula[i].title && jsonBuilderHandler.getJSONBuilt().formula[i].title!='')?('O'+(i+1)+': '+jsonBuilderHandler.getJSONBuilt().formula[i].title ): ('O'+(i+1))}} </span> -->
+        <span class="result-name ellipsis">{{('O'+(i+1))}} </span>
+        <div class="front">
+        </div>
+      </div>
+      <a href="javascript:void(0);" class="add-result flip r-flip-container" (click)="addOutcome()">
+        <i class="material-icons">add</i>
+        <div class="front"></div>
+      </a>
+    </div>
+    <div *ngFor="let formulaResult of jsonBuilderHandler.getJSONBuilt().formula; let i=index;">
+      <div class="type-details-tab" *ngIf="_outcomeService.getSelectedFormula() == formulaResult">
+        <div class="type-details-head-no-collapse">
+          <input [(ngModel)]="jsonBuilderHandler.getJSONBuilt().formula[i].title" type="textbox" class="edit-name hide" />
+          <span class="result_text ellipsis">
+            {{(jsonBuilderHandler.getJSONBuilt().formula[i].title &&jsonBuilderHandler.getJSONBuilt().formula[i].title!='')?('OUTCOME
+            '+(i+1)+' : '+jsonBuilderHandler.getJSONBuilt().formula[i].title) : ('OUTCOME '+(i+1))}}
+          </span>
+          <span class="pull-right">
+            <div class="icon-outer">
+              <a href="javascript:void(0);" class="tab-head-actions edit_name_link">
+                <i class="material-icons">mode_edit</i>
+
+              </a>
+              <div class="help-text">Edit</div>
+            </div>
+            <!--  copy Result-->
+            <div class="icon-outer">
+              <a href="javascript:void(0);" class="tab-head-actions" (click)="duplicateOutcome(formulaResult,i)">
+                <i class="material-icons">content_copy</i>
+              </a>
+              <div class="help-text">Duplicate</div>
+            </div>
+            <div class="icon-outer" *ngIf="jsonBuilderHandler.getJSONBuilt().formula.length > 1">
+              <a href="javascript:void(0);" class="tab-head-actions" (click)="deleteOutcome(i)">
+                <i class="material-icons">close</i>
+
+              </a>
+              <div class="help-text">Delete</div>
+            </div>
+          </span>
+        </div>
+        <div class="type-details-components">
+          <div class="type-details">
+            <div class="heading abhi" *ngIf="!(isNew && jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome)">
+              <span class="form-label"> Heading</span>
+              <div class="icon-outer">
+                <div class="char-count-limit" *ngIf="titleCount>35">{{titleCount}}</div>
+                <div class="help-text">Recommended limit of 35 characters is exceeded</div>
+              </div>
+              <a class="check check-small default" (click)="copyToAll('header')"> Apply to all outcomes</a>
+              <div [froalaEditor]="froalaOutcome.options" *ngIf="froalaOutcome.options" [(froalaModel)]="_outcomeService.getSelectedFormula().decimal"></div>
+            </div>
+
+            <div class="type-details-sub">
+              <editor-wysiwyg [controls]="_outcomeService.getSelectedFormula()"></editor-wysiwyg>
+            </div>
+            <div *ngIf="_outcomeService.getSelectedFormula().visuals" class="type-details-sub">
+              <span class="form-label">Add Media</span>
+              <div class="switch no-z-index">
+                <label>
+                  <input type="checkbox" name="properties-checkbox" class="show-check" [checked]="_outcomeService.getSelectedFormula().range.status"
+                    (change)="_outcomeService.getSelectedFormula().range.status = ! _outcomeService.getSelectedFormula().range.status"
+                    data-size="mini" data-on-color="'blue'">
+                  <span class="lever"></span>
+                </label>
+              </div>
+              <div [class.hide]="!_outcomeService.getSelectedFormula().range.status">
+                <div class="col-md-12 no-padding addmedia-outer" *ogIf="['!one-page-card','!inline-temp']">
+                  <div class="addmedia addmedia-container" [class.active]="_outcomeService.getSelectedFormula().visuals.type.toLowerCase()=='image'">
+                    <div class="add-outer" (click)="_outcomeService.getSelectedFormula().visuals.type='Image'">
+                      <i class="material-icons addmedia-icon">photo_camera</i>
+                      <!--<i class="material-icons close-media">close</i>-->
+                      <span class="media-name ellipsis">Image</span>
+                    </div>
+                  </div>
+                  <div class="addmedia addmedia-container" [class.active]="_outcomeService.getSelectedFormula().visuals.type=='Video'">
+                    <div class="add-outer" (click)="_outcomeService.getSelectedFormula().visuals.type='Video'">
+                      <i class="material-icons addmedia-icon">movie_creation</i>
+                      <!--<i class="material-icons close-media">close</i>-->
+                      <span class="media-name ellipsis">Video</span>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="_outcomeService.getSelectedFormula().visuals.type.toLowerCase()=='image'">
+                  <div class="col-xs-12 no-padding" style="margin-top:10px">
+                    <div class="input-group">
+                      <input type="text" class="file-input" value="{{(_outcomeService.getSelectedFormula().imageName != '')?_outcomeService.getSelectedFormula().imageName:_outcomeService.getSelectedFormula().result}}"
+                        placeholder="No file" readonly>
+                      <label class="input-group-btn">
+                        <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" style="width:78px;" (click)="upload(i);">
+                          <span style="margin-right:12px; float:left;">UPLOAD </span>
+                          <div class="help-tip editor-helptip pull-right upload-helptip">
+                            <i class="material-icons">info_outline</i>
+                            <div class="help-checktip">Recommended Dimensions are 500px by 320px.</div>
+                          </div>
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- Video links -->
+                <div *ngIf="_outcomeService.getSelectedFormula().visuals.type=='Video'">
+                  <div class="col-xs-12 no-padding" style="margin-top:10px">
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                      <label class="check-value">Video Link </label>
+                      <input type="text" class="file-input" placeholder="https://youtu.be/CGrdWRQqN1I" (blur)="getUpdatedVideoVisuals()" [(ngModel)]="videoLink"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="isNew">
+            <div class="type-details-tab" [class.hide]="editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult' && jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+              <div class="type-details-head" (click)="_editorService.scrollToTop();">
+                <i class="material-icons"></i>
+                <span class="type-details-heading">CALL TO ACTION</span>
+              </div>
+              <div class="type-details">
+                <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.variable_cta.active && !jsonBuilderHandler.getJSONBuilt().isVariableCta">lock_outline</i>
+                <span class="form-label lead-label mb0">Outcome Specific Engagement</span>
+                <div class="help-tip editor-helptip">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">Toggle here to have diiferent call to actions for each outcome.</div>
+                </div>
+                <div class="switch" [class.alwaysOff]="!_featureAuthService.features.variable_cta.active && !jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                  <label>
+                    <input type="checkbox" (change)="toggleVariableCtaOutcome()" [checked]="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                    <span class="lever"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="type-details top-space0 {{isNew?'NEW_CTA':'OLD_CTA'}}">
+                <div class="type-details has-content" *ngIf="!(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+                  <a class="check check-small default" (click)="copyToAll('button_heading')" style="margin-bottom: 5px" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                    Apply to all outcomes</a>
+                  <span class="form-label">Heading</span>
+                  <input class="detail-text" placeholder="Heading" (blur)="updateAllOutcomeCta()" [(ngModel)]="_outcomeService.getSelectedFormula().heading">
+
+                  <label class="radio-check" [class.active]="_outcomeService.getSelectedFormula().isValid" [class.inactive]="!_outcomeService.getSelectedFormula().isValid">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                      [checked]="_outcomeService.getSelectedFormula().isValid">
+                    <label for="primary0" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                            [checked]="_outcomeService.getSelectedFormula().isValid"s>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+                      REDIRECT USERS TO URL
+                    </span>
+                  </label>
+                  <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().isValid">
+                    <a class="check check-small default bottom-space10" (click)="copyToAll('button')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+
+                    <!-- <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i> -->
+                    <!--<span class="form-label">
+                                            Text
+                                        </span>-->
+                    <div [froalaEditor]="froalaCtaRedirectUrl.options" #froalaCtaRedirectUrlDOM *ngIf="froalaCtaRedirectUrl.options" [(froalaModel)]="_outcomeService.getSelectedFormula().units.preValue"></div>
+                    <a class="check check-small default top-space10" (click)="copyToAll('url')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-top:8px">
+
+                      <label class="check-value">
+                        <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+                      </label>
+
+
+                      <input type="text" class="form-text value-text" placeholder="http://" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+                        (blur)="_editorService.validateUrl();updateAllOutcomeCta()" (change)="onRecomNavigateURLChange($event)"
+                        [(ngModel)]="_outcomeService.getSelectedFormula().units.postValue" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible);_editorService.ctaFeatureCheck();"
+                      />
+                    </div>
+                    <div class="type-details no-border bottom-space0" style="padding-top:8px;">
+                      <!-- <div class="switch">
+                                            <label>
+                                            <input
+                                              type="checkbox"
+                                              [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                              (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                            >
+                                            <span class="lever"></span>
+                                          </label>
+                                        </div>
+                                        <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+                      <div class="custom-switch">
+                        <label class="check check-mandatory form-label">
+
+                          <input id="check_k71" type="checkbox" [checked]="_outcomeService.getSelectedFormula().units.open_in_tab" (change)="_outcomeService.getSelectedFormula().units.open_in_tab = !_outcomeService.getSelectedFormula().units.open_in_tab">
+                          <label for="check_k71"> </label> Open url in new tab
+                        </label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value  top-space10" *ngIf="isLeadInResult()">
+                      <label class="check-value">Message</label>
+                      <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+                      />
+                    </div>
+                    <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+
+                        <input id="check_k11likes" type="checkbox" [checked]="editorControl.click_button.props.followUpText==='true'" (change)="setPrimaryAction($event,'click_button')">
+                        <label for="check_k111"> </label> Set As Primary Action
+                      </label>
+                    </div>
+                  </div> -->
+                  </div>
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.prefix"
+                    [class.inactive]="!_outcomeService.getSelectedFormula().units.prefix" *ngIf="!_editorService.isEmpty(editorControl.cta_likes) && !_editorService.isEmpty(shareLinks) && !jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                      (click)="changeOutcomeType('Like');" id="primary1">
+                    <label for="primary1" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                            (click)="changeOutcomeType('Like');" id="primary1">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                      SUBSCRIBE TO SOCIAL FEEDS
+                    </span>
+                    <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().units.prefix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.facebook.visible">
+                        <input type="radio" name="icon-select" id="r-ic1" (click)="shareLinks.like.facebook.visible=!shareLinks.like.facebook.visible;updateAllOutcomeCta()">
+                        <label for="r-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.twitter.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.twitter.visible=!shareLinks.like.twitter.visible;updateAllOutcomeCta()"
+                          id="r-ic2">
+                        <label for="r-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.like.vkontakte" [class.active]="shareLinks.like.vkontakte.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.vkontakte.visible=!shareLinks.like.vkontakte.visible;updateAllOutcomeCta()"
+                          id="r-ic3">
+                        <label for="r-ic3">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <!--<hr class="radio-last-hr" [class.hide]="!(shareLinks.like.facebook.visible || shareLinks.like.twitter.visible || shareLinks.like.vkontakte.visible)">-->
+                      <section [class.hide]="!shareLinks.like.facebook.visible">
+
+                        <div class="form-label">Facebook Page URL</div>
+                        <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.facebook.title"
+                        />
+                      </section>
+                      <section [class.hide]="!shareLinks.like.twitter.visible">
+
+                        <div class="form-label top-space10">Twitter Handle</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">@</label>
+                          <input type="text" class="form-text value-text" placeholder="outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.twitter.title"
+                          />
+                        </div>
+                      </section>
+                      <section *ngIf="shareLinks.like.vkontakte" [class.hide]="!shareLinks.like.vkontakte.visible">
+                        <div class="form-label top-space10">VKontakte Profile</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">https://vk.com/id</label>
+                          <input type="text" class="form-text value-text" placeholder="460614642" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.vkontakte.title"
+                          />
+                        </div>
+                      </section>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                      <div class="custom-switch open-in-app">
+                        <label class="check check-mandatory form-label">
+                          <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_likes.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_likes')">
+                          <label for="check_k111"> </label> Set As Primary Action
+                        </label>
+                      </div>
+                    </div> -->
+                    <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula().units.prefix" >
+                      <div class="custom-switch open-in-app">
+                        <label class="check check-mandatory form-label">
+                          <input id="show-check-like" [checked]="_outcomeService.getSelectedFormula().units.sharePopupLike" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                          <label for="show-check-like"> </label> Show before result
+                        </label>
+                      </div>
+                    </div>
+                    </div>
+                  </label>
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.postfix"
+                    [class.inactive]="!_outcomeService.getSelectedFormula().units.postfix" *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !_editorService.isEmpty(shareLinks) && !jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                      id="primary2">
+                    <label for="primary2" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                            id="primary2">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                      SHARE ON SOCIAL MEDIA
+                    </span>
+                    <div class="col-xs-12 no-padding share radio-section ful-length" [class.hide]="!_outcomeService.getSelectedFormula().units.postfix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.facebook.visible">
+                        <input type="radio" name="icon-select" id="share-ic1" (click)="shareLinks.share.facebook.visible=!shareLinks.share.facebook.visible;updateAllOutcomeCta()">
+                        <label for="share-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.twitter.visible">
+                        <input type="radio" name="icon-select" id="share-ic2" (click)="shareLinks.share.twitter.visible=!shareLinks.share.twitter.visible;updateAllOutcomeCta()">
+                        <label for="share-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.linkedin.visible">
+                        <input type="radio" name="icon-select" id="share-ic3" (click)="shareLinks.share.linkedin.visible=!shareLinks.share.linkedin.visible;updateAllOutcomeCta()">
+                        <label for="share-ic3">
+                          <i class="fa fa-linkedin"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.vkontakte" [class.active]="shareLinks.share.vkontakte.visible">
+                        <input type="radio" name="icon-select" id="share-ic4" (click)="shareLinks.share.vkontakte.visible=!shareLinks.share.vkontakte.visible;updateAllOutcomeCta()">
+                        <label for="share-ic4">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.whatsapp" [class.active]="shareLinks.share.whatsapp.visible">
+                        <input type="radio" name="icon-select" id="share-ic5" (click)="shareLinks.share.whatsapp.visible=!shareLinks.share.whatsapp.visible;updateAllOutcomeCta()">
+                        <label for="share-ic5">
+                          <i class="fa fa-whatsapp"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.mail" [class.active]="shareLinks.share.mail.visible">
+                        <input type="radio" name="icon-select" id="share-ic6" (click)="shareLinks.share.mail.visible=!shareLinks.share.mail.visible;updateAllOutcomeCta()">
+                        <label for="share-ic6">
+                          <i class="fa fa-envelope"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.messenger" [class.active]="shareLinks.share.messenger.visible">
+                        <input type="radio" name="icon-select" id="share-ic7" (click)="shareLinks.share.messenger.visible=!shareLinks.share.messenger.visible;updateAllOutcomeCta()">
+                        <label for="share-ic7">
+                          <i class="fa fa-comments-o"></i>
+                        </label>
+                      </label>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                      <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+
+                          <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_shares.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_shares')">
+                          <label for="check_k111"> </label> Set As Primary Action
+                        </label>
+                      </div>
+                    </div> -->
+                    
+                    </div>
+                  </label>
+                  <a [class.hide]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" class="check check-small default" (click)="copyToAll('sharelinks')"
+                    *ngIf="_outcomeService.getSelectedFormula()?.units?.postfix && jsonBuilderHandler.getJSONBuilt().isVariableCta"
+                    style="margin-bottom: 10px;"> Apply to all outcomes</a>
+                  <section [class.hide]=" !_outcomeService.getSelectedFormula().units.postfix" *ngIf="!jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" class="outside-section ful-length">
+                    <!--<hr class="radio-last-hr" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">-->
+                    <div [class.hide]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" class="col-md-12 col-xs-12 no-padding full-check-value"
+                      *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)
+                      || (shareLinks.share.whatsapp && shareLinks.share.whatsapp.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible) || (shareLinks.share.messenger && shareLinks.share.messenger.visible)">
+                      <label class="check-value">SHARE URL
+                        <div class="help-tip editor-helptip pull-right upload-helptip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                        </div>
+                      </label>
+                      <input [(ngModel)]="shareLinks.share.twitter.url" class="form-text value-text" (change)="shareLinks.share.twitter.url=_editorService.onURLChange($event)"
+                        placeholder="http://www.outgrow.co">
+                    </div>
+                    <div [class.hide]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" *ngIf="shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                      <div class="form-label">Share Widget Title
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>-->
+                      <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" (froalaModelChange)="onWysiwygChange('share-title',shareLinks.share.twitter.title)"
+                        [(froalaModel)]="shareLinks.share.twitter.title"></div>
+                    </div>
+                    <div [class.hide]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" *ngIf="shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                      <div class="form-label" style="margin-top: 10px;">Share Widget Description
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under
+                            Configure.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>-->
+                      <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" (froalaModelChange)="onWysiwygChange('share-desc',shareLinks.share.twitter.description)"
+                        [(froalaModel)]="shareLinks.share.twitter.description"></div>
+                    </div>
+                    <div [class.hide]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome" class="type-details" style="padding-top:10px;"
+                      *ngIf="shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <div class="form-label">Social Share Image
+                        <div class="help-tip editor-helptip share-tooltip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                        </div>
+                      </div>
+                      <div class="switch hide">
+                        <label>
+                          <input class="show-check" type="checkbox">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <div class="col-xs-12 no-padding">
+                        <div class="input-group">
+                          <input class="file-input" placeholder="No file" readonly="" type="text" value="{{_outcomeService.getSelectedFormula().visuals.seoImage}}"
+                            readonly>
+                          <label class="input-group-btn">
+                            <span class="btn btn-basic2" (click)="uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                              UPLOAD
+                              <input style="display: none;" type="">
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula()?.units?.postfix" >
+                      <div class="custom-switch open-in-app">
+                        <label class="check check-mandatory form-label">
+                          <input id="show-check-share" [checked]="_outcomeService.getSelectedFormula().units.sharePopupShare" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                          <label for="show-check-share"> </label> Show before result
+                        </label>
+                      </div>
+                    </div>
+                  </section>
+                  <div *ngIf="((_outcomeService.getSelectedFormula()?.units?.postfix && _outcomeService.getSelectedFormula().units.sharePopupShare) || (_outcomeService.getSelectedFormula().units.prefix && _outcomeService.getSelectedFormula().units.sharePopupLike)) && !jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+                    <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+                        <div>
+                          <span class="form-label">HEADING</span>
+                          <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpTitle"></textarea>
+                        </div>
+                      </div>
+                      
+                      <div class="type-details" >
+                        <span class="form-label">Help Text</span>
+                        <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                          <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpDesc"></textarea>
+                        </div>
+                      </div>
+                </div>
+                </div>
+                <div class="type-details has-content" *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult' && !jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome)">
+                  <a class="check check-small default" (click)="copyToAll('button_heading')" style="margin-bottom: 5px" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                    Apply to all outcomes</a>
+                  <span class="form-label">Heading</span>
+                  <input class="detail-text" placeholder="Heading" (blur)="updateAllOutcomeCta()" [(ngModel)]="_outcomeService.getSelectedFormula().heading">
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.prefix" [class.inactive]="!_outcomeService.getSelectedFormula().units.prefix"
+                    *ngIf="!_editorService.isEmpty(editorControl.cta_likes) && !_editorService.isEmpty(shareLinks)">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                      (click)="changeOutcomeType('Like');" id="primary1">
+                    <label for="primary1" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                            (click)="changeOutcomeType('Like');" id="primary1">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                      SUBSCRIBE TO SOCIAL FEEDS
+                    </span>
+                    <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().units.prefix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.facebook.visible">
+                        <input type="radio" name="icon-select" id="r-ic1" (click)="shareLinks.like.facebook.visible=!shareLinks.like.facebook.visible;updateAllOutcomeCta()">
+                        <label for="r-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.twitter.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.twitter.visible=!shareLinks.like.twitter.visible;updateAllOutcomeCta()"
+                          id="r-ic2">
+                        <label for="r-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.like.vkontakte" [class.active]="shareLinks.like.vkontakte.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.vkontakte.visible=!shareLinks.like.vkontakte.visible;updateAllOutcomeCta()"
+                          id="r-ic3">
+                        <label for="r-ic3">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <!--<hr class="radio-last-hr" [class.hide]="!(shareLinks.like.facebook.visible || shareLinks.like.twitter.visible || shareLinks.like.vkontakte.visible)">-->
+                      <section [class.hide]="!shareLinks.like.facebook.visible">
+
+                        <div class="form-label">Facebook Page URL</div>
+                        <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.facebook.title"
+                        />
+                      </section>
+                      <section [class.hide]="!shareLinks.like.twitter.visible">
+
+                        <div class="form-label top-space10">Twitter Handle</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">@</label>
+                          <input type="text" class="form-text value-text" placeholder="outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.twitter.title"
+                          />
+                        </div>
+                      </section>
+                      <section *ngIf="shareLinks.like.vkontakte" [class.hide]="!shareLinks.like.vkontakte.visible">
+                        <div class="form-label top-space10">VKontakte Profile</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">https://vk.com/id</label>
+                          <input type="text" class="form-text value-text" placeholder="460614642" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.vkontakte.title"
+                          />
+                        </div>
+                      </section>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                        <div class="custom-switch open-in-app">
+                          <label class="check check-mandatory form-label">
+                            <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_likes.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_likes')">
+                            <label for="check_k111"> </label> Set As Primary Action
+                          </label>
+                        </div>
+                      </div> -->
+                      <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula().units.prefix" >
+                        <div class="custom-switch open-in-app">
+                          <label class="check check-mandatory form-label">
+                            <input id="show-check-like" [checked]="_outcomeService.getSelectedFormula().units.sharePopupLike" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                            <label for="show-check-like"> </label> Show before result
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </label>
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.postfix" [class.inactive]="!_outcomeService.getSelectedFormula().units.postfix"
+                    *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !_editorService.isEmpty(shareLinks)">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                      id="primary2">
+                    <label for="primary2" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                            id="primary2">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                      SHARE ON SOCIAL MEDIA
+                    </span>
+                    <div class="col-xs-12 no-padding share radio-section ful-length" [class.hide]="!_outcomeService.getSelectedFormula().units.postfix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.facebook.visible">
+                        <input type="radio" name="icon-select" id="share-ic1" (click)="shareLinks.share.facebook.visible=!shareLinks.share.facebook.visible;updateAllOutcomeCta()">
+                        <label for="share-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.twitter.visible">
+                        <input type="radio" name="icon-select" id="share-ic2" (click)="shareLinks.share.twitter.visible=!shareLinks.share.twitter.visible;updateAllOutcomeCta()">
+                        <label for="share-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.linkedin.visible">
+                        <input type="radio" name="icon-select" id="share-ic3" (click)="shareLinks.share.linkedin.visible=!shareLinks.share.linkedin.visible;updateAllOutcomeCta()">
+                        <label for="share-ic3">
+                          <i class="fa fa-linkedin"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.vkontakte" [class.active]="shareLinks.share.vkontakte.visible">
+                        <input type="radio" name="icon-select" id="share-ic4" (click)="shareLinks.share.vkontakte.visible=!shareLinks.share.vkontakte.visible;updateAllOutcomeCta()">
+                        <label for="share-ic4">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.whatsapp" [class.active]="shareLinks.share.whatsapp.visible">
+                        <input type="radio" name="icon-select" id="share-ic5" (click)="shareLinks.share.whatsapp.visible=!shareLinks.share.whatsapp.visible;updateAllOutcomeCta()">
+                        <label for="share-ic5">
+                          <i class="fa fa-whatsapp"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.mail" [class.active]="shareLinks.share.mail.visible">
+                        <input type="radio" name="icon-select" id="share-ic6" (click)="shareLinks.share.mail.visible=!shareLinks.share.mail.visible;updateAllOutcomeCta()">
+                        <label for="share-ic6">
+                          <i class="fa fa-envelope"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.messenger" [class.active]="shareLinks.share.messenger.visible">
+                        <input type="radio" name="icon-select" id="share-ic7" (click)="shareLinks.share.messenger.visible=!shareLinks.share.messenger.visible;updateAllOutcomeCta()">
+                        <label for="share-ic7">
+                          <i class="fa fa-comments-o"></i>
+                        </label>
+                      </label>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                        <div class="custom-switch open-in-app">
+                        <label class="check check-mandatory form-label">
+  
+                            <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_shares.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_shares')">
+                            <label for="check_k111"> </label> Set As Primary Action
+                          </label>
+                        </div>
+                      </div> -->
+                     
+                    </div>
+                  </label>
+                  <a class="check check-small default" (click)="copyToAll('sharelinks')" *ngIf="_outcomeService.getSelectedFormula()?.units?.postfix && jsonBuilderHandler.getJSONBuilt().isVariableCta"
+                    style="margin-bottom: 10px;"> Apply to all outcomes</a>
+                  <section [class.hide]=" !_outcomeService.getSelectedFormula().units.postfix" class="outside-section ful-length">
+                    <!--<hr class="radio-last-hr" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">-->
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)
+                    || (shareLinks.share.whatsapp && shareLinks.share.whatsapp.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible) || (shareLinks.share.messenger && shareLinks.share.messenger.visible)">
+                      <label class="check-value">SHARE URL
+                        <div class="help-tip editor-helptip pull-right upload-helptip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                        </div>
+                      </label>
+                      <input [(ngModel)]="shareLinks.share.twitter.url" class="form-text value-text" (change)="shareLinks.share.twitter.url=_editorService.onURLChange($event)"
+                        placeholder="http://www.outgrow.co">
+                    </div>
+                    <div *ngIf="shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                      <div class="form-label">Share Widget Title
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>-->
+                      <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" (froalaModelChange)="onWysiwygChange('share-title',shareLinks.share.twitter.title)"
+                        [(froalaModel)]="shareLinks.share.twitter.title"></div>
+                    </div>
+                    <div *ngIf="shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                      <div class="form-label" style="margin-top: 10px;">Share Widget Description
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under
+                            Configure.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>-->
+                      <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" (froalaModelChange)="onWysiwygChange('share-desc',shareLinks.share.twitter.description)"
+                        [(froalaModel)]="shareLinks.share.twitter.description"></div>
+                    </div>
+                    <div class="type-details" style="padding-top:10px;" *ngIf="shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <div class="form-label">Social Share Image
+                        <div class="help-tip editor-helptip share-tooltip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                        </div>
+                      </div>
+                      <div class="switch hide">
+                        <label>
+                          <input class="show-check" type="checkbox">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <div class="col-xs-12 no-padding">
+                        <div class="input-group">
+                          <input class="file-input" placeholder="No file" readonly="" type="text" value="{{_outcomeService.getSelectedFormula().visuals.seoImage}}"
+                            readonly>
+                          <label class="input-group-btn">
+                            <span class="btn btn-basic2" (click)="uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                              UPLOAD
+                              <input style="display: none;" type="">
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                      
+                    </div>
+                    <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula()?.units?.postfix" >
+                      <div class="custom-switch open-in-app">
+                        <label class="check check-mandatory form-label">
+                          <input id="show-check-share" [checked]="_outcomeService.getSelectedFormula().units.sharePopupShare" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                          <label for="show-check-share"> </label> Show before result
+                        </label>
+                      </div>
+                    </div>
+                  </section>
+                  <div *ngIf="(_outcomeService.getSelectedFormula()?.units?.postfix && _outcomeService.getSelectedFormula().units.sharePopupShare) || (_outcomeService.getSelectedFormula().units.prefix && _outcomeService.getSelectedFormula().units.sharePopupLike)">
+                    <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+                        <div>
+                          <span class="form-label">HEADING</span>
+                          <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpTitle"></textarea>
+                        </div>
+                      </div>
+                      
+                      <div class="type-details" >
+                        <span class="form-label">Help Text</span>
+                        <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                            <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpDesc"></textarea>
+                        </div>
+                      </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isNew">
+            <div class="type-details-tab" *ngIf="!isLeadInResult()">
+              <div class="type-details-head" (click)="_editorService.scrollToTop();">
+                <i class="material-icons"></i>
+                <span class="type-details-heading">CALL TO ACTION</span>
+              </div>
+              <div class="type-details">
+                <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.variable_cta.active && !jsonBuilderHandler.getJSONBuilt().isVariableCta">lock_outline</i>
+                <span class="form-label lead-label mb0">Outcome Specific Engagement</span>
+                <div class="help-tip editor-helptip">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">Toggle here to have diiferent engagements for each outcome.</div>
+                </div>
+                <div class="switch" [class.alwaysOff]="!_featureAuthService.features.variable_cta.active && !jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                  <label>
+                    <input type="checkbox" (change)="toggleVariableCtaOutcome()" [checked]="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                    <span class="lever"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="type-details top-space0 {{isNew?'NEW_CTA':'OLD_CTA'}}">
+                <div class="type-details has-content" *ngIf="!(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+                  <a class="check check-small default" (click)="copyToAll('button_heading')" style="margin-bottom: 5px" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                    Apply to all outcomes</a>
+                  <span class="form-label">Heading</span>
+                  <input class="detail-text" placeholder="Heading" (blur)="updateAllOutcomeCta()" [(ngModel)]="_outcomeService.getSelectedFormula().heading">
+
+                  <label class="radio-check" [class.active]="_outcomeService.getSelectedFormula().isValid" [class.inactive]="!_outcomeService.getSelectedFormula().isValid">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                      [checked]="_outcomeService.getSelectedFormula().isValid">
+                    <label for="primary0" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                            [checked]="_outcomeService.getSelectedFormula().isValid">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+                      REDIRECT USERS TO URL
+                    </span>
+                  </label>
+                  <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().isValid">
+                    <a class="check check-small default bottom-space10" (click)="copyToAll('button')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+
+                    <!-- <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i> -->
+                    <!--<span class="form-label">
+                                                  Text
+                                              </span>-->
+                    <div [froalaEditor]="froalaCtaRedirectUrl.options" #froalaCtaRedirectUrlDOM *ngIf="froalaCtaRedirectUrl.options" [(froalaModel)]="_outcomeService.getSelectedFormula().units.preValue"></div>
+                    <a class="check check-small default top-space10" (click)="copyToAll('url')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-top:8px">
+
+                      <label class="check-value">
+                        <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+                      </label>
+
+
+                      <input type="text" class="form-text value-text" placeholder="http://" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+                        (blur)="_editorService.validateUrl();updateAllOutcomeCta()" (change)="onRecomNavigateURLChange($event)"
+                        [(ngModel)]="_outcomeService.getSelectedFormula().units.postValue" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible);_editorService.ctaFeatureCheck();"
+                      />
+                    </div>
+                    <div class="type-details no-border bottom-space0" style="padding-top:8px;">
+                      <!-- <div class="switch">
+                                                  <label>
+                                                  <input
+                                                    type="checkbox"
+                                                    [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                                    (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                                  >
+                                                  <span class="lever"></span>
+                                                </label>
+                                              </div>
+                                              <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+                      <div class="custom-switch">
+                        <label class="check check-mandatory form-label">
+
+                          <input id="check_k71" type="checkbox" [checked]="_outcomeService.getSelectedFormula().units.open_in_tab" (change)="_outcomeService.getSelectedFormula().units.open_in_tab = !_outcomeService.getSelectedFormula().units.open_in_tab">
+                          <label for="check_k71"> </label> Open url in new tab
+                        </label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value  top-space10" *ngIf="isLeadInResult()">
+                      <label class="check-value">Message</label>
+                      <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+                      />
+                    </div>
+                    <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                          <div class="custom-switch open-in-app">
+                            <label class="check check-mandatory form-label">
+      
+                              <input id="check_k11likes" type="checkbox" [checked]="editorControl.click_button.props.followUpText==='true'" (change)="setPrimaryAction($event,'click_button')">
+                              <label for="check_k111"> </label> Set As Primary Action
+                            </label>
+                          </div>
+                        </div> -->
+                  </div>
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.prefix" [class.inactive]="!_outcomeService.getSelectedFormula().units.prefix"
+                    *ngIf="!_editorService.isEmpty(editorControl.cta_likes) && !_editorService.isEmpty(shareLinks)">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                      (click)="changeOutcomeType('Like');" id="primary1">
+                    <label for="primary1" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                            (click)="changeOutcomeType('Like');" id="primary1">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                      SUBSCRIBE TO SOCIAL FEEDS
+                    </span>
+                    <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().units.prefix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.facebook.visible">
+                        <input type="radio" name="icon-select" id="r-ic1" (click)="shareLinks.like.facebook.visible=!shareLinks.like.facebook.visible;updateAllOutcomeCta()">
+                        <label for="r-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.like.twitter.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.twitter.visible=!shareLinks.like.twitter.visible;updateAllOutcomeCta()"
+                          id="r-ic2">
+                        <label for="r-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.like.vkontakte" [class.active]="shareLinks.like.vkontakte.visible">
+                        <input type="radio" name="icon-select" (click)="shareLinks.like.vkontakte.visible=!shareLinks.like.vkontakte.visible;updateAllOutcomeCta()"
+                          id="r-ic3">
+                        <label for="r-ic3">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <!--<hr class="radio-last-hr" [class.hide]="!(shareLinks.like.facebook.visible || shareLinks.like.twitter.visible || shareLinks.like.vkontakte.visible)">-->
+                      <section [class.hide]="!shareLinks.like.facebook.visible">
+
+                        <div class="form-label top-space10">Facebook Page URL</div>
+                        <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.facebook.title"
+                        />
+                      </section>
+                      <section [class.hide]="!shareLinks.like.twitter.visible">
+
+                        <div class="form-label top-space10">Twitter Handle</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">@</label>
+                          <input type="text" class="form-text value-text" placeholder="outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.twitter.title"
+                          />
+                        </div>
+                      </section>
+                      <section *ngIf="shareLinks.like.vkontakte" [class.hide]="!shareLinks.like.vkontakte.visible">
+                        <div class="form-label top-space10">VKontakte Profile</div>
+                        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                          <label class="check-value">https://vk.com/id</label>
+                          <input type="text" class="form-text value-text" placeholder="460614642" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.vkontakte.title"
+                          />
+                        </div>
+                      </section>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                            <div class="custom-switch open-in-app">
+                              <label class="check check-mandatory form-label">
+                                <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_likes.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_likes')">
+                                <label for="check_k111"> </label> Set As Primary Action
+                              </label>
+                            </div>
+                          </div> -->
+                    </div>
+                  </label>
+                  <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.postfix" [class.inactive]="!_outcomeService.getSelectedFormula().units.postfix"
+                    *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !_editorService.isEmpty(shareLinks)">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                      id="primary2">
+                    <label for="primary2" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check"type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                            id="primary2">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                      SHARE ON SOCIAL MEDIA
+                    </span>
+                    <div class="col-xs-12 no-padding share radio-section ful-length" [class.hide]="!_outcomeService.getSelectedFormula().units.postfix">
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.facebook.visible">
+                        <input type="radio" name="icon-select" id="share-ic1" (click)="shareLinks.share.facebook.visible=!shareLinks.share.facebook.visible;updateAllOutcomeCta()">
+                        <label for="share-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.twitter.visible">
+                        <input type="radio" name="icon-select" id="share-ic2" (click)="shareLinks.share.twitter.visible=!shareLinks.share.twitter.visible;updateAllOutcomeCta()">
+                        <label for="share-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" [class.active]="shareLinks.share.linkedin.visible">
+                        <input type="radio" name="icon-select" id="share-ic3" (click)="shareLinks.share.linkedin.visible=!shareLinks.share.linkedin.visible;updateAllOutcomeCta()">
+                        <label for="share-ic3">
+                          <i class="fa fa-linkedin"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic" *ngIf="shareLinks.share.vkontakte" [class.active]="shareLinks.share.vkontakte.visible">
+                        <input type="radio" name="icon-select" id="share-ic4" (click)="shareLinks.share.vkontakte.visible=!shareLinks.share.vkontakte.visible;updateAllOutcomeCta()">
+                        <label for="share-ic4">
+                          <i class="fa fa-vk"></i>
+                        </label>
+                      </label>
+                      <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                            <div class="custom-switch open-in-app">
+                            <label class="check check-mandatory form-label">
+      
+                                <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_shares.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_shares')">
+                                <label for="check_k111"> </label> Set As Primary Action
+                              </label>
+                            </div>
+                          </div> -->
+                    </div>
+                  </label>
+                  <a class="check check-small default" (click)="copyToAll('sharelinks')" *ngIf="_outcomeService.getSelectedFormula()?.units?.postfix && jsonBuilderHandler.getJSONBuilt().isVariableCta"
+                    style="margin-bottom: 10px;"> Apply to all outcomes</a>
+                  <section [class.hide]=" !_outcomeService.getSelectedFormula().units.postfix" class="outside-section ful-length">
+                    <!--<hr class="radio-last-hr" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">-->
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <label class="check-value">SHARE URL
+                        <div class="help-tip editor-helptip pull-right upload-helptip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                        </div>
+                      </label>
+                      <input [(ngModel)]="shareLinks.share.twitter.url" class="form-text value-text" (change)="shareLinks.share.twitter.url=_editorService.onURLChange($event)"
+                        placeholder="http://www.outgrow.co">
+                    </div>
+                    <div *ngIf="shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <div class="form-label">Share Widget Title
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>-->
+                      <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" (froalaModelChange)="onWysiwygChange('share-title',shareLinks.share.twitter.title)"
+                        [(froalaModel)]="shareLinks.share.twitter.title"></div>
+                    </div>
+                    <div *ngIf="shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <div class="form-label" style="margin-top: 10px;">Share Widget Description
+                        <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under
+                            Configure.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                        <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                        <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                      </div>
+                      <!--<div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>-->
+                      <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" (froalaModelChange)="onWysiwygChange('share-desc',shareLinks.share.twitter.description)"
+                        [(froalaModel)]="shareLinks.share.twitter.description"></div>
+                    </div>
+                    <div class="type-details" style="padding-top:10px;" *ngIf="shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                      <div class="form-label">Social Share Image
+                        <div class="help-tip editor-helptip share-tooltip">
+                          <i class="material-icons">info_outline</i>
+                          <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                        </div>
+                      </div>
+                      <div class="switch hide">
+                        <label>
+                          <input class="show-check" type="checkbox">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <div class="col-xs-12 no-padding">
+                        <div class="input-group">
+                          <input class="file-input" placeholder="No file" readonly="" type="text" value="{{_outcomeService.getSelectedFormula().visuals.seoImage}}"
+                            readonly>
+                          <label class="input-group-btn">
+                            <span class="btn btn-basic2" (click)="uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                              UPLOAD
+                              <input style="display: none;" type="">
+                            </span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+                <div class="type-details {{isNew?'NEW_CTA':'OLD_CTA'}}" *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+                  <label class="radio-check active">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1_url" id="primary2_url" [checked]="true">
+                    <label for="primary2" class="label-radio"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check"  type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1_url" id="primary2_url" [checked]="true">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span>
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+                      REDIRECT USERS TO URL
+                    </span>
+
+                  </label>
+                  <div class="radio-section ful-length" [class.hide]="!_featureAuthService.features.cta.redirect_url">
+                    <span class="form-label">
+                      Button Text</span>
+                    <a class="check check-small default bottom-space10" (click)="copyToAll('button')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+                    <div [froalaEditor]="froalaCtaRedirectUrl.options" #froalaCtaRedirectUrlLeadformDOM *ngIf="froalaCtaRedirectUrl.options"
+                      [(froalaModel)]="_outcomeService.getSelectedFormula().units.preValue"></div>
+                    <a class="check check-small default top-space10" (click)="copyToAll('url')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                      Apply to all outcomes</a>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value top-space10">
+                      <label class="check-value">
+                        <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+                      </label>
+                      <input type="text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text" class="form-text value-text"
+                        placeholder="http://" [readonly]="!isCtaAccessible" (change)="onRecomNavigateURLChange($event)" (focus)="_outcomeService.setSelectedFormula(_outcomeService.getSelectedFormula())"
+                        (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck();" [(ngModel)]="_outcomeService.getSelectedFormula().units.postValue"
+                      />
+                    </div>
+                    <div class="type-details no-border bottom-space0" style="padding-top:8px;">
+                      <!-- <div class="switch">
+                                                  <label>
+                                                  <input
+                                                    type="checkbox"
+                                                    [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                                    (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                                  >
+                                                  <span class="lever"></span>
+                                                </label>
+                                              </div>
+                                              <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+                      <div class="custom-switch">
+                        <label class="check check-mandatory form-label">
+
+                          <input id="check_k81" type="checkbox" [checked]="_outcomeService.getSelectedFormula().units.open_in_tab" (change)="_outcomeService.getSelectedFormula().units.open_in_tab = !_outcomeService.getSelectedFormula().units.open_in_tab">
+                          <label for="check_k81"> </label> Open url in new tab
+                        </label>
+                      </div>
+
+                    </div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value top-space10" *ngIf="isLeadInResult()">
+                      <label class="check-value">Message</label>
+                      <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+                      />
+                    </div>
+
+                  </div>
+                  <label class="radio-check share inactive">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary1_url" disabled>
+                    <label for="primary1" class="label-radio" (click)="showMessage()"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary1_url" disabled>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span (click)="showMessage()">
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                      SUBSCRIBE TO SOCIAL FEEDS
+                    </span>
+                    <div class="radio-section ful-length inactive">
+                      <label class="ch-icon ic">
+                        <input type="radio" name="icon-select" id="r-ic1" disabled>
+                        <label for="r-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic">
+                        <input type="radio" name="icon-select" id="r-ic2" disabled>
+                        <label for="r-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                    </div>
+                  </label>
+                  <label class="radio-check inactive">
+                    <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary3_url" disabled />
+                    <label for="primary1" class="label-radio" (click)="showMessage()"> </label> -->
+                    <div class="switch">
+                      <label>
+                            <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary3_url" disabled/>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                    <span (click)="showMessage()">
+                      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                      SHARE ON SOCIAL MEDIA
+                    </span>
+                    <div class="col-xs-12 no-padding share radio-section ful-length">
+                      <label class="ch-icon ic">
+                        <input type="radio" name="icon-select" id="share-ic1" disabled>
+                        <label for="share-ic1">
+                          <i class="fa fa-facebook"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic">
+                        <input type="radio" name="icon-select" id="share-ic2" disabled>
+                        <label for="share-ic2">
+                          <i class="fa fa-twitter"></i>
+                        </label>
+                      </label>
+                      <label class="ch-icon ic">
+                        <input type="radio" name="icon-select" id="share-ic3" disabled>
+                        <label for="share-ic3">
+                          <i class="fa fa-linkedin"></i>
+                        </label>
+                      </label>
+                    </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- OUTCOME EDITOR END -->
+
+
+<!-- WHEN THERE IS NO OUTCOME -->
+<div class="type-details" *ngIf="!(_outcomeService.getSelectedFormula())">
+  <div class="blank-recomm">Add an Outcome to view Outcome Properties</div>
+</div>
+
+
+<!-- Settings for outcome -->
+<div class="details-area-tab hide" *ngIf="jsonBuilderHandler.getJSONBuilt().templateType == 'Recommendation'">
+  <div class="type-details-tab">
+    <div class="settings-tab">
+      <div class="" *ngIf="(_outcomeService.getSelectedFormula())">
+        <div class="type-details share" *ngIf="editorControl.share_links.visible">
+          <span class="form-label"> Social Sharing Buttons</span>
+          <div class="col-xs-12 no-padding">
+            <label class="ch-icon ic">
+              <input type="checkbox" (click)="_editorService.toggleSocialIcon('facebook')" name="icon-select" id="ic1" [checked]="_editorService.isSocialChecked('facebook')">
+              <label for="ic1">
+                <i class="fa fa-facebook"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="checkbox" (click)="_editorService.toggleSocialIcon('twitter')" name="icon-select" id="ic2" [checked]="_editorService.isSocialChecked('twitter')">
+              <label for="ic2">
+                <i class="fa fa-twitter"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="checkbox" (click)="_editorService.toggleSocialIcon('linkedin')" name="icon-select" id="ic3" [checked]="_editorService.isSocialChecked('linkedin')">
+              <label for="ic3">
+                <i class="fa fa-linkedin"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="checkbox" (click)="_editorService.toggleSocialIcon('email')" name="icon-select" id="ic5" [checked]="_editorService.isSocialChecked('email')">
+              <label for="ic5">Email </label>
+            </label>
+          </div>
+        </div>
+
+        <div class="type-details no-border" *ngIf="editorControl.result_disclaimer.order">
+          <span class="form-label" [class.no-margin]="editorControl.result_disclaimer.visible === false">
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!isDisclaimers">lock_outline</i>
+            Add Text or Disclaimer</span>
+          <div class="switch" [class.alwaysOn]="!isDisclaimers && editorControl.result_disclaimer.visible">
+            <label>
+              <input type="checkbox" (click)="_editorService.toggleDisclaimer(isDisclaimers);" [checked]="editorControl.result_disclaimer.visible">
+              <span class="lever"></span>
+            </label>
+          </div>
+          <div class="type-details hide" *ngIf="editorControl.result_disclaimer.visible">
+            <label class="check form-label" style="margin-bottom:5px;">
+              <input type="checkbox" value="Value1" name="check_dis_1" id="check_dis_1" [checked]="editorControl.result_disclaimer.disclaimer_pages.landing"
+                (change)="editorControl.result_disclaimer.disclaimer_pages.landing = !editorControl.result_disclaimer.disclaimer_pages.landing">
+              <label for="check_dis_1"> </label> Welcome Screen
+            </label>
+            <label class="check form-label" style="margin-bottom:5px;">
+              <input type="checkbox" value="Value1" name="check_dis_2" id="check_dis_2" [checked]="editorControl.result_disclaimer.disclaimer_pages.question"
+                (change)="editorControl.result_disclaimer.disclaimer_pages.question = !editorControl.result_disclaimer.disclaimer_pages.question">
+              <label for="check_dis_2"> </label> Questionnaire
+            </label>
+            <label class="check form-label" style="margin-bottom:5px;">
+              <input type="checkbox" value="Value1" [disabled]="!isDisclaimers && editorControl.result_disclaimer.visible" name="check_dis_3"
+                id="check_dis_3" [checked]="editorControl.result_disclaimer.disclaimer_pages.result" (change)="editorControl.result_disclaimer.disclaimer_pages.result = !editorControl.result_disclaimer.disclaimer_pages.result">
+              <label for="check_dis_3"> </label> Result Page
+            </label>
+          </div>
+          <div class="col-xs-12 no-padding div-check" *ngIf=" editorControl.result_disclaimer.visible">
+            <div (click)="_editorService.disclaimerClick(isDisclaimers)" [(froalaModel)]="editorControl.result_disclaimer.props.title"
+              *ngIf="froalaDisclaimer.options" #froalaDisclaimerDOM [froalaEditor]="froalaDisclaimer.options"></div>
+          </div>
+        </div>
+        <div class="type-details no-content top-space0" *ngIf="editorControl.result_redo">
+          <span class="form-label lead-label" [class.no-margin]="editorControl.result_redo.visible === false">Start Over</span>
+          <div class="switch">
+            <label>
+              <input type="checkbox" (change)="editorControl.result_redo.visible=!editorControl.result_redo.visible" [checked]="editorControl.result_redo.visible">
+              <span class="lever"></span>
+            </label>
+          </div>
+        </div>
+        <div class="type-details no-content top-space0" *ngIf="isNew && jsonBuilderHandler.getJSONBuilt().recomBased && jsonBuilderHandler.getJSONBuilt().formula.length>1">
+          <span class="form-label lead-label mb0" [class.no-margin]="editorControl.result_redo.visible === false">SHOW MULTIPLE OUTCOMES</span>
+          <div class="switch">
+            <label>
+              <input type="checkbox" (change)="toggleMultipleOutcome()" [checked]="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+              <span class="lever"></span>
+            </label>
+          </div>
+        </div>
+        <div class="type-details-head" *ngIf="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+          <span class="type-details-heading">SHOW OUTCOME</span>
+        </div>
+        <div class="col-xs-12 type-details" *ngIf="jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+          <span class="form-label lead-label mb0" style="margin-top:6px;">No. Of outcomes to show</span>
+          <div class="help-tip editor-helptip multiple-outcome-helptip">
+            <i class="material-icons">info_outline</i>
+            <div class="help-checktip">Order of the outcomes will be based from the highest to the lowest mapping with responses</div>
+          </div>
+          <select class="form-control select-noOfOutcomes" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().recomBased.noOfOutcome">
+            <option [value]="i+1" [class.hide]="!i" *ngFor="let for of jsonBuilderHandler.getJSONBuilt().formula; let i = index;">{{i+1}}</option>
+          </select>
+        </div>
+        <div class="type-details top-space0">
+          <div class="heading abhi " *ngIf="isNew && jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+            <span class="form-label"> Heading</span>
+            <div class="icon-outer">
+              <div class="char-count-limit" *ngIf="titleCount>35">{{titleCount}}</div>
+              <div class="help-text">Recommended limit of 35 characters is exceeded</div>
+            </div>
+            <!-- <a class="check check-small default" (click)="copyToAll('header')"> Apply to all outcomes</a> -->
+            <div [froalaEditor]="froalaOutcome.options" *ngIf="froalaOutcome.options" [(froalaModel)]="_outcomeService.getSelectedFormula().decimal"></div>
+          </div>
+        </div>
+        <div class="type-details-tab hide" *ngIf="!_featureAuthService.features.variable_cta.active">
+          <div class="type-details-head" (click)="_editorService.scrollToTop();">
+            <i class="material-icons"></i>
+            <span class="type-details-heading">CALL TO ACTION</span>
+          </div>
+          <div class="type-details top-space0 ">
+            <div class="type-details {{isNew?'NEW_CTA':'OLD_CTA'}}" *ngIf="!(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+              <a class="check check-small default" (click)="copyToAll('button_heading')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                Apply to all outcomes</a>
+              <span class="form-label">Heading</span>
+              <input class="detail-text" placeholder="Heading" (blur)="updateAllOutcomeCta()" [(ngModel)]="_outcomeService.getSelectedFormula().heading">
+              <label class="radio-check" [class.active]="_outcomeService.getSelectedFormula().isValid" [class.inactive]="!_outcomeService.getSelectedFormula().isValid">
+                <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                  [checked]="_outcomeService.getSelectedFormula().isValid">
+                <label for="primary0" class="label-radio"> </label> -->
+                <div class="switch">
+                  <label>
+                        <input class="show-check"  type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible);changeOutcomeType('Button');"
+                        [checked]="_outcomeService.getSelectedFormula().isValid">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+                  REDIRECT USERS TO URL
+                </span>
+              </label>
+              <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().isValid">
+                <a class="check check-small default" (click)="copyToAll('button')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                  Apply to all outcomes</a>
+                <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                  <label class="check-value">
+                    Text
+                  </label>
+                  <textarea class="detail-text wysiwyg-redirect-url" [(ngModel)]="_outcomeService.getSelectedFormula().units.preValue" [value]="_outcomeService.getSelectedFormula().units.preValue">
+                  </textarea>
+                </div>
+                <a class="check check-small default top-space10" (click)="copyToAll('url')" *ngIf="jsonBuilderHandler.getJSONBuilt().isVariableCta">
+                  Apply to all outcomes</a>
+                <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                  <label class="check-value">
+                    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+                  </label>
+                  <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+                    placeholder="http://" (blur)="_editorService.validateUrl();updateAllOutcomeCta()" (change)="onRecomNavigateURLChange($event)"
+                    [(ngModel)]="_outcomeService.getSelectedFormula().units.postValue" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck();"
+                  />
+                </div>
+                <div class="type-details no-border bottom-space0" style="padding-top:8px;">
+                  <!-- <div class="switch">
+                                        <label>
+                                        <input
+                                          type="checkbox"
+                                          [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                          (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                                        >
+                                        <span class="lever"></span>
+                                      </label>
+                                    </div>
+                                    <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+                  <div class="custom-switch">
+                    <label class="check check-mandatory form-label">
+
+                      <input id="check_k91" type="checkbox" [checked]="_outcomeService.getSelectedFormula().units.open_in_tab" (change)="_outcomeService.getSelectedFormula().units.open_in_tab = !_outcomeService.getSelectedFormula().units.open_in_tab">
+                      <label for="check_k91"> </label> Open url in new tab
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="isLeadInResult()">
+                  <label class="check-value">Message</label>
+                  <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+                  />
+                </div>
+
+              </div>
+              <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.prefix" [class.inactive]="!_outcomeService.getSelectedFormula().units.prefix"
+                *ngIf="!_editorService.isEmpty(editorControl.cta_likes) && !_editorService.isEmpty(shareLinks)">
+                <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                  (click)="changeOutcomeType('Like');" id="primary1">
+                <label for="primary1" class="label-radio"> </label> -->
+                <div class="switch">
+                  <label>
+                        <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                        (click)="changeOutcomeType('Like');" id="primary1">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                  SUBSCRIBE TO SOCIAL FEEDS</span>
+                <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().units.prefix">
+                  <label class="ch-icon ic" [class.active]="shareLinks.like.facebook.visible">
+                    <input type="radio" name="icon-select" id="r-ic1" (click)="shareLinks.like.facebook.visible=!shareLinks.like.facebook.visible;updateAllOutcomeCta()">
+                    <label for="r-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.like.twitter.visible">
+                    <input type="radio" name="icon-select" (click)="shareLinks.like.twitter.visible=!shareLinks.like.twitter.visible;updateAllOutcomeCta()"
+                      id="r-ic2">
+                    <label for="r-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.like.vkontakte" [class.active]="shareLinks.like.vkontakte.visible">
+                    <input type="radio" name="icon-select" (click)="shareLinks.like.vkontakte.visible=!shareLinks.like.vkontakte.visible;updateAllOutcomeCta()"
+                      id="r-ic3">
+                    <label for="r-ic3">
+                      <i class="fa fa-vk"></i>
+                    </label>
+                  </label>
+                  <!--<hr class="radio-last-hr" [class.hide]="!(shareLinks.like.facebook.visible || shareLinks.like.twitter.visible || shareLinks.like.vkontakte.visible)">-->
+                  <section [class.hide]="!shareLinks.like.facebook.visible">
+
+                    <div class="form-label top-space10">Facebook Page URL</div>
+                    <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.facebook.title"
+                    />
+                  </section>
+                  <section [class.hide]="!shareLinks.like.twitter.visible">
+                    <div class="form-label top-space10">Twitter Handle</div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                      <label class="check-value">@</label>
+                      <input type="text" class="form-text value-text" placeholder="outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.twitter.title"
+                      />
+                    </div>
+                  </section>
+                  <section *ngIf="shareLinks.like.vkontakte" [class.hide]="!shareLinks.like.vkontakte.visible">
+                    <div class="form-label">VKontakte Handle</div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                      <label class="check-value">https://vk.com/id</label>
+                      <input type="text" class="form-text value-text" placeholder="460614642" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.vkontakte.title"
+                      />
+                    </div>
+                  </section>
+                  <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula().units.prefix" >
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+                        <input id="show-check-like" [checked]="_outcomeService.getSelectedFormula().units.sharePopupLike" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                        <label for="show-check-like"> </label> Show before result
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </label>
+              <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.postfix" [class.inactive]="!_outcomeService.getSelectedFormula().units.postfix"
+                *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !_editorService.isEmpty(shareLinks)">
+                <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                  id="primary2">
+                <label for="primary2" class="label-radio"> </label> -->
+                <div class="switch">
+                  <label>
+                        <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                        id="primary2"/>
+                        <span class="lever"></span>
+                    </label>
+                </div>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                  SHARE ON SOCIAL MEDIA
+                </span>
+                <div class="col-xs-12 no-padding share radio-section ful-length" [class.hide]="!_outcomeService.getSelectedFormula().units.postfix">
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.facebook.visible">
+                    <input type="radio" name="icon-select" id="share-ic1" (click)="shareLinks.share.facebook.visible=!shareLinks.share.facebook.visible;updateAllOutcomeCta()">
+                    <label for="share-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.twitter.visible">
+                    <input type="radio" name="icon-select" id="share-ic2" (click)="shareLinks.share.twitter.visible=!shareLinks.share.twitter.visible;updateAllOutcomeCta()">
+                    <label for="share-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.linkedin.visible">
+                    <input type="radio" name="icon-select" id="share-ic3" (click)="shareLinks.share.linkedin.visible=!shareLinks.share.linkedin.visible;updateAllOutcomeCta()">
+                    <label for="share-ic3">
+                      <i class="fa fa-linkedin"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.share.vkontakte" [class.active]="shareLinks.share.vkontakte.visible">
+                    <input type="radio" name="icon-select" id="share-ic4" (click)="shareLinks.share.vkontakte.visible=!shareLinks.share.vkontakte.visible;updateAllOutcomeCta()">
+                    <label for="share-ic4">
+                      <i class="fa fa-vk"></i>
+                    </label>
+                  </label>
+                </div>
+              </label>
+              <a class="check check-small default" (click)="copyToAll('shareLinks')"> Apply to all outcomes</a>
+              <section [class.hide]="!_outcomeService.getSelectedFormula().units.postfix" class="outside-section ful-length">
+                <!--<hr class="radio-last-hr">-->
+                <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                  <label class="check-value">SHARE URL
+                    <div class="help-tip editor-helptip pull-right upload-helptip">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                    </div>
+                  </label>
+                  <input [(ngModel)]="shareLinks.share.twitter.url" class="form-text value-text" (change)="shareLinks.share.twitter.url=_editorService.onURLChange($event)"
+                    placeholder="http://www.outgrow.co">
+                </div>
+                <div class="form-label">Share Widget Title</div>
+                <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                  <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                  <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                </div>
+                <!--<div [class.char-count-red]="wysiwygShareTitleCount>160" class="char-count">{{wysiwygShareTitleCount}}</div>-->
+                <textarea class="wysiwyg-share-title" [(ngModel)]="shareLinks.share.twitter.title" [value]="shareLinks.share.twitter.title"></textarea>
+                <div class="form-label" style="margin-top: 10px;">Share Widget Description</div>
+                <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                  <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                  <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                </div>
+                <!--<div [class.char-count-red]="wysiwygShareDescCount>160" class="char-count">{{wysiwygShareDescCount}}</div>-->
+                <textarea class="wysiwyg-share-desc" [(ngModel)]="shareLinks.share.twitter.description" [value]="shareLinks.share.twitter.description">
+                </textarea>
+                <div class="type-details" style="padding-top:10px;">
+                  <div class="form-label">Social Share Image
+                    <div class="help-tip editor-helptip share-tooltip">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                    </div>
+                  </div>
+                  <div class="switch hide">
+                    <label>
+                      <input class="show-check" type="checkbox">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <div class="col-xs-12 no-padding">
+                    <div class="input-group">
+                      <input class="file-input" placeholder="No file" readonly="" type="text" value="{{_outcomeService.getSelectedFormula().visuals.seoImage}}"
+                        readonly>
+                      <label class="input-group-btn">
+                        <span class="btn btn-basic2" (click)="uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                          UPLOAD
+                          <input style="display: none;" type="">
+                        </span>
+                      </label>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula()?.units?.postfix" >
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+                        <input id="show-check-share" [checked]="_outcomeService.getSelectedFormula().units.sharePopupShare" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                        <label for="show-check-share"> </label> Show before result
+                      </label>
+                    </div>
+                  </div>
+              </section>
+              <div *ngIf="(_outcomeService.getSelectedFormula()?.units?.postfix && _outcomeService.getSelectedFormula().units.sharePopupShare) || (_outcomeService.getSelectedFormula().units.prefix && _outcomeService.getSelectedFormula().units.sharePopupLike)">
+                <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+                    <div>
+                      <span class="form-label">HEADING</span>
+                      <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpTitle"></textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="type-details" >
+                    <span class="form-label">Help Text</span>
+                    <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                        <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpDesc"></textarea>
+                    </div>
+                  </div>
+            </div>
+            </div>
+            <!-- <div class="type-details {{isNew?'NEW_CTA':'OLD_CTA'}}" *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+              <label class="radio-check active">
+                <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1_url" id="primary2_url" [checked]="true">
+                <label for="primary2" class="label-radio"> </label>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+                  REDIRECT USERS TO URL
+                </span>
+              </label>
+              <label class="radio-check share inactive">
+                <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary1_url" disabled>
+                <label for="primary1" class="label-radio" (click)="showMessage()"> </label>
+                <span (click)="showMessage()">
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                  SUBSCRIBE TO SOCIAL FEEDS</span>
+                <div class="radio-section inactive">
+                  <label class="ch-icon ic">
+                    <input type="radio" name="icon-select" id="r-ic1" disabled>
+                    <label for="r-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic">
+                    <input type="radio" name="icon-select" id="r-ic2" disabled>
+                    <label for="r-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                </div>
+              </label>
+              <label class="radio-check inactive">
+                <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1_url" id="primary3_url" disabled />
+                <label for="primary1" class="label-radio" (click)="showMessage()"> </label>
+                <span (click)="showMessage()">
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                  SHARE ON SOCIAL MEDIA
+                </span>
+
+                <div class="col-xs-12 no-padding share radio-section">
+                  <label class="ch-icon ic">
+                    <input type="radio" name="icon-select" id="share-ic1" disabled>
+                    <label for="share-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic">
+                    <input type="radio" name="icon-select" id="share-ic2" disabled>
+                    <label for="share-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic">
+                    <input type="radio" name="icon-select" id="share-ic3" disabled>
+                    <label for="share-ic3">
+                      <i class="fa fa-linkedin"></i>
+                    </label>
+                  </label>
+                </div>
+              </label>
+            </div> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Common editor for multiple outcomes start -->
+      <ng-container *ngIf="isNew && jsonBuilderHandler.getJSONBuilt().recomBased.multipleOutcome">
+        <div class="type-details-tab">
+          <div class="type-details-head" (click)="_editorService.scrollToTop();">
+            <i class="material-icons"></i>
+            <span class="type-details-heading">SOCIAL MEDIA</span>
+          </div>
+          <div class="type-details top-space0 {{isNew?'NEW_CTA':'OLD_CTA'}}">
+            <div class="type-details has-content">
+              <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.prefix" [class.inactive]="!_outcomeService.getSelectedFormula().units.prefix"
+                *ngIf="!_editorService.isEmpty(editorControl.cta_likes) && !_editorService.isEmpty(shareLinks)">
+                <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                  (click)="changeOutcomeType('Like');" id="primary1">
+                <label for="primary1" class="label-radio"> </label> -->
+                <div class="switch">
+                  <label>
+                        <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="_outcomeService.getSelectedFormula().units.prefix==true"
+                        (click)="changeOutcomeType('Like');" id="primary1">
+                        <span class="lever"></span>
+                    </label>
+                </div>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+                  SUBSCRIBE TO SOCIAL FEEDS
+                </span>
+                <div class="radio-section ful-length" *ngIf="_outcomeService.getSelectedFormula().units.prefix">
+                  <label class="ch-icon ic" [class.active]="shareLinks.like.facebook.visible">
+                    <input type="radio" name="icon-select" id="r-ic1" (click)="shareLinks.like.facebook.visible=!shareLinks.like.facebook.visible;updateAllOutcomeCta()">
+                    <label for="r-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.like.twitter.visible">
+                    <input type="radio" name="icon-select" (click)="shareLinks.like.twitter.visible=!shareLinks.like.twitter.visible;updateAllOutcomeCta()"
+                      id="r-ic2">
+                    <label for="r-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.like.vkontakte" [class.active]="shareLinks.like.vkontakte.visible">
+                    <input type="radio" name="icon-select" (click)="shareLinks.like.vkontakte.visible=!shareLinks.like.vkontakte.visible;updateAllOutcomeCta()"
+                      id="r-ic3">
+                    <label for="r-ic3">
+                      <i class="fa fa-vk"></i>
+                    </label>
+                  </label>
+                  <section [class.hide]="!shareLinks.like.facebook.visible">
+
+                    <div class="form-label top-space10">Facebook Page URL</div>
+                    <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.facebook.title"
+                    />
+                  </section>
+                  <section [class.hide]="!shareLinks.like.twitter.visible">
+
+                    <div class="form-label top-space10">Twitter Handle</div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                      <label class="check-value">@</label>
+                      <input type="text" class="form-text value-text" placeholder="outgrowco" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.twitter.title"
+                      />
+                    </div>
+                  </section>
+                  <section *ngIf="shareLinks.like.vkontakte" [class.hide]="!shareLinks.like.vkontakte.visible">
+                    <div class="form-label top-space10">VKontakte Profile</div>
+                    <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                      <label class="check-value">https://vk.com/id</label>
+                      <input type="text" class="form-text value-text" placeholder="460614642" (blur)="updateAllOutcomeCta()" [(ngModel)]="shareLinks.like.vkontakte.title"
+                      />
+                    </div>
+                  </section>
+                  <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula().units.prefix" >
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+                        <input id="show-check-like" [checked]="_outcomeService.getSelectedFormula().units.sharePopupLike" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                        <label for="show-check-like"> </label> Show before result
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </label>
+              <label class="radio-check share" [class.active]="_outcomeService.getSelectedFormula().units.postfix" [class.inactive]="!_outcomeService.getSelectedFormula().units.postfix"
+                *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !_editorService.isEmpty(shareLinks)">
+                <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                  id="primary2">
+                <label for="primary2" class="label-radio"> </label> -->
+                <div class="switch">
+                  <label>
+                        <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="changeOutcomeType('Share');" [checked]="_outcomeService.getSelectedFormula().units.postfix==true"
+                        id="primary2"/>
+                        <span class="lever"></span>
+                    </label>
+                </div>
+                <span>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+                  SHARE ON SOCIAL MEDIA
+                </span>
+                <div class="col-xs-12 no-padding share radio-section ful-length" [class.hide]="!_outcomeService.getSelectedFormula().units.postfix">
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.facebook.visible">
+                    <input type="radio" name="icon-select" id="share-ic1" (click)="shareLinks.share.facebook.visible=!shareLinks.share.facebook.visible;updateAllOutcomeCta()">
+                    <label for="share-ic1">
+                      <i class="fa fa-facebook"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.twitter.visible">
+                    <input type="radio" name="icon-select" id="share-ic2" (click)="shareLinks.share.twitter.visible=!shareLinks.share.twitter.visible;updateAllOutcomeCta()">
+                    <label for="share-ic2">
+                      <i class="fa fa-twitter"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" [class.active]="shareLinks.share.linkedin.visible">
+                    <input type="radio" name="icon-select" id="share-ic3" (click)="shareLinks.share.linkedin.visible=!shareLinks.share.linkedin.visible;updateAllOutcomeCta()">
+                    <label for="share-ic3">
+                      <i class="fa fa-linkedin"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.share.vkontakte" [class.active]="shareLinks.share.vkontakte.visible">
+                    <input type="radio" name="icon-select" id="share-ic4" (click)="shareLinks.share.vkontakte.visible=!shareLinks.share.vkontakte.visible;updateAllOutcomeCta()">
+                    <label for="share-ic4">
+                      <i class="fa fa-vk"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.share.whatsapp" [class.active]="shareLinks.share.whatsapp.visible">
+                    <input type="radio" name="icon-select" id="share-ic5" (click)="shareLinks.share.whatsapp.visible=!shareLinks.share.whatsapp.visible;updateAllOutcomeCta()">
+                    <label for="share-ic5">
+                      <i class="fa fa-whatsapp"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.share.mail" [class.active]="shareLinks.share.mail.visible">
+                    <input type="radio" name="icon-select" id="share-ic6" (click)="shareLinks.share.mail.visible=!shareLinks.share.mail.visible;updateAllOutcomeCta()">
+                    <label for="share-ic6">
+                      <i class="fa fa-envelope"></i>
+                    </label>
+                  </label>
+                  <label class="ch-icon ic" *ngIf="shareLinks.share.messenger" [class.active]="shareLinks.share.messenger.visible">
+                    <input type="radio" name="icon-select" id="share-ic7" (click)="shareLinks.share.messenger.visible=!shareLinks.share.messenger.visible;updateAllOutcomeCta()">
+                    <label for="share-ic7">
+                      <i class="fa fa-comments-o"></i>
+                    </label>
+                  </label>
+               
+                </div>
+              </label>
+
+              <!-- <section [class.hide]=" !_outcomeService.getSelectedFormula().units.postfix" class="outside-section ful-length">
+                <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)"> -->
+
+              <section [class.hide]=" !_outcomeService.getSelectedFormula().units.postfix" class="outside-section">
+                <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="shareLinks.share.facebook.visible || shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)
+                || (shareLinks.share.whatsapp && shareLinks.share.whatsapp.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible) || (shareLinks.share.messenger && shareLinks.share.messenger.visible)">
+
+                  <label class="check-value">SHARE URL
+                    <div class="help-tip editor-helptip pull-right upload-helptip">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                    </div>
+                  </label>
+                  <input [(ngModel)]="shareLinks.share.twitter.url" class="form-text value-text" (change)="shareLinks.share.twitter.url=_editorService.onURLChange($event)"
+                    placeholder="http://www.outgrow.co">
+                </div>
+                <div *ngIf="shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                  <div class="form-label">Share Widget Title
+                    <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+                    </div>
+                  </div>
+                  <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                    <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                    <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                  </div>
+                  <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" (froalaModelChange)="onWysiwygChange('share-title',shareLinks.share.twitter.title)"
+                    [(froalaModel)]="shareLinks.share.twitter.title"></div>
+                </div>
+                <div *ngIf="shareLinks.share.twitter.visible || shareLinks.share.linkedin.visible || shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible) || (shareLinks.share.mail && shareLinks.share.mail.visible)">
+                  <div class="form-label" style="margin-top: 10px;">Share Widget Description
+                    <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under Configure.
+                      </div>
+                    </div>
+                  </div>
+                  <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                    <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                    <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+                  </div>
+                  <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" (froalaModelChange)="onWysiwygChange('share-desc',shareLinks.share.twitter.description)"
+                    [(froalaModel)]="shareLinks.share.twitter.description"></div>
+                </div>
+                <div class="type-details" style="padding-top:10px;" *ngIf="shareLinks.share.facebook.visible || (shareLinks.share.vkontakte && shareLinks.share.vkontakte.visible)">
+                  <div class="form-label">Social Share Image
+                    <div class="help-tip editor-helptip share-tooltip">
+                      <i class="material-icons">info_outline</i>
+                      <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                    </div>
+                  </div>
+                  <div class="switch hide">
+                    <label>
+                      <input class="show-check" type="checkbox">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <div class="col-xs-12 no-padding">
+                    <div class="input-group">
+                      <input class="file-input" placeholder="No file" readonly="" type="text" value="{{_outcomeService.getSelectedFormula().visuals.seoImage}}"
+                        readonly>
+                      <label class="input-group-btn">
+                        <span class="btn btn-basic2" (click)="uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                          UPLOAD
+                          <input style="display: none;" type="">
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && _outcomeService.getSelectedFormula()?.units?.postfix" >
+                  <div class="custom-switch open-in-app">
+                    <label class="check check-mandatory form-label">
+                      <input id="show-check-share" [checked]="_outcomeService.getSelectedFormula().units.sharePopupShare" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                      <label for="show-check-share"> </label> Show before result
+                    </label>
+                  </div>
+                </div>
+              </section>
+              <div *ngIf="(_outcomeService.getSelectedFormula()?.units?.postfix && _outcomeService.getSelectedFormula().units.sharePopupShare) || (_outcomeService.getSelectedFormula().units.prefix && _outcomeService.getSelectedFormula().units.sharePopupLike)">
+                <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+                    <div>
+                      <span class="form-label">HEADING</span>
+                      <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpTitle"></textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="type-details" >
+                    <span class="form-label">Help Text</span>
+                    <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                        <textarea class="form-text question-textarea" [(ngModel)]="_outcomeService.getSelectedFormula().units.sharePopUpDesc"></textarea>
+                    </div>
+                  </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <!-- Common editor for multiple outcomes end -->
+
+    </div>
+  </div>
+</div>
+<!-- Settings for outcome End-->

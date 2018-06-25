@@ -1,0 +1,500 @@
+<!-- Start: Modal Graph -->
+<div id="graph-modal-new" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-xxlg" [class.gradedModalmd]="jsonBuilderHelper.isTempType(['Graded'])">
+    <!-- Modal content-->
+    <div class="modal-content modal-bg">
+      <div class="modal-body">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" (click)="table_prop = false">
+          <i class="material-icons">close</i>
+        </button>
+        <div class="content-area">
+          <div class="left-nav-outer">
+            <ul>
+              <li [class.active]="visuals.graph.type=='bar'">
+                <a href="javascript:void(0);" (click)="toggleGraphType('bar')">
+                  <i class="material-icons rotate-icon">equalizer</i>
+                </a>
+              </li>
+              <li [class.active]="visuals.graph.type=='column'">
+                <a href="javascript:void(0);" (click)="toggleGraphType('column')">
+                  <i class="material-icons">equalizer</i>
+                </a>
+              </li>
+              <li [class.hide]="jsonBuilderHelper.isTempType(['Graded'])" [class.active]="visuals.graph.type=='pie'">
+                <a href="javascript:void(0);" (click)="toggleGraphType('pie')">
+                  <i class="material-icons">pie_chart</i>
+                </a>
+              </li>
+              <li [class.hide]="jsonBuilderHelper.isTempType(['Graded'])" [class.active]="visuals.graph.type=='line'">
+                <a href="javascript:void(0);" (click)="toggleGraphType('line')">
+                  <i class="material-icons">show_chart</i>
+                </a>
+              </li>
+              <li class="icon-settings hide" [class.active]="!table_prop">
+                <a (click)="table_prop=!table_prop" href="javascript:void(0);" class="">
+                  <i class="material-icons">settings</i>
+                </a>
+              </li>
+              <li class="icon-settings">
+                <a href="https://support.outgrow.co/docs/charts-graphs" target="_blank">
+                  <i class="material-icons">help_outline</i>
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-12 np spinner-outer-main hide" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+            <div class="form-group col-sm-4 chart-title hide">
+              <input type="text" [(ngModel)]="visuals.graph.title" required="required" />
+              <label class="control-label" for="input">Chart Title</label>
+              <i class="bar"></i>
+            </div>
+            <div class="form-group col-sm-2 hide">
+              <input type="text" [(ngModel)]="visuals.graph.xAxis" (blur)="createChart()" required="required" />
+              <label class="control-label" for="input">X-Axis Name</label>
+              <i class="bar"></i>
+            </div>
+            <div class="form-group col-sm-2 hide">
+              <input type="text" [(ngModel)]="visuals.graph.yAxis" (blur)="createChart()" required="required" />
+              <label class="control-label" for="input">Y-Axis Name</label>
+              <i class="bar"></i>
+            </div>
+            <div class="spinner-outer">
+              <span>Rows</span>
+              <div class="input-group spinner">
+                <input type="text" class="form-control">
+                <div class="input-group-btn-vertical">
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-up"></i>
+                  </button>
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="spinner-outer">
+              <span>Columns</span>
+              <div class="input-group spinner">
+                <input type="text" class="form-control">
+                <div class="input-group-btn-vertical">
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-up"></i>
+                  </button>
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spinner-outer-main hide" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+            <div class="spinner-outer">
+              <span>X-AXIS</span>
+              <div class="input-group spinner">
+                <input type="text" class="form-control">
+                <div class="input-group-btn-vertical">
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-up"></i>
+                  </button>
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="spinner-outer">
+              <span>Y-AXIS MAX VALUE</span>
+              <div class="input-group spinner">
+                <input type="text" class="form-control">
+                <div class="input-group-btn-vertical">
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-up"></i>
+                  </button>
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="spinner-outer">
+              <span>ITEMS</span>
+              <div class="input-group spinner">
+                <input type="text" class="form-control">
+                <div class="input-group-btn-vertical">
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-up"></i>
+                  </button>
+                  <button class="btn btn-default " type="button">
+                    <i class="fa fa-caret-down"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="graph-outer">
+            <div class="form-outer">
+              <div class="form-group col-sm-12 chart-title" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <input type="text" [(ngModel)]="visuals.graph.title" required="required" />
+                <label class="control-label" for="input">Chart Title</label>
+                <i class="bar"></i>
+              </div>
+              <div class="form-group col-sm-6" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <input type="text" [(ngModel)]="visuals.graph.xAxis" (blur)="createChart()" required="required" />
+                <label class="control-label" for="input">X-Axis Name</label>
+                <i class="bar"></i>
+              </div>
+              <div class="form-group col-sm-6" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <input type="text" [(ngModel)]="visuals.graph.yAxis" (blur)="createChart()" required="required" />
+                <label class="control-label" for="input">Y-Axis Name</label>
+                <i class="bar"></i>
+              </div>
+            </div>
+            <!--<h5>{{visuals.graph.title}}</h5>-->
+            <div class="graph-outer-main">
+              <span class="title-top" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">{{visuals.graph.title}}</span>
+              <span class="title-top" *ngIf="jsonBuilderHelper.isTempType(['Graded'])">Insert a graph to show how other respondents did on this quiz.</span>
+
+              <div *ngIf="jsonBuilderHelper.isTempType(['Graded'])" class="graph-perdropdown">
+                <div class="form-group col-sm-6 chart-title" style="margin-top: 0px;">
+                  <input type="text" [(ngModel)]="visuals.graph.title" required="required" />
+                  <label class="control-label" for="input">Chart Title</label>
+                  <i class="bar"></i>
+                </div>
+                <div class="col-sm-6 chart-title" style="margin-top: 0px;">
+                  <p>Show Score Distribution as: </p>
+                  <select (change)="createGradedChart()" class="form-control" data-width="fit" [(ngModel)]="visuals.graph.titleColor">
+                    <option value="percentage">Percentage</option>
+                    <option value="absolute">Absolute Number</option>
+                  </select>
+                </div>
+              </div>
+              <div id="container" style="min-width: 450px; height: 370px; margin: 0 auto; float: left;"></div>
+              <!--<span class="title-bottom">{{visuals.graph.title}}</span>-->
+              <span *ngIf="jsonBuilderHelper.isTempType(['Numerical']) && visuals.graph.type=='pie'" class="title-bottom">
+                <i class="material-icons">report_problem</i> We are only basing it off the numbers in row 2 - the first numerical row.</span>
+            </div>
+            <a href="javascript:void(0)" (click)="saveData()" data-dismiss="modal" class="pull-right btn btn-saveGraph btn-hover" [class.showbutn-graded]="jsonBuilderHelper.isTempType(['Graded'])">{{(visuals.graph.rawJSON)?'Update Chart':'Insert Chart'}}</a>
+          </div>
+
+          <div class="jason-feed" *ngIf="table_prop && graphshow">
+            <i class="material-icons icon-div-close" (click)="graphshow=false">close</i>
+            <div class="col-sm-12 np">
+              <label class="jason-title col-sm-2 np">Json Feed URL</label>
+              <div class="form-group jason-input col-sm-10 np">
+                <input required="" type="text" [(ngModel)]="visuals.graph.JsonFeed.jsonUrl" (focus)="graphIcons=true;graphConnected=false;visuals.graph.JsonFeed.autoUpdate=false;visuals.graph.JsonFeed.JsonFeedstatus='Disconnected';graphError=false"
+                  placeholder="Enter your JSON feed URL here">
+                <div class="actions-icon" *ngIf="graphIcons && visuals.graph.JsonFeed.jsonUrl!='' && urlValidation(visuals.graph.JsonFeed.jsonUrl)">
+                  <i class="material-icons icon-check" (click)="fetchJson()">check</i>
+                  <i class="material-icons icon-close" (click)="visuals.graph.JsonFeed.jsonUrl=''">close</i>
+                </div>
+
+                <span class="jason-connecting" *ngIf="graphLoader">
+                  <i class="fa fa-spinner" aria-hidden="true"></i> Connecting
+                </span>
+
+                <div class="jason-reset" *ngIf="graphError">
+                  <a href="javascript:void(0);" (click)="resetjsonfeed()">
+                    <i class="fa fa-repeat" aria-hidden="true"></i> Reset</a>
+                </div>
+
+                <div class="jason-error" *ngIf="graphError">
+                  <span>
+                    <i class="material-icons">error_outline</i> Failed to connect</span>
+                </div>
+
+                <div class="jason-switch" *ngIf="graphConnected">
+                  <div class="switch">
+                    <label>
+                      <span>JSON: {{visuals.graph.JsonFeed.JsonFeedstatus}}</span>
+                      <input class="show-check" type="checkbox" [checked]="visuals.graph.JsonFeed.JsonFeedstatus=='Connected'" (change)="statuschange()">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <div class="switch" *ngIf="graphConnected">
+                    <label>
+                      <span>Auto Update
+                        <!-- <div class="help-tip editor-helptip autoUpdate-tip">
+                                <i class="material-icons">info_outline</i>
+                                <div class="help-checktip">In case the JSON is getting Auto updated and a formula has been added to the table area, the formula will get removed after the update.</div>
+                              </div> -->
+                      </span>
+                      <input class="show-check" type="checkbox" [(ngModel)]="visuals.graph.JsonFeed.autoUpdate" [checked]="visuals.graph.JsonFeed.autoUpdate">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <!-- <div class="" *ngIf="graphConnected">
+                      <label>
+                          <span>Duration</span>
+                          <select>
+                            <option></option>
+                          </select>
+                      </label>
+                  </div>  -->
+                </div>
+
+                <small>
+                  Data should be in proper JSON Format, with sheets as the outer dimension.
+                  <a href="http://myjson.com/11irtz" target="_blank" class="text-red"> View sample feed. </a>.
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="property-outer" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])" [class.display-property]="!table_prop">
+            <!-- <div class="chart-label">
+                <label class="file-label">Edit Data:</label>
+              </div> -->
+            <div class="input-file-container">
+              <label class="file-label">Edit Data:</label>
+              <input type="file" id="upload_file-graphpopup" (change)='uploadXls($event)' accept=".xls">
+              <label for="upload_file-graphpopup" class="input-file-trigger help-tip">
+                <i class="material-icons">cloud_upload</i> Upload File
+                <div class="help-checktip upload-tooltip">Upload File (xls, xlsx, csv)</div>
+              </label>
+              <button type="button" class="btn btn-red-outline btn-jason-trigger" (click)="graphshow=true">Json</button>
+
+            </div>
+            <div class="asterisk-info" [class.hide]="!table_prop">
+              <span class="asterisk">*</span>
+              The first row and first column are reserved for text which appears on hover, this should not be used for value purposes.
+            </div>
+            <ul class="top-link">
+              <li [class.active]="table_prop" (click)="table_prop = true" class="help-tip">
+                <a>
+                  <i class="material-icons">view_module</i>
+                </a>
+                <div class="help-checktip">Table</div>
+              </li>
+              <li [class.active]="!table_prop" (click)="table_prop = false" class="help-tip">
+                <a>
+                  <i class="material-icons">color_lens</i>
+                </a>
+                <div class="help-checktip">Display</div>
+              </li>
+              <li class="help-tip">
+                <a href="https://support.outgrow.co/docs/charts-graphs" target="_blank">
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <div class="help-checktip">Help</div>
+              </li>
+            </ul>
+            <div class="content-outer" [class.hide]="!table_prop">
+              <div class="excel-outer">
+                <div id="og-excel-table"></div>
+              </div>
+            </div>
+            <div class="content-outer" [class.hide]="table_prop">
+              <a class="arrow-back hide" (click)="table_prop=true" href="javascript:void(0);">
+                <i class="material-icons">arrow_back</i>
+              </a>
+              <div class="graph-prop-outer">
+                <div class="prop-small-section">
+                  <h3>General</h3>
+                  <div class="full-section hide">
+                    <div class="small-section text pt5">Title Position</div>
+                    <div class="small-section">
+                      <div class="horz-control">
+                        <select (change)="visuals.graph.titlePosition=$event.target.value;createChart();" class="select-default" data-width="fit"
+                          class="form-control">
+                          <option [selected]="visuals.graph.titlePosition=='top'" value="top">Top</option>
+                          <option [selected]="visuals.graph.titlePosition=='bottom'" value="bottom">Bottom</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section hide">
+                    <div class="small-section text">Legend</div>
+                    <div class="small-section">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" (change)="visuals.graph.legend=!visuals.graph.legend;createChart();" class="show-check" [checked]="visuals.graph.legend">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section" *ngIf="visuals.graph.type==='line'">
+                    <div class="small-section text">Polar Graph</div>
+                    <div class="small-section">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" (change)="visuals.graph.polar=!visuals.graph.polar;createChart();" class="show-check" [checked]="visuals.graph.polar">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section hide">
+                    <div class="small-section text pt5">Legend Position</div>
+                    <div class="small-section">
+                      <div class="horz-control">
+                        <select class="select-default" (change)="visuals.graph.legendPosition=$event.target.value;createChart();" data-width="fit"
+                          class="form-control">
+                          <option value="top" [selected]="visuals.graph.legendPosition=='top'">Top</option>
+                          <option value="bottom" [selected]="visuals.graph.legendPosition=='bottom'">Bottom</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section">
+                    <div class="small-section text">Stacked</div>
+                    <div class="small-section">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" class="show-check" (change)="updateStacking();createChart();" [checked]="visuals.graph.stacking=='normal'">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section">
+                    <div class="small-section text">Axis Name</div>
+                    <div class="small-section">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" class="show-check" (change)="visuals.graph.axis=!visuals.graph.axis;createChart();" [checked]="visuals.graph.axis">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section">
+                    <div class="small-section text">Grid</div>
+                    <div class="small-section">
+                      <div class="switch">
+                        <label>
+                          <input type="checkbox" class="show-check" (change)="visuals.graph.grid=!visuals.graph.grid;createChart();" [checked]="visuals.graph.grid">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="full-section">
+                    <div class="small-section text pt5">Decimals</div>
+                    <div class="small-section horz-control">
+                      <select class="form-control" (change)="onChangeDecimalPlaces($event.target.value)">
+                        <option [selected]="visuals.graph.decimal==0" value="0">No Decimal</option>
+                        <option [selected]="visuals.graph.decimal==1" value="1">.0</option>
+                        <option [selected]="visuals.graph.decimal==2" value="2">.00</option>
+                        <option [selected]="visuals.graph.decimal==3" value="3">.000</option>
+                        <option [selected]="visuals.graph.decimal==4" value="4">.0000</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="prop-small-section graph-prop" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                  <div class="form-outer top5">
+                    <div class="form-group col-sm-12 np top10">
+                      <input type="text" (change)="onChangePrefix('preValue',$event.target.value)" [(ngModel)]="visuals.graph.preValue" required="required"
+                      />
+                      <label class="control-label" for="input">Prefix</label>
+                      <i class="bar"></i>
+                    </div>
+                    <div class="form-group col-sm-12 np">
+                      <input type="text" (change)="onChangePrefix('postValue',$event.target.value)" [(ngModel)]="visuals.graph.postValue" required="required"
+                      />
+                      <label class="control-label" for="input">Suffix</label>
+                      <i class="bar"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="prop-small-section graph-prop">
+                  <h3>Number of rows and columns to display:</h3>
+                  <div class="form-outer" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                    <!--Rows : <input type="text" [(ngModel)]="visuals.graph.rows"/>
+                    Columns : <input type="text" [(ngModel)]="visuals.graph.columns"/>-->
+                    <div class="form-group col-sm-12 np">
+                      <input type="text" [(ngModel)]="visuals.graph.rows" required="required" />
+                      <label class="control-label" for="input">No. of Rows</label>
+                      <i class="bar"></i>
+                    </div>
+                    <div class="form-group col-sm-12 np">
+                      <input type="text" [(ngModel)]="visuals.graph.columns" required="required" />
+                      <label class="control-label" for="input">No. of Columns</label>
+                      <i class="bar"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="prop-small-section graph-prop-outer color-sec">
+                <h3>Color</h3>
+                <div class="full-section-right mb10">
+                  <label class="radio-check " [class.active]="visuals.graph.isDefaultColor" [class.inactive]="!visuals.graph.isDefaultColor">
+                    <input id="color0" name="color" type="radio" value="Value1 " (click)="toggleGraphColorType(true)">
+                    <label class="label-radio" for="color0"> </label>
+                    <span>Set single color to all</span>
+
+                    <div class="full-section-right" [class.hide]="!visuals.graph.isDefaultColor">
+                      <div class="graph-colors">
+                        <div class="single-color-box" (click)="singleColor()" [style.backgroundColor]="visuals.graph.defaultColor">
+                        </div>
+                      </div>
+                      <div class="theme-modal graph-color-picker-single-modal hide">
+                        <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseTintModal()">
+                          <i class="material-icons">close</i>
+                        </a>
+                        <a href="javascript:void(0);" [style.backgroundColor]="visuals.graph.defaultColor" class="c1 theme-color current-theme-color">&nbsp;</a>
+                        <input type="text" class="graph-color-picker-single detail-text current-theme-text">
+                      </div>
+                    </div>
+
+                  </label>
+                  <label class="radio-check share" [class.hide]="isPieValid" [class.active]="!visuals.graph.isDefaultColor" [class.inactive]="visuals.graph.isDefaultColor">
+                    <input id="color1" name="color" type="radio" value="Value1" (click)="toggleGraphColorType(false)">
+                    <label class="label-radio" for="color1"> </label>
+                    <span> Individual colors</span>
+                    <div class="full-section-right" [class.hide]="visuals.graph.isDefaultColor || visuals.graph.type=='pie'">
+                      <ul class="graph-colors">
+                        <li *ngFor="let color of colors;let i=index">
+                          <div class="color-box" (click)="multiColor(i)" [style.backgroundColor]="color"></div>
+                        </li>
+                      </ul>
+                      <div class="theme-modal graph-theme-modal hide">
+                        <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseTintModal()">
+                          <i class="material-icons">close</i>
+                        </a>
+                        <a href="javascript:void(0);" [style.backgroundColor]="colors[colorChangeIndex]" class="c1 theme-color current-theme-color">&nbsp;</a>
+                        <input type="text" class=" graph-color-picker detail-text current-theme-text">
+                      </div>
+                    </div>
+                  </label>
+                </div>
+
+                <div class="full-section-right hide">
+                  <div class="small-section text pt5">Title Color</div>
+                  <div class="small-section">
+                    <div class="horz-control">
+                      <select class="select-default" data-width="fit" (change)="visuals.graph.titleColor=$event.target.value;createChart();" class="form-control">
+                        <option value="#fb5f66" [selected]="visuals.graph.titleColor=='#fb5f66'">Red</option>
+                        <option value="#6b696d" [selected]="visuals.graph.titleColor=='#6b696d'">Gray</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="full-section-right hide">
+                  <div class="small-section text pt5">Text Color</div>
+                  <div class="small-section">
+                    <div class="horz-control">
+                      <select class="select-default" data-width="fit" (change)="visuals.graph.textColor=$event.target.value;createChart();" class="form-control">
+                        <option value="#fb5f66" [selected]="visuals.graph.textColor=='#fb5f66'">Red</option>
+                        <option value="#6b696d" [selected]="visuals.graph.textColor=='#6b696d'">Gray</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="graph-help-text np" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+            Feel free to use this spreadsheet just like you would use excel. You can perform mathematical operations inside cells and
+            also use variables from the calculator like Q_1 and R_1. Make sure to add an underscore in the variables in order
+            to differentiate from the cell numbers.
+          </div>
+          <a href="javascript:void(0)" (click)="saveData()" data-dismiss="modal" class="pull-right btn btn-saveGraph btn-hover">{{(visuals.graph.rawJSON || jsonBuilderHelper.isTempType(['Graded']))?'Update Chart':'Insert Chart'}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal Graph -->

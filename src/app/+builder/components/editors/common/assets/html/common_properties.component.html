@@ -1,0 +1,91 @@
+<div class="ques-textarea-parent">
+    <span *ogIf="['!inline-temp']" class="form-label">QUESTION TITLE</span>
+    <span *ogIf="['inline-temp']" class="form-label">QUESTION
+        <span class="small-sub-text">(Text before answer)</span>:</span>
+    <div class="help-tip editor-helptip" *ngIf="jsonBuilderHelper.editors('controlImage') && control.imageVisible">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Recommended Dimensions are 800px by 300px.</div>
+    </div>
+
+    <div class="icon-outer bottom">
+        <div class="char-count-limit" [class.hide]="froalaHeader.textCount<=80">{{froalaHeader.textCount}}</div>
+        <div class="help-text">Recommended limit of 80 characters is exceeded</div>
+    </div>
+    <div *ngIf="jsonBuilderHelper.editors('controlImage')">
+        <label class="rd-icon ic rd-option">
+            <div class="help-text">Video</div>
+            <input type="radio" name="ques" id="icon27k" value="" (click)="show('video')" [checked]="control.video.visible">
+            <label for="icon27k">
+                <i class="material-icons">videocam</i>
+            </label>
+        </label>
+        <label class="rd-icon ic rd-option">
+            <div class="help-text">Image</div>
+            <input type="radio" name="ques" id="icon26" value="" (click)="show('image')" [checked]="control.imageVisible">
+            <label for="icon26">
+                <i class="material-icons">photo_camera</i>
+            </label>
+        </label>
+        <label class="rd-icon ic rd-option">
+            <div class="help-text">Text</div>
+            <input type="radio" name="ques" id="icon25" value="" (click)="show('text')" [checked]="!control.imageVisible && !control.video.visible">
+            <label for="icon25">
+                <i class="material-icons">menu</i>
+            </label>
+        </label>
+    </div>
+
+    <div [froalaEditor]="froalaHeader.options" *ngIf="froalaHeader.options" [(froalaModel)]="control.props.title"></div>
+
+    <div class="type-details-sub" *ngIf="jsonBuilderHelper.editors('followUpText')">
+        <span class="form-label">QUESTION
+            <span class="small-sub-text">(Text after answer)</span>
+        </span>
+        <div [froalaEditor]="froalaFollowUp.options" *ngIf="froalaFollowUp.options" [(froalaModel)]="control.props.followUpText"></div>
+    </div>
+    <div *ngIf="jsonBuilderHelper.editors('controlImage')">
+        <!-- Image -->
+        <div class="div-check1" *ngIf="control.imageVisible">
+            <div class="col-md-12 no-padding" style="margin-top:8px">
+                <div class="input-group">
+                    <input type="text" class="file-input" value="{{(control.imageName != '')?control.imageName:control.imageURL}}" placeholder="No file"
+                        readonly>
+                    <!-- <div class="dropdown custom-select-temp top-space10">
+                        <button class="btn dropdown-toggle btn-basic2" type="button" data-toggle="dropdown">
+                           UPLOAD
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="btn btn-default btn-flat btn-basic2" (click)="uploadImage(control,'jpg');">
+                                  Image
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);" class="btn btn-default btn-flat btn-basic2" (click)="uploadImage(control,'gif');">
+                                   GIF
+                                </a>
+                            </li>
+                        </ul>
+                    </div> -->
+                    <label class="input-group-btn">
+                        <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="uploadImage(control,'jpg');">
+                            UPLOAD
+                        </span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <!-- Image END-->
+        <!-- Video  -->
+        <div class="div-check1" *ngIf="control.video.visible">
+            <div class="col-md-12 no-padding" style="margin-top:8px;">
+                <div class="input-group  video-load">
+                    <label class="check-value">Video Link </label>
+                    <input type="text" class="form-text value-text" placeholder="https://youtu.be/CGrdWRQqN1I" (blur)="videoLinkUpdate()" [(ngModel)]="videoLink">
+                </div>
+            </div>
+        </div>
+        <!-- Video END -->
+    </div>
+</div>

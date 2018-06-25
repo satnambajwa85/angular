@@ -1,0 +1,342 @@
+<div class="native-int-box links-outer" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')" >
+		<div class="logo-sec ml10">
+			<img class="img-responsive"  src="assets/images/messenger-new.png" />
+		</div> 
+		<div class="integration-name">
+			Messenger
+		</div>
+	<div class="links-inner">
+	<ul>
+		<li>
+			<div class="i-outer-red" ><a href="javascript:void(0)"><i class="material-icons small-icon">lock_outline</i></a></div>
+		</li>                 
+	</ul>
+	</div>
+</div>
+<div class="native-int-box" [class.links-outer]="isConfigured" *ngIf="returnFeatureAccess()">
+	<div *ngIf="isConfigured && !config.active" class="red-bar"></div>
+    <div *ngIf="isConfigured && config.active" class="green-bar"></div>
+  	<div class="logo-sec">
+		<img class="img-responsive"  src="assets/images/messenger-new.png" />
+  	</div> 
+  	<div class="integration-name">
+    	Messenger
+  	</div>
+	<button *ngIf="!isConfigured" (click)="openAuthModal()" class="btn configure-btn "  type="submit">Configure</button>
+  
+  <div class="links-inner">
+    <ul>
+        <li>
+            <div *ngIf="isConfigured && !config.active" class="i-outer-red" ><i class="material-icons">error</i></div>
+            <div *ngIf="isConfigured && config.active" class="i-outer-green" ><i class="material-icons">check_circle</i></div>
+        </li>
+        
+      <li class="help-tip" *ngIf="isConfigured && config.active" ><a href="javascript:void(0)" (click)="connect()"><img class="img-responsive"  src="assets/images/config-icon-active.png" /></a>
+        <div class="help-checktip config-tip">Test</div></li>
+      <li class="help-tip" *ngIf="isConfigured">
+        <a href="javascript:void(0)" (click)="connect()" > <img class="img-responsive"  src="assets/images/config-icon.png" />
+        </a>
+        <div class="help-checktip config-tip">Reconfigure</div></li> 
+      <li class="help-tip" *ngIf="isConfigured && config.active && isLeadsPending">
+        <a href="javascript:void(0)" (click)="shareLinkModal()"><i class="material-icons">autorenew</i>
+        </a>
+        <div class="help-checktip config-tip">Share Link</div></li>    
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="updateIntegrationStatus(false)"><i class="material-icons ">do_not_disturb_alt</i></a>
+        <div class="help-checktip config-tip">Deactivate</div></li>  
+      <li class="help-tip" *ngIf="isConfigured && !config.active">
+        <a href="javascript:void(0)" (click)="openAuthModal()"><i class="material-icons">playlist_add_check</i></a>
+        <div class="help-checktip config-tip">Activate</div></li>  	                 
+    </ul>
+  </div>
+</div>
+<div id="chatbot-new" class="modal fade integration-modal" role="dialog">
+    <div class="modal-dialog ">
+      <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+                    <i class="material-icons modal-close">close</i>
+                </button>
+                <img class="img-responsive"  src="assets/images/messenger-new.png" />
+            </div>
+        <div class="modal-body">
+            <form >
+                <ul class="progressbar">
+				  <li  class="active threeOption" [class.icon]="isConfigured">Configure <i class="material-icons">check_circle</i></li>
+				  <li class="threeOption" [class.active]="isConfigured" [class.icon]="isMapped">Select Page<i class="material-icons">check_circle</i></li>
+                  <li class="threeOption" [class.active]="isMapped">Share Link <i class="material-icons">check_circle</i></li>    
+                </ul>
+                <fieldset class="btn-center-outer" *ngIf="!isConfigured">
+				<h5 >Connect to Facebook Messenger</h5>
+				<div class="circle-outer">
+					<div class="circle"><img class="outgrow-logo" src="assets/images/og-symbol.png"></div>
+					<div class="divider"><img src="assets/images/inv-arrow.png"></div>
+					<div class="circle"><img class="img-responsive"  src="assets/images/messenger-new.png" /></div>
+				</div>
+                <input type="button" name="submit" class="submit action-button button btn" value="Connect Facebook Messenger" (click)="connect()"/>
+				</fieldset>
+				<fieldset *ngIf="isConfigured && isConnected && !isMapped">
+						<div class="error-main" *ngIf="isMapError">
+							<i class="material-icons">check_circle</i> {{mapError}}
+						</div>
+						<div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+							<i class="material-icons loader-plan">autorenew</i>
+						</div>
+						<div class="dropdown-outer mt0"> 
+							<h5 class="mt0">SELECT FACEBOOK PAGE FROM THE LIST OF YOUR PAGES </h5>
+							<select (change)="selectPage($event.target.value)">
+								<option value="0">Select page</option>
+								<option *ngFor="let page of pageList" [value]="page?.id" [selected] = "page?.id == config.page_id">{{page?.name}}</option>
+							</select>
+						
+						</div>
+						<button (click)="test()" id="fb_btn" [disabled]="isDisabled" class="action-button button btn " type="button">
+							Connect
+						</button>
+				</fieldset>
+
+				<fieldset *ngIf="isMapped">
+						<h5 class="modal-title align-left">Share your bot</h5>
+						<div class="form-group">
+							<input class="form-control" [(ngModel)]="shareLink" type="text" name="domain">
+							<label class="control-label" for="input">Your messenger bot link</label><i class="bar"></i>
+						</div>
+
+						<div class="col-md-12 col-sm-12 col-xs-12 np text-center">
+								<a id="" (click)="copyLink()"  class="submit action-button  btn cpy-chtbtn btn-new" href="javascript:void(0);" type="button">
+									Copy Link
+								</a>
+								<a id="" target="_blank" class="submit action-button  btn btn-new" href="{{shareLink}}" type="button">
+									Open Link
+								</a>
+						</div>
+
+						<a (click)="closeMapped()" class="submit action-button button btn" href="javascript:void(0);" type="button">
+							FINISH
+						</a>
+				</fieldset>
+			</form>
+        </div>
+      </div>
+	</div>
+</div>
+
+<div class="integration-box hide" *ngIf="returnFeatureAccess()">
+	<a class="if-connected">
+		<div class="int-box-inner">
+			<div *ngIf="isConfigured" class="integration-pullout">
+				<i class="material-icons">expand_more</i>
+				<ul class="new-dropdown-menu">
+					<li *ngIf="isConfigured && !config.active">
+						<a class="hvr-shutter-out-vertical" href="javascript:void(0);">
+							<div class="company-block">
+								<i class="material-icons">mode_edit</i>
+							</div>
+							<div class="int-content">
+								<span class="company-title ellipsis" (click)="connect()">&nbsp;Reconfigure</span>
+							</div>
+						</a>
+					</li>
+					<li *ngIf="isConfigured && config.active">
+						<a class="hvr-shutter-out-vertical" href="javascript:void(0);">
+							<div class="company-block">
+								<i class="material-icons">mode_edit</i>
+							</div>
+							<div class="int-content">
+								<span class="company-title ellipsis" (click)="shareLinkModal()">&nbsp;Share Link</span>
+							</div>
+						</a>
+					</li>  
+					<li>
+						<a class="hvr-shutter-out-vertical" *ngIf="isConfigured && config.active" href="javascript:void(0);" (click)="connect()">
+							<div class="company-block">
+								<i class="material-icons">play_circle_outline</i>
+							</div>
+							<div class="int-content">
+								<span class="company-title ellipsis">&nbsp;Test <span class="pending-leads"></span></span>
+							</div>
+						</a>
+					</li>
+					<li>
+						<a *ngIf="isConfigured && config.active" class="hvr-shutter-out-vertical" href="javascript:void(0);" (click)="updateIntegrationStatus(false)">
+							<div class="company-block">
+								<i class="material-icons">block</i>
+							</div>
+							<div class="int-content">
+								<span class="company-title ellipsis">&nbsp;Deactivate <span class="pending-leads"></span></span>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</div>
+
+			<img class="img-responsive img-height" src="assets/images/fb_messanger.png" />
+			<div class="active-text connected" *ngIf="isConfigured && config.active">
+				<i class="material-icons">fiber_manual_record</i>Active
+			</div>
+			<div class="active-text not-connected" *ngIf="isConfigured && !config.active">
+				<i class="material-icons">fiber_manual_record</i>Inactive
+			</div>
+		</div>
+	</a>
+	<div class="btn-wrap">
+		<a *ngIf="!isConfigured" (click)="openAuthModal()" class="config-btn col-sm-12 col-xs-12 np" href="javascript:void(0);">
+			<div class="config-text">
+				<div class="text">Configure</div>
+			</div>
+		</a>
+		<a *ngIf="isConfigured && config.active" (click)="connect()" class="config-btn col-sm-12 col-xs-12 np" href="javascript:void(0);">
+			<div class="config-text">
+				<div class="text">Reconfigure</div>
+			</div>
+		</a>
+		<a *ngIf="isConfigured && !config.active" (click)="connect(true)" class="config-btn col-sm-12 np deactivate-btn btn-activate"
+		 href="javascript:void(0);">
+			<div class="config-text">
+				<div class="text"><i class="material-icons">check_circle</i> &nbsp;Activate</div>
+			</div>
+		</a>
+	</div>
+</div>
+<div class="integration-box upgrade-block hide" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')">
+	<a class="if-connected">
+		<div class="int-box-inner">
+			<img class="img-responsive img-height" src="assets/images/fb_messanger.png" />
+		</div>
+	</a>
+	<div class="btn-wrap">
+		<a class="config-btn col-sm-12 col-xs-12 np" href="javascript:void(0);" (click)="premiumPopup('integrations')">
+			<div class="config-text">
+				<div class="text"><i class="material-icons">lock_outline</i> Upgrade</div>
+			</div>
+		</a>
+	</div>
+</div>
+<div id="chatbot-auth" class="configure-modal modal fade modIntegration mapping-int-toAccess" tabindex="-1" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content modal-custom">
+			<div class="col-md-12 col-xs-12 col-sm-12 np">
+				<div class="col-md-5 np img-style hide">
+					<img class="int-bg" src="assets/images/marketo-background.png">
+					<!--<img class="int-img" src="assets/images/int-marketo.png">-->
+					<img class="int-img" src="assets/images/fb_messanger_v5.png">
+				</div>
+				<div class="col-md-12 np modal-background access-popup text-center">
+					<div id="connect-salesforce">
+						<div class="modal-header">
+							<button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" (click)="close()">
+								<i class="material-icons modal-close">close</i>
+							</button>
+							<h5 class="modal-title">AUTHORIZE ACCESS to YOUR Facebook Messenger ACCOUNT</h5>
+						</div>
+						<div class="modal-body">
+							<!--<a href="javascript:void(0);" class="text-red"> View Marketo entry</a>-->
+							<img class="" src="assets/images/access-fb.png">
+						</div>
+						<div class="modal-footer col-md-12 col-sm-12 col-xs-12 text-center">
+							<a (click)="connect()" class="btn btn-basic configure-btn btn-red btn-hover" href="javascript:void(0);" type="button">
+								Yes, Continue
+							</a>
+							<a id="btn-marketo-test" (click)="close()" class="btn btn-basic configure-btn btn-grey" href="javascript:void(0);" type="button">
+								NO
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="chatbot" class="configure-modal modal fade modIntegration fb-msg" tabindex="-1" role="dialog">
+	<div class="modal-dialog modal-lg">
+		<!-- Modal content-->
+		<div class="modal-content modal-custom">
+			<div class="col-md-12 col-xs-12 col-sm-12 no-padding">
+				<div class="col-md-5 no-padding img-style">
+					<img class="" src="assets/images/marketo-bg-full.png">
+					<img class="int-img" src="assets/images/fb_messanger_v5.png">
+				</div>
+				<div class="col-md-7 np modal-background">
+					<div id="test-slack" class="test-integrations" *ngIf="!isMapped">
+						<div class="modal-header">
+							<button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+								<i class="material-icons modal-close">close</i>
+							</button>
+							<h5 class="modal-title">Connect to Facebook Messenger</h5>
+							<p class="subheading"></p>
+						</div>
+						<div class="modal-body">
+							<div *ngIf="isMapError" class="alert alert-danger custom-danger">
+								<p><span class="mat-icon"><i class="material-icons">report_problem</i></span> {{mapError}}
+									<a *ngIf="isTokenExpired" class="text-red" href="javascript:void(0)" (click)="connect()">Reconfigure</a>
+								</p>
+							</div>
+							<div class="col-md-12 col-xs-12 col-sm-12 np">
+								<div class="select-form-group">
+									<label class="label-text">SELECT FACEBOOK PAGE FROM THE LIST OF YOUR PAGES </label>
+									<select class="form-control" (change)="selectPage($event.target.value)">
+										<option value="0">Select page</option>
+										<option *ngFor="let page of pageList" [value]="page?.id" [selected] = "page?.id == config.page_id">{{page?.name}}</option>
+									</select>
+									<span class="select-caret"></span>
+								</div>
+							</div>
+
+							<div class="row-data" *ngIf="!isLoading && !isMapError">
+								<label class="control-label label-head heading"></label>
+							</div>
+
+						</div>
+						<div class="modal-footer col-md-12 text-center">
+							<button id="btn btn-basic configure-btn btn-test" (click)="test()" [disabled]="isDisabled" class="btn btn-basic configure-btn"
+								href="javascript:void(0);" type="button">
+                                Connect
+                            </button>							
+						 	<span> By connecting the page to messenger you allow the bot to run on the page by default</span> 
+						 	<span> </span> 
+						</div>
+					</div>
+					<div id="success-chatbot" *ngIf="isMapped">
+						<div class="modal-header">
+							<button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close"> 
+                                <i class="material-icons modal-close">close</i>
+                            </button>
+							<h5 class="modal-title">Share your bot</h5>
+							<!-- <p class="subheading subtitle">We were able to test the connection and field mappings successfully.</p> -->
+						</div>
+						<div class="modal-body">
+							<div *ngIf="isMapError" class="total-alert alert alert-danger custom-danger map-int-alert">
+								<p><span class="mat-icon"><i class="material-icons">report_problem</i></span> {{mapError}}
+								</p>
+							</div>
+							<div class="col-md-12 col-xs-12 col-sm-12 np">
+								<div class="row-data">
+									<label class="control-label label-head heading text-center">Your messenger bot link</label>
+									<!-- <label class="label-head heading">Entry</label> -->
+								</div>
+								<div class="row-data">
+									<label class="control-label label-head heading text-center">{{shareLink}}</label>
+									<!-- <label class="label-head heading">Entry</label> -->
+								</div>
+								<div class="col-md-12 col-sm-12 col-xs-12 np text-center">
+									<a id="" (click)="copyLink()"  class="btn cpy-chtbtn btn-basic configure-btn btn-red-outline btn-hover" href="javascript:void(0);" type="button">
+										Copy Link
+									</a>
+									<a id="" target="_blank" class="btn btn-basic configure-btn btn-red-outline btn-hover" href="{{shareLink}}" type="button">
+										Open Link
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer col-md-12 col-sm-12 col-xs-12 text-center">
+							<a id="btn-marketo-test" (click)="closeMapped()" class="btn btn-basic configure-btn" href="javascript:void(0);" type="button">
+                                FINISH
+                            </a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,83 @@
+/* .form-inner .form-group.input-danger-msg input {
+    border: 1px solid #fe0000 !important;
+}
+.form-inner .form-group.input-success-msg input {
+    border: 1px solid #3cb878 !important;
+}        
+.form-inner .form-group.input-danger-msg span.input-icon-msg {
+    color: #fe0000;
+    text-transform: uppercase;
+    position: absolute;
+    right: -6px;
+    top: 108px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.form-inner .form-group.input-success-msg span.input-icon-msg {
+    color: #3cb878;
+    text-transform: uppercase;
+    position: absolute;
+    right: -6px;
+    top: 108px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.form-inner .form-group.input-danger-msg .input-icon-msg:after{
+    font-family: "Material Icons";
+    content: "\E5CD";
+    text-rendering: optimizeLegibility;
+}
+.form-inner .form-group.input-success-msg .input-icon-msg:after {
+    font-family: "Material Icons";
+    content: "\E5CA";
+    text-rendering: optimizeLegibility;
+}  */
+/* .login-outer .alert.alert-danger {
+    color: #fb545b;
+    font-size: 11px;
+    margin-top: 0px;
+}
+.login-outer .alert.alert-danger i.material-icons {
+    position: relative;
+    top: 2px;
+    font-size: 11px;
+} */
+
+
+      /* popover */
+      /* .input-icon-msg:hover .popover-block{ display: block;}
+      .input-icon-msg .popover-block {
+          position: absolute; */
+          /* top: -50px;
+          right: -62px; */
+          /* min-width: 150px;
+          padding: 13px 15px;
+          font-size: 12px;
+          border-radius: 4px;
+          background: rgba(0,0,0,0.7);
+          border: none;
+          box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.3);
+          display: none;
+          z-index: 99;
+          text-transform: none;
+          color: #fff;
+          font-family: montserratlight;
+          bottom: 125%;
+          right: -380%;
+      }
+
+      .input-icon-msg .popover-block:before {
+          position: absolute; */
+          /* top: 43px;
+          right: 65px; */
+          /* display: inline-block;
+          border-right: 6px solid transparent;
+          border-top: 8px solid #000;
+          border-left: 6px solid transparent;
+          border-bottom-color: #000;
+          content: '';
+          opacity: 0.7;
+          top: 100%;
+          left: 50%;
+      } */
+  /* end: popover */

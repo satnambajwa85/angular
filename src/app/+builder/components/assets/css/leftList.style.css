@@ -1,0 +1,361 @@
+ul,
+li {
+    list-style: none;
+}
+
+a:focus,
+img:focus,
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    text-decoration: none;
+}
+
+.panel-body {
+    padding: 0px;
+}
+
+.ed-sidebar a {
+    color: #62696d;
+    text-transform: uppercase;
+    font-size: 11px;
+    font-family: 'montserratregular';
+    line-height: 1;
+    cursor: pointer;
+}
+
+.icon-options .btn {
+    border: none;
+    padding: 0px;
+}
+
+.icon-options .btn-default:focus,
+.icon-options .btn-default:hover,
+.icon-options .btn-default:active {
+    background: none;
+    box-shadow: none;
+    border: none;
+}
+
+.icon-options i {
+    font-size: 14px;
+    line-height: 28px;
+    color: #c2c9cd;
+}
+
+.add-options i {
+    font-size: 14px;
+    color: #fb5f66;
+    line-height: 23px;
+}
+
+.add-options .dropdown-menu {
+    top: 93%;
+    left: -126px;
+    min-width: 150px;
+    font-size: 12px;
+    border-radius: 0px;
+    background: #fb5f66;
+    /* color: #fff; */
+    border-radius: 4px;
+    border: none;
+    display: none;
+}
+
+.icon-options .dropdown-menu {
+    top: 70%;
+    left: -103px;
+    min-width: 130px;
+    font-size: 12px;
+    border-radius: 0px;
+}
+
+.ed-sidebar a:hover {
+    text-decoration: none;
+}
+
+.ed-sidebar-sub {}
+
+.ed-sidebar-sub label {
+    font-weight: normal;
+    color: #62696d;
+    background: #f6f8f9;
+    padding: 0 5px;
+    font-size: 13px;
+    border-radius: 5px;
+}
+
+.ed-sidebar-sub ul li {
+    line-height: 1;
+    padding-left: 7px;
+    margin-top: -3px;
+}
+
+.ed-sidebar-sub ul li a.head {
+    width: 88%;
+    display: block;
+    padding-top: 3px;
+    text-transform: none;
+    color: #8e989f;
+    font-size: 12px;
+}
+
+.ed-sidebar-sub ul li a.sublist-action {
+    display: none;
+    transition: all 200ms ease-in 0s;
+    line-height: 26px;
+    vertical-align: bottom;
+    margin-right: 4px;
+}
+
+.ed-sidebar-sub ul li a i {
+    color: #fb5f66;
+    font-size: 13px;
+}
+
+.ed-sidebar-sub ul li a i:hover {
+    color: #fb5f66;
+}
+
+.ed-sidebar {
+    display: block;
+}
+
+
+.ed-sidebar-sub label {
+    font-weight: normal;
+    color: #62696d;
+    background: #f6f8f9;
+    padding: 0 5px;
+    font-size: 13px;
+    border-radius: 5px;
+}
+
+.ed-sidebar-sub ul {
+    padding: 0px;
+    margin-bottom: 0px;
+    padding-left: 20px;
+    margin-top: 0px;
+}
+
+.ed-sidebar-sub ul li:hover .sublist-action {
+    display: inline-block;
+    line-height: 1;
+    margin-top: 10px;
+    margin-bottom: -6px;
+}
+
+.panel-body .ed-sidebar:last-child {
+    padding-bottom: 20px;
+}
+
+.circle {
+    display: none;
+}
+
+/*.circle.active {
+    background: #fb5f66;
+    border: none;
+}*/
+
+.panel-title i.corner {
+    display: inline-block;
+    position: relative;
+    left: -8px;
+    vertical-align: middle;
+    font-size: 14px;
+    color: #bec5c9;
+    top: -2px;
+}
+
+.panel-title i.main-ic {
+    font-size: 16px;
+    vertical-align: text-bottom;
+    margin-right: 4px;
+    color: #bec5c9;
+}
+
+.panel-body {
+    border-top: none;
+    margin-top: 10px;
+}
+
+.icon-options i {
+    font-size: 14px;
+    line-height: 28px;
+    color: #c2c9cd;
+}
+
+.add-options i {
+    font-size: 14px;
+    color: #fb5f66;
+    line-height: 23px;
+}
+
+.add-options {
+    display: none;
+}
+
+.add-visible-parent {
+    display: block;
+    padding-right: 10px;
+}
+
+.add-visible-parent:hover .add-options {
+    display: inline;
+    width: 40px;
+    text-align: center;
+    float: right;
+    padding-left: 16px;
+}
+
+.add-options .dropdown-menu {
+    top: 93%;
+    left: -126px;
+    min-width: 150px;
+    font-size: 12px;
+    border-radius: 0px;
+    background: #fb5f66;
+    /* color: #fff; */
+    border-radius: 4px;
+    border: none;
+    display: none;
+}
+
+.add-options:hover .dropdown-menu {
+    display: block;
+}
+
+.add-options .dropdown-menu > li > a:hover,
+.add-options .dropdown-menu > li > a:focus {
+    color: #fff;
+}
+
+.add-options .dropdown-menu > li > a:hover,
+.add-options .dropdown-menu > li > a:focus {
+    background: #fb5f66;
+    color: #fff;
+}
+
+.add-options .dropdown-menu > li > a:hover .add-options-i,
+.add-options .dropdown-menu > li > a:focus .add-options-i {
+    color: #fff;
+}
+
+.add-options .dropdown-menu > li > a {
+    color: #fff;
+    padding: 3px 15px;
+    text-transform: capitalize;
+}
+
+.hollow.active-circle + a,
+.circle.active + a,
+.sub-head.active-circle,
+.hollow.active-circle + div a {
+    color: #fb5f66 !important;
+}
+.circle.active + a i{
+color: #fb5f66;
+}
+.visible-parent {
+    display: block;
+    padding-right: 10px;
+}
+
+.visible-parent:hover .visible {
+    display: inline;
+}
+
+.visibility_off {
+    color: #fb5f66;
+}
+
+.visible {
+    display: none;
+}
+
+.visible i {
+    font-size: 14px;
+    float: right;
+    line-height: 18px;
+    color: #fb5f66;
+}
+
+.visible-parent a.disable {
+    text-decoration: line-through;
+    color: #ccc !important;
+}
+
+span.hollow {
+    height: 10px;
+    width: 10px;
+    display: inline-block;
+    border-radius: 25px;
+    position: relative;
+    left: -42px;
+    vertical-align: middle;
+    top: 16px;
+}
+
+.sub-head span.hollow {
+    top: -2px;
+    left: -15px;
+}
+
+.hollow.active-circle {
+    background: #fb5f66;
+}
+
+.ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fbcol {
+    background: #3b5998;
+}
+
+.incol {
+    background: #0077b5;
+}
+
+.twcol {
+    background: #54ABEE;
+}
+
+.gen-setting {
+    padding: 15px ;
+    display: inline-block;
+        width: 100%;
+}
+
+.gen-setting i {
+    font-size: 17px;
+    display: inline-block;
+    vertical-align: text-top;
+    margin-right: 10px;
+    color: #bec5c9;
+    margin-top: -2px;
+}
+.ed-sidebar .lock-icon{
+    color: #fb5f66;
+    font-size: 13px;
+    vertical-align: text-top;
+    margin-right: 4px;
+    float: left;
+}
+.ed-sidebar .lock-icon{ 
+    float: none;
+    margin-right: 3px;
+    margin-top: 0px;
+    margin-left: -2px;
+}
+
+
+.custom-css-icon.grey{    margin-right: 8px;  position: relative; top: -2px; display: inline-block;; }
+.custom-css-icon{    margin-right: 8px;  position: relative; top: -2px; display: none; }
+span.circle.active + .section-head img.custom-css-icon { display: inline-block;margin-right: 11px;}
+span.circle.active + .section-head img.custom-css-icon.grey { display: none;}

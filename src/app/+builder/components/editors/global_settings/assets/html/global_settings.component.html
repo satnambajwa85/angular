@@ -1,0 +1,626 @@
+<div class="type-detail-outerr">
+  <div class="type-details-head-no-collapse">
+    <span class="form-label no-margin">Style</span>
+  </div>
+  <div class="type-details no-border-after pb0">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.background_image">lock_outline</i>
+    <span class="form-label" [class.no-margin]="!page.bgImageVisible ">Background Image</span>
+    <div class="help-tip editor-helptip"  *ngIf="page.bgImageVisible">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Recommended Dimensions are {{Dimensions[tempName]}}.</div><!-- 570px for t8 -->
+    </div>
+    <div class="switch">
+      <label>
+        <input (change)="toggleBgImage();callGA('TOGGLEBG')" [checked]="page.bgImageVisible" type="checkbox">
+        <span class="lever"></span>
+      </label>
+    </div>
+    <div class="col-xs-12 no-padding" [class.hide]="!page.bgImageVisible">
+      <div class="input-group">
+        <input type="text" class="file-input" value="{{(page.bgName != '')?page.bgName:page.bgImage}}" placeholder="No file" readonly>
+        <label class="input-group-btn">
+          <span class="btn btn-basic2 bgImageButton" (click)="backgroundModal()">
+            REPLACE IMAGE
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="type-details no-border-after pb0" *ngIf="jsonBuilderHandler.editors('bgImageInQ')">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.background_image">lock_outline</i>
+    <span class="form-label no-margin">{{ (questionPage.bgImageVisible)?'Questions Page Background Image:':'Enable Image On Questions Page:' }}</span>
+    <div class="switch">
+      <label>
+        <input (change)="toggleQuestionBgImage()" [checked]="questionPage.bgImageVisible" type="checkbox">
+        <span class="lever"></span>
+      </label>
+    </div>
+  </div>
+  <div class="type-details no-border-after pb0">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!isCustomColorAvailable">lock_outline</i>
+
+    <div class="color-parent">
+      <div class="pull-left color-parent-sub col-xs-6 np" (click)="themeColorPopup('theme')">
+        <span class="form-label">Predefined Palettes</span>              
+        <div class="picker-image ">
+          <div class="selected-theme">
+            <span class="theme_text" [class.hide]="!customPalleteApplied()">
+              <img src="assets/images/color-picker.png">
+              <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.predefined_color_themes">lock_outline</i>SELECT</span>
+            <div class="selected-theme theme_box" [class.hide]="customPalleteApplied()">
+              <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.bgColor  | safeStyle"></span>
+              <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.componentColor | safeStyle"></span>
+              <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.textColor | safeStyle"></span>
+              <i class="material-icons color-arrow">keyboard_arrow_down</i>
+            </div>
+          </div>
+        </div>
+        <div class="theme-parent default-theme-parent hide">
+          <div class="themes" *ngFor="let pallete of themePalettes.pallete">
+            <a href="javascript:void();" (click)="updateTheming(pallete);themeColorClose(pallete)">
+              <div class="help-tip color-help-tip">
+                <span class="theme-color" [style.backgroundColor]="pallete.backGround | safeStyle">&nbsp;</span>
+                <div class="help-checktip">Background</div>
+              </div>
+              <div class="help-tip color-help-tip">
+                <span class="theme-color" [style.backgroundColor]="pallete.components | safeStyle">&nbsp;</span>
+                <div class="help-checktip">Component</div>
+              </div>
+              <div class="help-tip color-help-tip">
+                <span class="theme-color" [style.backgroundColor]="pallete.text | safeStyle">&nbsp;</span>
+                <div class="help-checktip">Text</div>
+              </div>
+              <!-- <span class="radio-like active" *ngIf="jsonBuilderHandler.getJSONBuilt().theme.bgColor == pallete.backGround && jsonBuilderHandler.getJSONBuilt().theme.componentColor == pallete.components && jsonBuilderHandler.getJSONBuilt().theme.textColor == pallete.text"></span> -->
+            </a>
+          </div>
+        </div>
+      </div>
+      <!--<span class="or"> or </span>-->
+
+
+      <span class="divider col-xs-1 np">/</span>
+      <div class="col-xs-5 no-padding">
+        <span class="form-label">Custom Palettes</span>
+        <div class="col-xs-12 no-padding">
+          <div class="color-parent-sub">
+            <div class="picker-image " (click)="themeColorPopup('custom')">
+              <div class="selected-theme">
+                <div class="custom_text" [class.hide]="customPalleteApplied()">
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.custom_themes">lock_outline</i>
+                  <img src="assets/images/color-picker.png" *ngIf="_featureAuthService.features.custom_styling.custom_themes">
+                  <span>SELECT</span>
+                </div>
+                <!-- <div class="custom-theme custom_box" [class.hide]="!customPalleteApplied()">
+                  <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.bgColor  | safeStyle"></span>
+                  <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.componentColor | safeStyle"></span>
+                  <span class="selected-color" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().theme.textColor | safeStyle"></span>
+                  <i class="material-icons color-arrow">keyboard_arrow_down</i>
+                </div> -->
+                <div class="custom-theme custom_box" [class.hide]="!customPalleteApplied()">
+                  <div class="selected-theme" (click)="featureAccessIssue()">
+                    <div class="help-tip color-help-tip custom-color-tip">
+                      <!-- <a class="theme-color custom-edit bg-theme-color" href="javascript:void();" *ngIf="jsonBuilderHandler.getJSONBuilt().customColor.bgColor=='#ffffff'"><i class="material-icons">edit</i></a> -->
+                      <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.bgColor  | safeStyle"
+                        class="theme-color custom-theme-color bg-theme-color">
+                        &nbsp;
+                      </a>
+                      <div class="help-checktip">Background</div>
+                    </div>
+                    <div class="help-tip color-help-tip custom-color-tip">
+                      <!-- <a class="theme-color custom-edit component-theme-color" href="javascript:void();" *ngIf="jsonBuilderHandler.getJSONBuilt().customColor.componentColor=='#ffffff'"><i class="material-icons">edit</i></a> -->
+                      <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.componentColor | safeStyle"
+                        class="theme-color custom-theme-color component-theme-color">
+                        &nbsp;
+                      </a>
+                      <div class="help-checktip">Component</div>
+                    </div>
+                    <div class="help-tip color-help-tip custom-color-tip">
+                      <!-- <a class="theme-color custom-edit text-theme-color" href="javascript:void();" *ngIf="jsonBuilderHandler.getJSONBuilt().customColor.textColor=='#ffffff'"><i class="material-icons">edit</i></a> -->
+                      <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.textColor | safeStyle"
+                        class="theme-color custom-theme-color text-theme-color">
+                        &nbsp;
+                      </a>
+                      <div class="help-checktip">Text</div>
+                    </div>
+                  </div>
+                  <div class="theme-modal bg-theme-modal hide">
+                    <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseThemeModal('bgColor')">
+                      <i class="material-icons">close</i>
+                    </a>
+                    <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.bgColor" class="theme-color current-theme-color">&nbsp;</a>
+                    <input type="text" class="bg-theme-color-picker detail-text current-theme-text">
+                  </div>
+                  <div class="theme-modal component-theme-modal hide">
+                    <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseThemeModal('componentColor')">
+                      <i class="material-icons">close</i>
+                    </a>
+                    <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.componentColor" class="theme-color current-theme-color">&nbsp;</a>
+                    <input type="text" class="component-theme-color-picker detail-text current-theme-text">
+                  </div>
+                  <div class="theme-modal text-theme-modal hide">
+                    <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseThemeModal('textColor')">
+                      <i class="material-icons">close</i>
+                    </a>
+                    <a href="javascript:void();" [style.backgroundColor]="jsonBuilderHandler.getJSONBuilt().customColor.textColor" class="theme-color current-theme-color">&nbsp;</a>
+                    <input type="text" class="text-theme-color-picker detail-text current-theme-text">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tint-block">
+      <span class="form-label  top-space10" [class.no-margin]="!jsonBuilderHandler.getJSONBuilt().theme.tintToggle">
+        <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.custom_tints">lock_outline</i> Tint</span>
+      <div class="switch top-space10" [class.alwaysOff]="!_featureAuthService.features.custom_styling.custom_tints">
+        <label>
+          <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().theme.tintToggle" (change)="toggleTint()">
+          <span class="lever mt5"></span>
+        </label>
+      </div>
+      <div class="col-md-12 col-xs-12 no-padding" [class.hide]="!jsonBuilderHandler.getJSONBuilt().theme.tintToggle">
+        <div class="color-parent">
+          <div class="pull-left color-parent-sub">
+            <div class="tint-picker " (click)="featureCheck()">
+              <div class="selected-theme">
+                <span class="selected-color tint-theme-color" [style.background]="jsonBuilderHandler.getJSONBuilt().theme.tintColor"></span>
+                <span (click)="themeColorPopup('opacity')" class="pull-right">
+                  <span class="tint-per">{{num}}%</span>
+                  <i class="material-icons color-arrow">keyboard_arrow_down</i>
+                </span>
+              </div>
+            </div>
+            <div class="theme-parent tint-theme-parent hide">
+              <div class="themes active">
+                <input id="tint_range" type="range" min="1" max="100" value="{{num}}" />
+              </div>
+            </div>
+            <div class="theme-modal tint-theme-modal hide">
+              <a class="custom-close current-theme-color" href="javascript:void(0);" (click)="CloseTintModal()">
+                <i class="material-icons">close</i>
+              </a>
+              <a href="javascript:void();" [style.background]="jsonBuilderHandler.getJSONBuilt().theme.tintColor" class="theme-color current-theme-color">&nbsp;</a>
+              <input type="text" class=" tint-color-picker detail-text current-theme-text">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="type-details" [class.no-border-after]="jsonBuilderHandler.isTempName(['one-page-card-new','one-page-card-oldresult'])">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_styling.fonts">lock_outline</i>
+    <span class="form-label">Font</span>
+    <div class="col-md-12 col-xs-12 no-padding">
+      <select id="font-selectbox" class="form-control" data-width="fit" (change)="changeFont($event)">
+        <option *ngFor="let font of fonts, let i=index" value="{{i}}" [selected]="font.fontFamily==jsonBuilderHandler.getJSONBuilt().theme.fontFamily">{{font.displayName}}</option>
+      </select>
+    </div>
+    <!-- <div class="type-details bottom-space0" *ngIf="jsonBuilderHandler.editors('RTL')">
+        <div class="rtl-outer">
+        <span class="form-label"> ORIENTATION: (Right to Left) </span>
+        </div>
+      <div class="switch">
+          <label>
+            <input
+              type="checkbox"
+              [checked] = "jsonBuilderHandler.getJSONBuilt().RTL"
+              (change)="RTL()" >
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div> -->
+  </div>
+  <!--<div class="type-details" *ngIf="['one-page-card-new','one-page-card-oldresult'].indexOf(jsonBuilderHandler.getJSONBuilt().template) >= 0">
+    <span class="form-label">Show Progress Bar</span>
+    <div class="switch">
+      <label>
+        <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().progressBar.visible" (change)="progressBarChange($event)">
+        <span class="lever"></span>
+      </label>
+    </div>
+  </div>-->
+</div>
+<div class="type-detail-outerr">
+  <div class="type-details-head-no-collapse">
+    <span class="form-label no-margin">Branding</span>
+  </div>
+  <div class="type-details no-border-after pb0">
+    <div *ngIf="editorControl.logo.order">
+      <span class="form-label" [class.no-margin]="editorControl.logo.visible === false">Logo</span>
+      <div class="help-tip editor-helptip hide">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Recommended Dimensions are 180px by 50px.</div>
+      </div>
+      <div class="switch">
+        <label>
+          <input type="checkbox" class="show-check" (change)="toggleLogo($event);callGA('TOGGLELOGO')" [checked]="editorControl.logo.visible">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <div class="div-check" *ngIf="editorControl.logo.visible">
+        <div class="col-xs-12 no-padding">
+          <div class="input-group">
+            <input type="text" class="file-input" placeholder="No file" value="{{(editorControl.logo.props.unit != '')?editorControl.logo.props.unit:editorControl.logo.props.title}}"
+              readonly>
+            <label class="input-group-btn">
+              <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="upload('logo');">
+                UPLOAD
+              </span>
+            </label>
+          </div>
+        </div>
+        <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-top:8px;">
+          <label class="check-value">LOGO URL</label>
+          <input type="text" class="form-text value-text" placeholder="http://" (change)="onNavigateURLChange($event)" [(ngModel)]="editorControl.logo.config.direction"
+          />
+        </div>
+        <div class="type-details bottom-space0" *ngIf="editorControl.logo?.props?.postfix">
+          <div class="form-label">Logo Orientation</div>
+          <div class="radio-logo-sizes">
+            <div class="logo-dir-outer">
+              <label class="logo-direction vert ic">
+                <input type="radio" value="Value1" name="radiobox1" id="r1" (click)="logoReactSize('vert')" [checked]="editorControl.logo.config.attr.logoClass === 'vert'">
+                <div class="logo-helptip">
+                  <label for="r1">
+                    <i class="material-icons fa-rotate-h">all_inclusive</i>
+                  </label>
+                  <div class="logo-helptext">Vertical Logo Dimensions: 70 X 70</div>
+                </div>
+              </label>
+              <label class="logo-direction horz ic">
+                <input type="radio" value="Value1" name="radiobox1" id="r2" (click)="logoReactSize('horz')" [checked]="editorControl.logo.config.attr.logoClass === 'horz'">
+                <div class="logo-helptip">
+                  <label for="r2">
+                    <i class="material-icons">all_inclusive</i>
+                  </label>
+                  <div class="logo-helptext">Horizontal Logo Dimensions: 160 X 60</div>
+                </div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="type-details powered">
+    <div class="col-xs-12 no-padding setting-detail-box powered">
+      <span class="form-label no-margin">Outgrow Branding
+        <i class="material-icons lock-icon bookmark-icon" style="margin-top: 2px;" *ngIf="editorControl.poweredby.visible && !_featureAuthService.features.custom_branding.cta_build_similar_calc">lock_outline</i>
+        <!--<i class="material-icons" style="font-size: 12px; margin-left: 5px;position: relative;top: 2px;color: #ccc;">https</i>-->
+      </span>
+      <div class="switch" [class.alwaysOn]="editorControl.poweredby.visible && !_featureAuthService.features.custom_branding.cta_build_similar_calc">
+        <label>
+          <input type="checkbox" [checked]="editorControl.poweredby.visible" (change)="togglePoweredBy($event);callGA('POWEROGTOGGLE')">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <select class="form-control top-space10 hide" *ngIf="editorControl.poweredby.visible">
+        <option>Light</option>
+        <option>Dark</option>
+      </select>
+    </div>
+    <div class="col-xs-12 no-padding setting-detail-box powered top-space10" *ngIf="_subdomainService.currentCompany.agency && _featureAuthService.features.custom_branding.allow_agency_branding">
+      <span class="form-label">Agency Branding
+        <i class="material-icons lock-icon bookmark-icon" style="margin-top: 2px;" *ngIf="!_featureAuthService.features.custom_branding.allow_agency_branding">lock_outline</i>
+        <!--<i class="material-icons" style="font-size: 12px; margin-left: 5px;position: relative;top: 2px;color: #ccc;">https</i>-->
+      </span>
+      <div class="switch" [class.alwaysOff]="!_featureAuthService.features.custom_branding.allow_agency_branding">
+        <label>
+          <input type="checkbox" [checked]="editorControl.poweredby.showButton" (change)="toggleAgencyPoweredBy();callGA('POWEROGTOGGLE')">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <div class="col-xs-12 no-padding" [class.hide]="!editorControl.poweredby.showButton">
+        <div class="input-group">
+          <input type="text" class="file-input" value="{{(editorControl.poweredby.imageName != '')?editorControl.poweredby.imageName:''}}"
+            placeholder="No file" readonly>
+          <label class="input-group-btn">
+            <span class="btn btn-basic2 bgImageButton" (click)="uploadAgencyLogo()">
+              {{(editorControl.poweredby.imageName != '')?'REPLACE':'UPLOAD'}} IMAGE
+            </span>
+          </label>
+        </div>
+        <div class="type-details-sub">
+          <div *ngIf="editorControl.poweredby.showButton">
+            <span class="form-label">Text:</span>
+            <input type="text" class="detail-text" [(ngModel)]="editorControl.poweredby.formulaIndex">
+          </div>
+        </div>
+        <div class="type-details">
+          <div *ngIf="editorControl.poweredby.showButton">
+            <span class="form-label">URL:</span>
+            <input type="text" class="detail-text" (change)="onURLChange($event)" [(ngModel)]="editorControl.poweredby.postfix">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-12 no-padding setting-detail-box powered hide">
+      <span>Hide Welcome Screen</span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" (change)="changeVisivility();callGA('HIDEWELCOMETOGGLE')" [checked]="!page.visible" />
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-container *ngIf="!jsonBuilderHandler.isEmpty(editorControl.header_links)">
+  <div class="type-detail-outerr" [class.hide]="jsonBuilderHandler.isTempName(['sound-cloud-v3','experian'])">
+    <div class="type-details-head-no-collapse">
+      <span class="form-label no-margin">Header</span>
+      <div class="switch">
+        <label>
+          <input (change)="toggleHeaderLinks()" [checked]="editorControl.header_links.visible" type="checkbox">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+    <div class="">
+      <links [control]="editorControl.header_links" *ngIf="editorControl.header_links.visible" [type]="'Header'" [coltype]='0'>
+      </links>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="!jsonBuilderHandler.isEmpty(editorControl.footer_links)">
+  <div class="type-detail-outerr" [class.hide]="jsonBuilderHandler.isTempName(['sound-cloud-v3','experian'])">
+    <div class="type-details-head-no-collapse">
+      <span class="form-label no-margin">Footer</span>
+      <div class="switch">
+        <label>
+          <input (change)="toggleFooterLinks()" [checked]="editorControl.footer_links.visible" type="checkbox">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+    <div class="">
+      <div *ngIf="editorControl.footer_links.visible" class="type-details no-border-after bottom-space0">
+        <div class="footer-flip-outer">
+          <div class="footer-flip-inner">
+            <input type="radio" name="col" id="footer4" [value]="'1'" [(ngModel)]="editorControl.footer_links.columneLayout" [checked]="editorControl.footer_links.columneLayout=='1' || !editorControl.footer_links.columneLayout"
+            />
+            <label class="result-name ellipsis" for="footer4">
+              <span>1 Row</span>
+            </label>
+          </div>
+        </div>
+        <div class="footer-flip-outer">
+          <div class="footer-flip-inner">
+            <input type="radio" name="col" id="footer1" [value]="'2'" [(ngModel)]="editorControl.footer_links.columneLayout" [checked]="editorControl.footer_links.columneLayout =='2'"
+            />
+            <label class="result-name ellipsis" for="footer1">
+              <span>2</span>
+              <span>Column</span>
+            </label>
+          </div>
+        </div>
+        <div class="footer-flip-outer">
+          <div class="footer-flip-inner">
+            <input type="radio" name="col" id="footer2" [value]="'3'" [(ngModel)]="editorControl.footer_links.columneLayout" [checked]="editorControl.footer_links.columneLayout=='3'"
+            />
+            <label class="result-name ellipsis" for="footer2">
+              <span>3</span>
+              <span>Column</span>
+            </label>
+          </div>
+        </div>
+        <div class="footer-flip-outer">
+          <div class="footer-flip-inner">
+            <input type="radio" name="col" id="footer3" [value]="'4'" [(ngModel)]="editorControl.footer_links.columneLayout" [checked]="editorControl.footer_links.columneLayout=='4'"
+            />
+            <label class="result-name ellipsis" for="footer3">
+              <span>4</span>
+              <span>Column</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
+      <links [control]="editorControl.footer_links" *ngIf="editorControl.footer_links.visible" [type]="'Footer'" [coltype]="editorControl.footer_links.columneLayout">
+      </links>
+    </div>
+  </div>
+</ng-container>
+<div class="type-detail-outerr" *ngIf="!builderService.isDemo">
+  <div class="type-details-head-no-collapse no-mrgin">
+    <!-- <span class="form-label" *ngIf="tempType === 'Numerical'">Calculator Settings</span>
+  <span class="form-label" *ngIf="tempType === 'Recommendation'">Quiz Settings</span>
+  <span class="form-label" *ngIf="tempType === 'Graded'">Quiz Settings</span>
+  <span class="form-label" *ngIf="tempType === 'Poll'">Poll Settings</span> -->
+    <span class="form-label">Settings</span>
+  </div>
+  <div class="type-detail-outerr" *ngIf="['one-page-card-new','one-page-card-oldresult','template-five'].indexOf(jsonBuilderHandler.getJSONBuilt().template) >= 0">
+  <!--<div class="type-details-head-no-collapse">
+    <span class="form-label no-margin">Progress Bar</span>
+  </div>-->
+  <div class="type-details powered bottom-space0">
+    <div class="col-xs-12 no-padding setting-detail-box powered">
+      <span class="form-label" [class.mb0]="tempType !== 'Numerical'">{{(tempName=='template-five')?'Show Question Numbers':'Show Progress Bar'}}</span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().progressBar.visible" (change)="progressBarChange($event)">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+    <div class="col-xs-12 no-padding setting-detail-box powered hide">
+      <span class="form-label" [class.mb0]="tempType !== 'Numerical'">Bullet Style:</span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().progressBar.bulletStyle" (change)="progressBarBulletChange($event)">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+    <div class="col-xs-12 no-padding setting-detail-box powered hide" *ngIf="jsonBuilderHandler.getJSONBuilt().progressBar.visible">
+      <!-- <span class="form-label">Auto</span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().progressBar.auto" (change)="jsonBuilderHandler.getJSONBuilt().progressBar.auto = !jsonBuilderHandler.getJSONBuilt().progressBar.auto">
+          <span class="lever"></span>
+        </label>
+      </div> -->
+      <span class="form-label">Start from</span>
+      <div class="">
+        <div class="range-selector">
+          <input type="range" min="0" max="100" class="form-text" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().progressBar.perc">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div class="type-details no-border bottom-space0" *ngIf="jsonBuilderHandler.editors('realTimeResult') && tempType === 'Numerical'">
+      <span class="form-label lead-label" [class.no-margin]="!jsonBuilderHandler.getJSONBuilt().realTime">Show Real Time Results </span>
+      <div class="help-tip editor-helptip">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Toggle here to enable your users to see the results in real time as they answer the questions.</div>
+      </div>
+      <div class="switch" [class.alwaysOff]="!isRealTimeResult">
+        <label>
+          <input type="checkbox" (change)="onRealTimeChange();callGA('REALTIMECHANGE')" name="multi-checkbox"
+                 class="show-check"
+                 [checked]="jsonBuilderHandler.getJSONBuilt().realTime"
+                 data-size="mini" data-on-color="'blue'">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <div class="col-md-12 no-padding top-space10" *ngIf="jsonBuilderHandler.getJSONBuilt().realTime">
+        <span class="form-label">Select the result to display</span>
+        <select class="select-default" (change)="selectRealTime($event.target.value)" data-width="fit" class="form-control" (change)="selectRealTime($event.target.value)">
+              <option *ngFor="let result of realTimeResultList; let i = index;" [selected]="jsonBuilderHandler.getJSONBuilt().realTimeResult == i" value="{{i}}">{{result}}</option>
+        </select>
+      </div>
+      <div class="type-details" *ngIf="jsonBuilderHandler.getJSONBuilt().realTime">
+        <div class="col-xs-12 no-padding div-check">
+          <span class="form-label">Heading</span>
+          <input placeholder="Real Time Result Text" type="text" class="detail-text" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().realTimeHeading">
+        </div>
+      </div>
+    </div>
+  <div class="type-details no-border-after">
+    <div class="col-xs-12 no-padding setting-detail-box" [class.hide]="changeTempAccess == 1">
+      <a class="btn btn-default btn-flat btn-basic2" (click)="changeTemplate()">
+        <i class="material-icons">crop_original</i> CHANGE LAYOUT</a>
+    </div>
+    <div class="dropdown custom-select-temp top-space10" *ngIf="switchExp">
+      <button class="btn dropdown-toggle btn-basic2" [class.hide]="isLtdPlan || isFreelancerLtdPlan" type="button" data-toggle="dropdown">
+        <i class="material-icons">swap_vertical_circle</i>SWITCH CONTENT TYPE
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li *ngIf="switchType1Access">
+          <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType1.changeTo)">
+            <i class="material-icons">insert_photo</i> <i *ngIf="!experienceType[switchType1.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+            <span> &nbsp;{{switchType1.text}}</span>
+          </a>
+        </li>
+        <li *ngIf="switchType2Access">
+          <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType2.changeTo)">
+            <i class="material-icons">playlist_add_check</i> <i *ngIf="!experienceType[switchType2.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+            <span> &nbsp;{{switchType2.text}}</span>
+          </a>
+        </li>
+        <li *ngIf="switchType3Access">
+          <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType3.changeTo)">
+            <i class="material-icons">storage</i> <i *ngIf="!experienceType[switchType3.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+            <span> &nbsp;{{switchType3.text}}</span>
+          </a>
+        </li>
+        <li *ngIf="switchType4Access">
+          <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType4.changeTo)">
+            <i class="material-icons">assistant</i> <i *ngIf="!experienceType[switchType4.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+            <span> &nbsp;{{switchType4.text}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div [class.hide]="isLtdPlan || isFreelancerLtdPlan"  class="col-xs-12 no-padding setting-detail-box top-space10" *ngIf="switchType1Access && !switchExp">
+      <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType1.changeTo)">
+        <i class="material-icons">screen_share</i><i *ngIf="!experienceType[switchType1.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+        <span> &nbsp;{{switchType1.text}}</span>
+      </a>
+    </div>
+    <div [class.hide]="isLtdPlan || isFreelancerLtdPlan"  class="col-xs-12 no-padding setting-detail-box top-space10" *ngIf="switchType2Access&& !switchExp">
+      <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType2.changeTo)">
+        <i class="material-icons">screen_share</i> <i *ngIf="!experienceType[switchType2.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+        <span> &nbsp;{{switchType2.text}}</span>
+      </a>
+    </div>
+    <div [class.hide]="isLtdPlan || isFreelancerLtdPlan"  class="col-xs-12 no-padding setting-detail-box top-space10" *ngIf="switchType3Access&& !switchExp">
+      <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType3.changeTo)">
+        <i class="material-icons">screen_share</i> <i *ngIf="!experienceType[switchType3.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+        <span> &nbsp;{{switchType3.text}}</span>
+      </a>
+    </div>
+    <div [class.hide]="isLtdPlan || isFreelancerLtdPlan"  class="col-xs-12 no-padding setting-detail-box top-space10" *ngIf="switchType4Access&& !switchExp">
+      <a class="btn btn-default btn-flat btn-basic2" (click)="changeCalcType(switchType4.changeTo)">
+        <i class="material-icons">screen_share</i> <i *ngIf="!experienceType[switchType4.changeTo.toLowerCase()]" class="material-icons icon-lock">lock_outline</i> SWITCH TO
+        <span> &nbsp;{{switchType4.text}}</span>
+      </a>
+    </div>
+  </div>
+</div>
+<!--- modal changeTemplate -->
+<!--<div id="changeTemplate" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+              <div class="modal-header">
+                  <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close">
+                      <i class="material-icons">close</i>
+                  </button>
+              </div>
+            <div class="modal-body">
+                <div class="col-md-12 col-sm-12 col-xs-12 np">
+                    <div class="col-md-4 np calquiz-block">
+                        <label class="check-icon">
+                            <input type="radio" value="Numerical" name="calQuiz" id="radio1" (click) = "selectCalc()">
+                            <label for="radio1">
+                                <span class="outer-border">
+                                    <span class="animated-icon animated-calc">
+                                    </span>
+                                </span>
+                            </label>
+                            <div class="calc-quiz-margin">
+                                <h3>Numerical Calculator</h3>
+                                <span class="">Gives a result in the form of a number like a grade, price estimate or percentage.</span>
+                            </div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 np res-outer">
+                                <h3 class="example-heading">Examples</h3>
+                                <ul class="col-md-12 col-sm-12 col-xs-12 np">
+                                    <li>How much do you really know about the Lakers?</li>
+                                    <li>How much does it cost to remodel your kitchen?</li>
+                                    <li>What is the risk of getting zika?</li>
+                                </ul>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="col-md-4 np calquiz-block">
+                        <label class="check-icon ic">
+                            <input type="radio" value="Recommendation" name="calQuiz" id="radio2" (click) = "selectCalc()">
+                            <label for="radio2">
+                                <span class="outer-border">
+                                    <span class="animated-icon animated-recom">
+                                    </span>
+                                </span>
+                            </label>
+                            <div class="calc-quiz-margin">
+                                <h3>Outcome Quiz</h3>
+                                <span class="col-md-7 col-sm-12 col-xs-12 np">Gives a result in the form of a recommendation or a suggestion.</span>
+                            </div>
+                            <div class="col-md-12 col-sm-6 col-xs-12 np res-outer">
+                                <h3 class="example-heading">Examples</h3>
+                                <ul class="col-md-12 col-sm-12 col-xs-12 np">
+                                    <li>Which jeans should you wear?</li>
+                                    <li>Which insurance plan is right for you? </li>
+                                    <li>Which celebrity matches your style?</li>
+                                </ul>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> </div>-->
+<!--- modal changeTemplate -->

@@ -1,0 +1,202 @@
+<div class="">
+  <div class="main-side">
+    <div class="sidebar-topselector">
+      <div class="card-layout">
+        <span> WELCOME SCREEN 
+          <!-- <div class="switch">
+            <label>
+                  <input type="checkbox" (change)="changeVisivility();callGA('HIDEWELCOMETOGGLE')" [checked]="page.visible"/>
+                  <span class="lever"></span>
+                </label>
+          </div> -->
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="col-xs-12 no-padding">
+  <div class="type-details">
+    <div *ngIf="editorControl.header.order">
+      <span class="form-label">Heading</span>
+      <div class="icon-outer bottom">
+        <div class="char-count-limit" *ngIf="froalaHeader.textCount>49">{{froalaHeader.textCount}}</div>
+        <div class="help-text">Recommended limit of 49 characters is exceeded</div>
+      </div>
+      <div class="wysiwyg" *ngIf="froalaHeader.options" [froalaEditor]="froalaHeader.options"
+          [(froalaModel)]="editorControl.header.props.title" (froalaModelChange)="change('editorControl.header.props.title')"> 
+      </div>
+
+    <div class="type-details-sub">
+      <div *ngIf="editorControl.sub_header.order">
+        <!--<span class="form-label" [class.no-margin]="!editorControl.sub_header.visible">Sub Heading</span>-->
+        <span class="form-label" [class.no-margin]="!editorControl.sub_header.visible">Sub Heading</span>
+        <div class="icon-outer bottom">
+          <div class="char-count-limit" *ngIf="editorControl.sub_header.visible && froalaSubHeader.textCount>134">{{froalaSubHeader.textCount}}</div>
+          <div class="help-text">Recommended limit of 134 characters is exceeded</div>
+        </div>
+        <div class="switch">
+          <label>
+          <input type="checkbox" class="" (change)="toggleSubHeader();callGA('TOGGLESUB')" [checked]="editorControl.sub_header.visible">
+          <span class="lever"></span>
+        </label>
+        </div>
+        <div *ngIf="editorControl.sub_header.visible">
+          <div class="wysiwyg-sub" *ngIf="froalaSubHeader.options" [attr.contenteditable]="false" [froalaEditor]="froalaSubHeader.options"
+              [(froalaModel)]="editorControl.sub_header.props.title"> 
+        </div>
+        </div>
+      </div>
+
+
+
+      <div class="type-details-sub" *ngIf="editorControl.click_button.visible || (editorControl.leadform.visible && editorControl.leadform.props && !editorControl.leadform.props.postfix)">
+        <div>
+          <span class="form-label">Button Text</span>
+          <input type="text" class="detail-text" *ngIf="editorControl.leadform.visible" [(ngModel)]="editorControl.leadform.props.title"
+          />
+          <input type="text" class="detail-text" *ngIf="editorControl.click_button.visible" [(ngModel)]="editorControl.click_button.props.title"
+          />
+        </div>
+
+      </div>
+  </div>
+  </div>
+  </div>
+  
+  <div class="type-details-outerr">
+      <div class="type-details-head-no-collapse">
+          <span class="result_text ellipsis">LOGO</span>
+           <div class="switch">
+            <label>
+              <input type="checkbox" class="show-check" (change)="toggleLogo($event);callGA('TOGGLELOGO')" [checked]="editorControl.logo.visible">
+              <span class="lever"></span>
+            </label>
+          </div>
+      </div>
+      <div class="type-details" *ngIf="editorControl.logo.visible">
+        <div *ngIf="editorControl.logo.order">
+          <!--<span class="form-label" [class.no-margin]="editorControl.logo.visible === false">Logo</span>-->
+          <div class="help-tip editor-helptip hide">
+            <i class="material-icons">info_outline</i>
+            <div class="help-checktip">Recommended Dimensions are 180px by 50px.</div>
+          </div>
+          <div class="div-check">
+            <div class="col-xs-12 no-padding">
+              <div class="input-group">
+                <input type="text" class="file-input" placeholder="No file" value="{{(editorControl.logo.props.unit != '')?editorControl.logo.props.unit:editorControl.logo.props.title}}"
+                  readonly>
+                <label class="input-group-btn">
+              <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="upload('logo');">
+                  UPLOAD
+              </span>
+            </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-top: 8px;">
+              <label class="check-value">LOGO URL</label>
+              <input type="text" class="form-text value-text" placeholder="http://" (change)="onNavigateURLChange($event)" [(ngModel)]="editorControl.logo.config.direction"
+              />
+            </div>
+            <div class="type-details bottom-space0" *ngIf="editorControl.logo?.props?.postfix">
+              <div class="form-label">Logo Orientation</div>
+              <div class="radio-logo-sizes">
+                <div class="logo-dir-outer">
+                  <label class="logo-direction vert ic">
+                      <input type="radio" value="Value1" name="radiobox1" id="r1" (click) = "logoReactSize('vert')" [checked]="editorControl.logo.config.attr.logoClass === 'vert'">
+                      <div class="logo-helptip">
+                        <label for="r1"> 
+                          <i class="material-icons fa-rotate-h">all_inclusive</i>
+                        </label>
+                        <div class="logo-helptext">Vertical Logo Dimensions: 70 X 70</div>
+                      </div>
+                  </label>
+                  <label class="logo-direction horz ic">
+                      <input type="radio" value="Value1" name="radiobox1" id="r2" (click) = "logoReactSize('horz')" [checked]="editorControl.logo.config.attr.logoClass === 'horz'">
+                      <div class="logo-helptip">
+                        <label for="r2">
+                          <i class="material-icons">all_inclusive</i>
+                        </label>
+                        <div class="logo-helptext">Horizontal Logo Dimensions: 160 X 60</div>
+                      </div>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+
+
+  <div class="type-details-outerr settings-tab">
+    <div class="type-details-head-no-collapse">
+      <span class="result_text ellipsis">SETTINGS</span>
+    </div>
+    <div class="type-details highlight  bottom-space0" 
+    [class.hide]="page.defaultClass ==='new-template-five'"
+    *ngIf="jsonBuilderHandler.getJSONBuilt().template === 'template-five'">
+      <div class="col-xs-12 no-padding setting-detail-box highlight">
+        <span class="label-welcome form-label no-margin">Text highlight</span>
+        <div class="switch">
+          <label>
+              <input type="checkbox"
+              [checked]="jsonBuilderHandler.getJSONBuilt().highlight"
+              (change)="jsonBuilderHandler.getJSONBuilt().highlight = !jsonBuilderHandler.getJSONBuilt().highlight"/>
+              <span class="lever"></span>
+            </label>
+        </div>
+      </div>
+    </div>
+    <div class="type-details bottom-space0 landing-alignment" *ngIf="jsonBuilderHandler.isTempName([ 'sound-cloud-v3', 'inline-temp-new', 'template-five', 'one-page-card-new'])">
+      <div class="form-label">Alignment</div>
+      <div class="radio-logo-sizes">
+        <div class="logo-dir-outer">
+          <label class="logo-direction vert ic align">
+              <input type="radio" value="Value1" name="radiobox2" id="r3" (click)="page.align='left'" [checked]="page.align=='left' || (page.align=='' && jsonBuilderHandler.isTempName(['sound-cloud-v3', 'template-five']))">
+              <div class="logo-helptip">
+                <label for="r3"> 
+                  <i class="material-icons">format_align_left</i>
+                </label>
+                <div class="logo-helptext">Align Left</div>
+              </div>
+          </label>
+          <label class="logo-direction vert ic align">
+              <input type="radio" value="Value1" name="radiobox2" id="r4" (click)="page.align='center'" [checked]="page.align=='center' || (page.align=='' && jsonBuilderHandler.isTempName(['inline-temp-new', 'one-page-card-new']))">
+              <div class="logo-helptip">
+                <label for="r4"> 
+                  <i class="material-icons">format_align_center</i>
+                </label>
+                <div class="logo-helptext">Align Center</div>
+              </div>
+          </label>
+          <label class="logo-direction vert ic align">
+              <input type="radio" value="Value1" name="radiobox2" id="r5" (click)="page.align='right'" [checked]="page.align=='right'">
+              <div class="logo-helptip">
+                <label for="r5">
+                  <i class="material-icons">format_align_right</i>
+                </label>
+                <div class="logo-helptext">Align Right</div>
+              </div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="type-details powered">
+      <div class="col-xs-12 no-padding setting-detail-box powered">
+        <span class="label-welcome form-label no-margin">Hide Welcome Screen</span>
+        <div class="help-tip editor-helptip">
+          <i class="material-icons">info_outline</i>
+          <div class="help-checktip">You may hide the welcome screen in case you are using your own welcome screen or if you wish to take the user directly
+            to question 1.</div>
+        </div>
+        <div class="switch">
+          <label>
+                <input type="checkbox" (change)="changeVisivility();callGA('HIDEWELCOMETOGGLE')" [checked]="!page.visible"/>
+                <span class="lever"></span>
+              </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

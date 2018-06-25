@@ -1,0 +1,38 @@
+<div class="col-xs-12 col-sm-12  new-js-outr custom-js">
+    <div class="custom-js-right custom-css-new w750">
+        <div *ngIf="changed">
+            <div class=" col-md-12 col-sm-12 col-xs-12 np" *ngIf="stylesData.status == 'disapproved'">
+                <div class="error-notice">
+                    <div class="oaerror danger">
+                        <i class="material-icons">cancel</i> Your custom sytle sheet has been disapproved.
+                    </div>
+                </div>
+            </div>
+            <div class=" col-md-12 col-sm-12 col-xs-12 np" *ngIf="stylesData.status == 'approved'">
+                <div class="error-notice">
+                    <div class="oaerror success">
+                        <i class="material-icons">check_circle</i> Your custom sytle sheet has been approved. Run your {{_jsonBuilderService.getJSONBuilt().templateType==='Numerical'?'calculator':(_jsonBuilderService.getJSONBuilt().templateType==='Poll'?'poll':'quiz')}} to see your script in action.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 no-padding info-text-outer">
+            <div class=" col-md-9 col-xs-12 col-sm-12 no-padding info-text">
+                <h1>Custom Sytle Sheets</h1>
+                <h4>Create your own custom sytle sheets for your {{_jsonBuilderService.getJSONBuilt().templateType==='Numerical'?'calculator':(_jsonBuilderService.getJSONBuilt().templateType==='Poll'?'poll':'quiz')}}</h4>
+            </div>
+            <div *ngIf="changed">
+                <div class=" col-md-6 col-xs-12 col-sm-12 no-padding text-right">
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 no-padding" style="width: 100% !important; overflow: hidden;">
+                <textarea style="width:100%" id="CustomCssEditor" rows="25" [(ngModel)]="stylesData.value" (change)="validateAndSave($event,true)"></textarea>
+             
+        </div>
+        <div class="col-xs-3 no-padding">
+            <button type="button" (click)="validateAndSave($event,false)" class="btn btn-basic  border-btn">{{buttontext}}</button>
+        </div>
+       
+    </div>
+</div>

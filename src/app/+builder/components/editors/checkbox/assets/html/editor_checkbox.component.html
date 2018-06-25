@@ -1,0 +1,561 @@
+<!--<div class="type-details hide">
+    <span class="form-label no-margin" *ngIf="jsonBuilderHelper.getSelectedControl().type ==='radio_button'">Allow User to Multi Select</span>
+    <span class="form-label no-margin" *ngIf="jsonBuilderHelper.getSelectedControl().type ==='checkbox'">Allow User to Single Select</span>
+    <div class="switch">
+        <label>
+            <input type="checkbox" name="multi-checkbox" class="show-check"
+                [checked]="jsonBuilderHelper.getSelectedControl().type ==='radio_button'"
+                (change)="onChangeControl()" data-size="mini" data-on-color="'blue'">
+            <span class="lever"></span>
+        </label>
+    </div>
+</div>-->
+<!-- Common Component -->
+<div class="type-details">
+  <common-editor [control]="control"></common-editor>
+  <div class="type-details bottom-space0">
+    <span class="form-label" [class.no-margin]="control.config.showHelp === false">Help Text</span>
+    <div class="icon-outer bottom" *ngIf="control.config.showHelp">
+      <div class="char-count-limit" *ngIf="froalaHelpText.textCount>90">{{froalaHelpText.textCount}}</div>
+      <div class="help-text">Recommended limit of 90 characters is exceeded</div>
+    </div>
+    <div class="switch">
+      <label>
+        <input type="checkbox" name="properties-checkbox" class="show-check" [checked]="control.config.showHelp" (change)="onChangeDescription(control);callGA('HELPTEXT',control)"
+          data-size="mini" data-on-color="'blue'">
+        <span class="lever"></span>
+      </label>
+    </div>
+    <div class="col-xs-12 no-padding text-group div-check help-editor-outer" *ngIf="control.config.showHelp">
+      <div class="form-text question-textarea helptext-control" *ngIf="froalaHelpText.options && !jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new', 'template-five-oldresult'])"
+        [froalaEditor]="froalaHelpText.options" [(froalaModel)]="control.props.helpText">
+      </div>
+      <textarea class="form-text question-textarea helptext-control" *ngIf="jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new', 'template-five-oldresult'])"
+        [(ngModel)]="control.props.helpText"></textarea>
+    </div>
+  </div>
+</div>
+<div class="type-details-head-no-collapse">
+  <span>OPTIONS</span>
+  <span class="pull-right">
+    <!-- <label class="rd-icon ic rd-option" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+      <div class="help-text">Image</div>
+      <input type="radio" name="bh" id="icon6" value="" (click)="optionImageToggle()" [checked]="control.optionImageVisible">
+      <label for="icon6">
+        <i class="material-icons">photo_camera</i>
+      </label>
+    </label>
+    <label class="rd-icon ic rd-option">
+      <div class="help-text">Icon</div>
+      <input type="radio" name="bh" id="icon4" value="" (click)="ShowIcon();callGA('TOGGLEICONON')" [checked]="control.isIconPresent">
+      <label for="icon4">
+        <i class="material-icons">photo_filter</i>
+      </label>
+    </label>
+    <label class="rd-icon ic rd-option">
+
+      <div class="help-text">Text</div>
+      <input type="radio" name="bh" id="icon5" value="" (click)="None();callGA('TOGGLEICONOFF')" [checked]="(control.isIconPresent || control.optionImageVisible)?false:true">
+
+      <label for="icon5">
+        <i class="material-icons">menu</i>
+      </label>
+    </label> -->
+
+    <div class="switch hide" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+      <label>
+        <input type="checkbox" name="properties-checkbox" class="show-check" [checked]="control.optionImageVisible" (change)="optionImageToggle()"
+          data-size="mini" data-on-color="'blue'">
+        <span class="lever-image plural">
+          <i class="material-icons">photo_camera</i>
+        </span>
+      </label>
+    </div>
+  </span>
+</div>
+<div class="card-layout new-imgupload">
+  <span class="border-white"></span>
+  <span *ngIf="control.type != 'selectbox'">
+    <label class="rd-icon ic rd-option">
+      <!--<div class="help-text">Text</div>-->
+      <input type="radio" name="bh" id="icon5" value="" (click)="None();callGA('TOGGLEICONOFF')" [checked]="(control.isIconPresent || control.optionImageVisible)?false:true">
+
+      <label for="icon5">
+        <i class="material-icons">menu</i>
+      </label>
+      <p class="imguploadtext">Text</p>
+    </label>
+    <label class="rd-icon ic rd-option">
+      <!--<div class="help-text">Icon</div>-->
+      <input type="radio" name="bh" id="icon4" value="" (click)="ShowIcon();callGA('TOGGLEICONON')" [checked]="control.isIconPresent">
+      <label for="icon4">
+          <i class="material-icons">brightness_low</i>
+      </label>
+      <p class="imguploadtext">Icon</p>
+    </label>
+    <label class="rd-icon ic rd-option" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+        <!--<div class="help-text">Image</div>-->
+        <input type="radio" name="bh" id="icon6" value="" (click)="optionImageToggle()" [checked]="control.optionImageVisible">
+        <label for="icon6">
+          <i class="material-icons">photo_camera</i>
+        </label>
+        <p class="imguploadtext">Image</p>
+      </label>
+    
+  </span>
+</div>
+
+<!-- Modal -->
+<div id="icon_img_selection_pop" class="modal fade hide" role="dialog">
+  <div class="modal-dialog modal-lg">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header col-sm-12 np">
+        <form>
+          <div class="input-group col-sm-9 np">
+            <div class="input-group-btn">
+              <i class="material-icons">search</i>
+            </div>
+            <input type="text" class="form-control" placeholder="Search">
+          </div>
+          <div class="col-sm-3 np">
+            <div class="switch-section">
+              <div class="switch">
+                <ul>
+                  <li class="custom-toggle">
+                    <input type="checkbox" name="check" id="check1" />
+                    <label for="check1">
+                      <span class="can-toggle__switch" data-checked="Images" data-unchecked="Icon"></span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-body col-sm-12 np">
+        <div class="col-sm-2 np">
+          <div class="upload-box">
+            <i class="material-icons">add_a_photo</i> Upload Images
+          </div>
+        </div>
+        <div class="col-sm-10 np icon-img-wrapper">
+          <div class="icon_img_radio">
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_about-96" value="about-96">
+              <label for="icon_about-96">
+                <img src="assets/images/icon_img/about-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_accept_database-96" value="accept_database-96">
+              <label for="icon_accept_database-96">
+                <img src="assets/images/icon_img/accept_database-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_add_column-96" value="add_column-96">
+              <label for="icon_add_column-96">
+                <img src="assets/images/icon_img/add_column-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_add_database-96" value="add_database-96">
+              <label for="icon_add_database-96">
+                <img src="assets/images/icon_img/add_database-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_add_image-96" value="add_image-96">
+              <label for="icon_add_image-96">
+                <img src="assets/images/icon_img/add_image-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_add_row-96" value="add_add_row-96">
+              <label for="icon_add_row-96">
+                <img src="assets/images/icon_img/add_row-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_address_book-96" value="address_book-96">
+              <label for="icon_address_book-96">
+                <img src="assets/images/icon_img/address_book-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_advance-96" value="advance-96">
+              <label for="icon_advance-96">
+                <img src="assets/images/icon_img/advance-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_advertising-96" value="advertising-96">
+              <label for="icon_advertising-96">
+                <img src="assets/images/icon_img/advertising-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_alarm_clock-96" value="alarm_clock-96">
+              <label for="icon_alarm_clock-96">
+                <img src="assets/images/icon_img/alarm_clock-96.png" />
+              </label>
+            </label>
+
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_alphabetical_sorting_az-96" value="alphabetical_sorting_az-96">
+              <label for="icon_alphabetical_sorting_az-96">
+                <img src="assets/images/icon_img/alphabetical_sorting_az-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_alphabetical_sorting_za-96" value="alphabetical_sorting_za-96">
+              <label for="icon_alphabetical_sorting_za-96">
+                <img src="assets/images/icon_img/alphabetical_sorting_za-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_answers-96" value="answers-96">
+              <label for="icon_answers-96">
+                <img src="assets/images/icon_img/answers-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_approval-96" value="alarm_approval-96">
+              <label for="icon_approval-96">
+                <img src="assets/images/icon_img/approval-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_approve-96" value="approve-96">
+              <label for="icon_approve-96">
+                <img src="assets/images/icon_img/approve-96.png" />
+              </label>
+            </label>
+
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_area_chart-96" value="area_chart-96">
+              <label for="icon_area_chart-96">
+                <img src="assets/images/icon_img/area_chart-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_assistant-96" value="assistant-96">
+              <label for="icon_assistant-96">
+                <img src="assets/images/icon_img/assistant-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_audio_file-96" value="audio_file-96">
+              <label for="icon_audio_file-96">
+                <img src="assets/images/icon_img/audio_file-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_automatic-96" value="automatic-96">
+              <label for="icon_automatic-96">
+                <img src="assets/images/icon_img/automatic-96.png" />
+              </label>
+            </label>
+            <label class="rd-icon">
+              <input type="radio" name="1" id="icon_automotive-96" value="automotive-96">
+              <label for="icon_automotive-96">
+                <img src="assets/images/icon_img/automotive-96.png" />
+              </label>
+            </label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="type-details">
+
+  <div class="col-xs-12 no-padding bottom-space10 comp-list" [class.firstOption]="i==0" [class.lastOption]="i == control.options.length-1"
+    [class.hide]="option.type=='textfield'" *ngFor="let option of control.options ; let i = index">
+    <div class="delete-option">
+      <div class="icon-outer">
+        <div class="char-count-limit" *ngIf="option.label.length>(control.optionImageVisible?40:65)">{{option.label.length}}</div>
+        <div class="help-text">Recommended limit of {{(control.optionImageVisible)?40:65}} characters is exceeded</div>
+      </div>
+      <span class="option option-up" [class.hide]="option.type==='textfield'" *ngIf="i>0">
+        <a href="javascript:void();" (click)="move_option_up(i)">
+          <i class="material-icons">keyboard_arrow_up</i>
+        </a>
+        <div class="help-text">Up</div>
+      </span>
+      <span class="option option-down" *ngIf="i<control.options.length-1" [class.hide]="(control.options[i+1] && control.options[i+1].type ==='textfield') || option.type ==='textfield'">
+        <a href="javascript:void();" (click)="move_option_down(i)">
+          <i class="material-icons">keyboard_arrow_down</i>
+        </a>
+        <div class="help-text">Down</div>
+      </span>
+      <span class="option" *ngIf="control.options.length !== 1">
+        <a href="javascript:void();" (click)="delete_Option_From_Items(control.options,i);callGA('DELETEOPTION')">
+          <i class="material-icons">clear</i>
+        </a>
+        <div class="help-text">Delete</div>
+      </span>
+    </div>
+    <span class="no-padding option-label">
+      <div class="help-tip">
+        <span class="default-label" *ngIf="option.defualtselected">D</span>
+        <div class="help-checktip">Default Option</div>
+      </div>
+      <span class="" *ngIf="!option.defualtselected">{{i+1}}</span>
+    </span>
+    <!--icons-->
+    <div class="option-textbox">
+      <div class="btn-group option-icons optionicon{{i}}" *ngIf="showIcon && control.type !== 'selectbox'">
+        <button type="button" class="btn btn-default dropdown-toggle" (click)="OpenPreviousIcon(i)" aria-haspopup="true" aria-expanded="false">
+          <span class="selected-icon">
+            <!-- <i class="material-icons" *ngIf="option.icon">{{option.icon}}</i> -->
+            <i *ngIf="option.icon" class="{{option.icon.startsWith('fa-')?option.icon + ' fa':'material-icons'}}">{{option.icon.startsWith('fa-')?'':option.icon}}</i>
+            <i class="material-icons" *ngIf="!option.icon">landscape</i>
+          </span>
+          <div class="choose iconopen{{i}}">
+            <a href="javascript:void(0);" class="default choose-icon" (click)="OpenChangeIcon(i)">
+              <span class="arrow-down">
+                <i class="material-icons">keyboard_arrow_down</i>
+              </span>
+            </a>
+          </div>
+        </button>
+        <div class="material-icon-dropdown scrollbar">
+          <!-- <a href="javascript:void(0);" class="close" (click) = "CloseChangeIcon(i)"><i class="material-icons" >close</i></a> -->
+          <div class="selected-icon">
+            <span *ngIf="!option.previousIcons.length" class="no-icon">No Previous Icon</span>
+            <label class="rd-icon ic" *ngFor="let icon of option.previousIcons; let s of index">
+              <input type="radio" name="p{{i+1}}" id="iconp{{s}}+{{i+1}}" value="{{icon}}" (click)="changeIcon(option,$event)">
+              <label attr.for="iconp{{s}}+{{i+1}}">
+                <!-- <i class="material-icons">{{icon}}</i> -->
+                <i class="{{icon.startsWith('fa-')?icon + ' fa':'material-icons'}}">{{icon.startsWith('fa-')?'':icon}}</i>
+              </label>
+            </label>
+          </div>
+          <div class="icon-op">
+            <label class="rd-icon ic" *ngFor="let icon of jsonElementHandler.iconArray; let s of index">
+              <input type="radio" name="{{i+1}}" id="icon{{s}}+{{i+1}}" value="{{icon}}" (click)="changeIcon(option,$event)">
+              <label attr.for="icon{{s}}+{{i+1}}">
+                <i class="{{icon.startsWith('fa-')?icon + ' fa':'material-icons'}}">{{icon.startsWith('fa-')?'':icon}}</i>
+              </label>
+            </label>
+          </div>
+        </div>
+        <!-- <ul class="dropdown-menu" id="icon-list{{i}}">
+                    <li>
+                        <label class="rd-icon ic" *ngFor="let icon of option.previousIcons; let s of index">
+                            <input type="radio" name="p{{i+1}}" id="iconp{{s}}+{{i+1}}" value="{{icon}}" (click)="changeIcon(option,$event)">
+                            <label attr.for="iconp{{s}}+{{i+1}}"><i class="material-icons">{{icon}}</i> </label>
+                        </label>
+                        <span *ngIf="!option.previousIcons.length">No Previous Icon</span>
+                    </li>
+                </ul> -->
+      </div>
+      <div class="option-textbox-sub" [class.paddr0]="showIcon && !control.optionImageVisible">
+        <input type="text" class="form-text" placeholder="Label" [(ngModel)]="option.label" (keyup)="onKeyUp(i, $event)">
+      </div>
+      <div class="btn-group option-images optionimage{{i}}" *ngIf="control.optionImageVisible && jsonBuilderHelper.editors('optionsImage') && control.type !== 'selectbox'">
+        <button type="button" class="btn btn-default dropdown-toggle" (click)="OpenPreviousImage(i)" aria-haspopup="true" aria-expanded="false">
+          <img [src]="option.imageURL" *ngIf="['https://cdn.filestackcontent.com/m5ovgp6OTaGFDRFk8dRJ'].indexOf(option.imageURL) < 0">
+          <span class="selected-icon newuiicon" *ngIf="['https://cdn.filestackcontent.com/m5ovgp6OTaGFDRFk8dRJ'].indexOf(option.imageURL) >= 0">
+              <i class="material-icons">add_a_photo</i>
+          </span>
+          <div class="choose imageopen{{i}} hide">
+            <a href="javascript:void(0);" class="default choose-image" (click)="OpenChangeImage()">
+              <span class="arrow-down">
+                <i class="material-icons">keyboard_arrow_down</i>
+              </span>
+            </a>
+          </div>
+        </button>
+        <div class="material-icon-dropdown optionImage optionImage{{i}}">
+          <!-- <a href="javascript:void(0);" class="close" (click) = "CloseChangeIcon(i)"><i class="material-icons" >close</i></a> -->
+          <div class="newimgupload-topbar">
+              <p>Question {{jsonBuilderHelper.getQuestionNo()}} > Image</p>
+              <a href="javascript:void(0);" class="close" (click) = "CloseChangeIcon(i)"><i class="material-icons" >close</i></a>
+          </div>
+          <div class="newimgupload-links">
+            <a href="javascript:void(0);" [class.active]="showIconsList" (click)="newaddphotos()">
+              <i class="material-icons">photo_camera</i>
+              <label>Photos</label>
+            </a>
+            <a href="javascript:void(0);" (click)="uploadImage(option)" class="">
+              <i class="material-icons">file_upload</i>
+              <div class="help-tip editor-helptip pull-right upload-helptip" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">Recommended Dimensions are 240px by 240px.</div>
+              </div>
+              <label>Upload</label>
+            </a>
+            <a href="javascript:void(0);" [class.active]="showLink" (click)="newaddlink()">
+              <i class="material-icons">link</i>
+              <label>Add Link</label>
+            </a>
+          </div>
+          <div class="newimgupload-addlink">
+              <label class="check-value">LINK</label>
+              <input class="form-text value-text" placeholder="https://" [(ngModel)]="option.imageURL" type="text">
+          </div>
+          <div class="no-padding col-sm-12 col-md-12">
+            <!-- <button class="btn btn-red-filled btn-hover" type="button" (click)="uploadImage(option)">Upload Image</button> -->
+            <div class="input-group img-option hide" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+              <input type="text" class="file-input" *ngIf="option.imageName" value="{{(option.imageName != '')?option.imageName:option.imageURL}}"
+                placeholder="No file" readonly>
+              <span class="btn btn-basic2 btn-hover" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="uploadImage(option)">
+                <span style="float: left;margin-right: 8px;"> UPLOAD</span>
+                <div class="help-tip editor-helptip pull-right upload-helptip" *ngIf="jsonBuilderHelper.editors('optionsImage')">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">Recommended Dimensions are 240px by 240px.</div>
+                </div>
+              </span>
+            </div>
+            <div class="text-center img-option hide" style="justify-content: center;  margin: 0;">
+              <span>Or</span>
+            </div>
+            <div class="input-group img-option nb newimgupload-search">
+              <span class="input-group-addon">
+                <i class="material-icons">search</i>
+              </span>
+              <input type="text" class="file-input" [(ngModel)]="filter" placeholder="Search for photos" (keyup)="filterIcons()">
+            </div>
+          </div>
+          <div class="icon-op scrollbar newimgupload-scrolbar">
+            <!-- <span class="icon-img-title">Select an image</span> -->
+            <label class="rd-icon ic" *ngFor="let img of imgArray; let s = index" [class.active]="option.imageURL === img.url">
+              <input type="radio" name="{{i+1}}" id="{{img.title}}{{s}}+{{i+1}}" [checked]="option.imageURL === img.url" value="{{img.title}}">
+              <label attr.for="{{img.title}}{{s}}+{{i+1}}" (click)="setOptionImage(option, img, $event)">
+                <img src="{{img.url}}" />
+              </label>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="no-padding col-sm-12 col-md-12 hide">
+      <div class="input-group img-option" *ngIf="control.optionImageVisible && jsonBuilderHelper.editors('optionsImage')">
+        <input type="text" class="file-input" value="{{(option.imageName != '')?option.imageName:option.imageURL}}" placeholder="No file"
+          readonly>
+        <span class="btn btn-basic2" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz" (click)="uploadImage(option)">
+          <span style="float: left;margin-right: 8px;"> UPLOAD</span>
+          <div class="help-tip editor-helptip pull-right upload-helptip" *ngIf="control.optionImageVisible && jsonBuilderHelper.editors('optionsImage')">
+            <i class="material-icons">info_outline</i>
+            <div class="help-checktip">Recommended Dimensions are 240px by 240px.</div>
+          </div>
+        </span>
+      </div>
+    </div>
+    <div class="no-padding col-sm-12 col-md-12">
+      <label class="check-value" [class.help-tip-absent]="i!=0">VALUE
+        <div class="help-tip" *ngIf="i==0 && jsonBuilderHelper.getJSONBuilt().templateType=='Numerical'">
+          <i class="material-icons">info_outline</i>
+          <div class="help-checktip" *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Numerical'">
+            Each option has a numeric 'value' that describes its impact to the end result. In a calculator calculating the total cost
+            of a fruit basket, the 'value' will be the cost of a fruit item.
+          </div>
+        </div>
+      </label>
+      <input type="{{inputType}}" class="form-text value-text" placeholder="Value" [(ngModel)]="option.value" (keyup)="onKeyUp(i, $event)"
+        (keydown)="onKeyDown(i, $event)">
+
+    </div>
+  </div>
+  <div class="col-xs-12 top-space5">
+    <div class="addoption">
+      <a href="javascript:void(0);" (click)="add_Option_In_Dropdown();callGA('ADDOPTION')" class="default">Add Option</a>
+    </div>
+  </div>
+  <div class="new-otherfield-outr col-xs-12 bottom-space0 top-space15" [class.hide]="control.optionImageVisible">
+    <label class="correc-leftpanel new-otherfield">
+      <input id="og_others" type="checkbox" value="Value1" name="og_others" (change)="addOthersField(control.options[control.options.length - 1], $event)"
+        [checked]="control.options[control.options.length - 1].type === 'textfield'">
+      <label for="og_others"></label>
+      <p>Add "Other" Option</p>
+      <div class="help-tip editor-helptip">
+        <i class="material-icons">help_outline</i>
+        <div class="help-checktip">Allow the user to write his own answer</div>
+      </div>
+    </label>
+    <div *ngIf="control.options[control.options.length - 1].type=='textfield'">
+      <div class="no-padding col-sm-12 col-md-12 othertext-placeholder">
+        <div class="option-textbox">
+          <div class="btn-group option-icons optionicon{{control.options.length - 1}}" style="margin-top:8px; margin-right:8px" *ngIf="showIcon">
+            <button type="button" class="btn btn-default dropdown-toggle" (click)="OpenPreviousIcon(control.options.length - 1)" aria-haspopup="true" aria-expanded="false">
+              <span class="selected-icon">
+                <!-- <i class="material-icons" *ngIf="control.options[control.options.length - 1].icon">{{control.options[control.options.length - 1].icon}}</i> -->
+                <i *ngIf="control.options[control.options.length - 1].icon" class="{{control.options[control.options.length - 1].icon.startsWith('fa-')?control.options[control.options.length - 1].icon + ' fa':'material-icons'}}">{{control.options[control.options.length - 1].icon.startsWith('fa-')?'':control.options[control.options.length - 1].icon}}</i>
+                <i class="material-icons" *ngIf="!control.options[control.options.length - 1].icon">landscape</i>
+              </span>
+              <div class="choose iconopen{{control.options.length - 1}}">
+                <a href="javascript:void(0);" class="default choose-icon" (click)="OpenChangeIcon(control.options.length - 1)">
+                  <span class="arrow-down">
+                    <i class="material-icons">keyboard_arrow_down</i>
+                  </span>
+                </a>
+              </div>
+            </button>
+            <div class="material-icon-dropdown scrollbar">
+              <div class="selected-icon">
+                <span *ngIf="!control.options[control.options.length - 1].previousIcons.length" class="no-icon">No Previous Icon</span>
+                <label class="rd-icon ic" *ngFor="let icon of control.options[control.options.length - 1].previousIcons; let s of index">
+                  <input type="radio" name="p{{control.options.length - 1+1}}" id="iconp{{s}}+{{control.options.length - 1+1}}" value="{{icon}}" (click)="changeIcon(control.options[control.options.length - 1],$event)">
+                  <label attr.for="iconp{{s}}+{{control.options.length - 1+1}}">
+                    <i class="{{icon.startsWith('fa-')?icon + ' fa':'material-icons'}}">{{icon.startsWith('fa-')?'':icon}}</i>
+                  </label>
+                </label>
+              </div>
+              <div class="icon-op">
+                <label class="rd-icon ic" *ngFor="let icon of jsonElementHandler.iconArray; let s of index">
+                  <input type="radio" name="{{control.options.length - 1+1}}" id="icon{{s}}+{{control.options.length - 1+1}}" value="{{icon}}" (click)="changeIcon(control.options[control.options.length - 1],$event)">
+                  <label attr.for="icon{{s}}+{{control.options.length - 1+1}}">
+                    <i class="{{icon.startsWith('fa-')?icon + ' fa':'material-icons'}}">{{icon.startsWith('fa-')?'':icon}}</i>
+                  </label>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="option-textbox-sub paddr0 pad0 ">
+           <input type="text" class="form-text value-text" placeholder="Placeholder..." [(ngModel)]="control.options[control.options.length - 1].description">
+        </div>
+        </div>
+      </div>
+      <div class="no-padding col-sm-12 col-md-12 othertext-value">
+        <label class="check-value">VALUE</label>
+        <input type="{{inputType}}" class="form-text value-text" placeholder="Value" [(ngModel)]="control.options[control.options.length - 1].value">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="form-label type-details-head-no-collapse" *ngIf="jsonBuilderHelper.editors('MarkAsMandate') || (jsonBuilderHelper.editors('logicJump') && !jsonBuilderHelper.editors('sectionalLogicJump'))">SETTINGS</div>
+<question-redirect-url [control]="control"></question-redirect-url>
+
+<div class="type-details no-border bottom-space0" *ngIf="jsonBuilderHelper.editors('MarkAsMandate')">
+  <label class="check check-mandatory form-label">
+    Mark as Mandatory
+  </label>
+  <div class="switch">
+    <label>
+      <input type="checkbox" value="Value1" [disabled]="isQuestionInFormula()" name="checkbox1" id="check_k" [checked]="control.config.validations.required.status"
+        (change)="onChange(control);callGA('MANDATE',control)">
+      <span class="lever"></span>
+    </label>
+  </div>
+  <span class="mandatory-info" *ngIf="isQuestionInFormula()">
+    <p>Since this question has been used in the formula, it is required that it be kept mandatory.</p>
+  </span>
+</div>
+
+
+
+<div class="type-details" *ngIf="jsonBuilderHelper.editors('logicJump') && !jsonBuilderHelper.editors('sectionalLogicJump')">
+  <span class="form-label">
+    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.logic_jump.active">lock_outline</i>LOGIC JUMP</span>
+  <div class="col-md-12 no-padding">
+    <a class="btn btn-default btn-flat btn-basic2" href="javascript:void(0);" (click)="openLogicPopup()">{{control.condition?'EDIT':'ADD'}} LOGIC JUMP</a>
+  </div>
+</div>

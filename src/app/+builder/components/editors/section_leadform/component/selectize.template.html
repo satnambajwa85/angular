@@ -1,0 +1,70 @@
+<div class="input-group">
+  <div class="col-md-11 col-xs-11 no-padding">
+    <select [disabled]="checkGDPR()" class="select-default" [(ngModel)]="field.type" (change)="changed($event,field)">
+      <option value="firstName">First Name</option>
+      <option value="lastName">Last Name</option>
+      <option value="fullName">Full Name</option>
+      <option value="email">Email</option>
+      <option value="tel">Phone Number</option>
+      <option value="tel_us">Phone Number(US)</option>
+      <option value="others">Others</option>
+    </select>
+  </div>
+  <div class="col-md-12 no-padding" *ngIf="field.type==='others'">
+    <label class="check-value">SUBTYPE</label>
+    <select [disabled]="checkGDPR()" class="form-control form-text value-text" (change)="changedSubType($event,field)">
+      <option value="others" [selected]="field.subType === 'others'">Textbox</option>
+      <option value="checkbox" [selected]="field.subType === 'checkbox'">Checkbox</option>
+      <option value="dropdown" [selected]="field.subType === 'dropdown'">Dropdown</option>
+    </select>
+  </div>
+  <div class="col-md-12 no-padding" *ngIf="((_JSONBuilder.getSelectedPage().type ==='Result' && control.config.direction == 'beforeResult') || _JSONBuilder.getSelectedPage().type ==='Questionnaire' || (_JSONBuilder.getSelectedPage().type ==='Landing' && _JSONBuilder.isTempName(['template-seven']))) && !_JSONBuilder.isTempName(['template-eight', 'sound-cloud-v3'])">
+    <label class="check-value">TITLE</label>
+    <input type="text" class="form-control form-text value-text " [(ngModel)]="field.name">
+  </div>
+  <div class="col-md-12 no-padding">
+    <label class="check-value" *ngIf="field.subType!=='checkbox' ">PLACEHOLDER</label>
+    <label class="check-value checkbox-field-label" *ngIf="field.subType==='checkbox'">LABEL</label>
+    <input *ngIf="field.subType!=='checkbox'" type="text" class="form-control form-text value-text " (keyup)="placeholderChange(field)"
+      [(ngModel)]="field.placeholder">
+    <div *ngIf="field.subType==='checkbox'">
+      <div [froalaEditor]="froalaCheckbox.options" *ngIf="froalaCheckbox.options" [(froalaModel)]="field.placeholder"></div>
+    </div>
+  </div>
+  <div class="col-md-12 no-padding" *ngIf="field.type==='tel'">
+    <label class="check-value" style="width:120px;">NO. OF CHARACTERS
+      <!--<div class="help-tip restrict-helptip editor-helptip">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip">Restricting phone number length</div>
+      </div>-->
+    </label>
+    <input type="number" class="form-control form-text value-text " (blur)="restrictingPhoneNumber($event, field)" [(ngModel)]="field.icon"
+      style=" width: calc(100% - 140px);">
+  </div>
+  <div class="col-xs-12 no-padding " *ngIf="field.type === 'email'">
+    <label class="check-mandatory form-label v-align">
+      <input type="checkbox" name="multi-checkbox" id="val_email{{field._id}}" class="show-check" [checked]="field.emailValidator"
+        (click)="emailValidationToggle($event)" data-size="mini" data-on-color="'blue'">
+      <label for="val_email{{field._id}}"> </label>
+      <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.lead_generation.email_check">lock_outline</i>
+      Validate Email
+      <div class="help-tip editor-helptip v-helptip">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip"> Toggle on to check that emails submitted are valid and actually exist.</div>
+      </div>
+    </label>
+  </div>
+  <div class="col-xs-12 no-padding " *ngIf="field.type === 'others' && field.subType === 'checkbox'">
+    <label class="check-mandatory form-label v-align">
+      <input type="checkbox" (change)="checked(field,$event)" name="multi-checkbox" id="val_checked{{field._id}}" class="show-check"
+        [checked]="field.attr.class=='true'" data-size="mini" data-on-color="'blue'">
+      <label for="val_checked{{field._id}}"> </label>
+      <!-- <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.lead_generation.email_check">lock_outline</i> -->
+      Checked
+      <!-- <div class="help-tip editor-helptip v-helptip">
+        <i class="material-icons">info_outline</i>
+        <div class="help-checktip"> Toggle on to check that emails submitted are valid and actually exist.</div>
+      </div> -->
+    </label>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="col-md-12 no-padding" style="margin-top: -2px;">
+  <hr class="radio-last-hr NEW" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll'])">
+  <div class="form-label" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll'])">RESULT TEXT
+    <div class="help-tip editor-helptip result-tip new-tol">
+      <i class="material-icons">info_outline</i>
+      <div class="help-checktip">You can add a dynamic result (or any other variable) by clicking on "Add Variable".</div>
+    </div>
+  </div>
+  <!--<div class="char-count-limit" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll']) && (froalaHeader.textCount >80)">{{froalaHeader.textCount}}</div>-->
+  <div class="icon-outer bottom">
+    <div class="char-count-limit sub-last" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll']) && (froalaHeader.textCount >80)">{{froalaHeader.textCount}}</div>
+    <div class="help-text">Recommended limit of 80 characters is exceeded</div>
+  </div>
+  <div [froalaEditor]="froalaHeader.options" [(froalaModel)]="control.props.title" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll']) && froalaHeader.options"></div>
+  <div class="form-label" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll'])" [class.sub-last]="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll'])">DESCRIPTION</div>
+  <div class="icon-outer bottom" style="margin-top:15px;">
+    <div class="char-count-limit sub-last" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll']) && (froalaHeader.textCount >(leadExists?105:400))">{{froalaHeader.textCount}}</div>
+    <div class="help-text">Recommended limit of {{(froalaHeader.textCount > leadExists)?105:400}} characters is exceeded</div>
+  </div>
+  <span class="break"></span>
+  <div [froalaEditor]="froalaSubHeader.options" [(froalaModel)]="control.props.helpText" *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded', 'Poll']) && froalaSubHeader.options"></div>
+  <div class="form-label" *ngIf="jsonBuilderHelper.isTempType(['Recommendation'])">Outcome</div>
+  <div class="icon-outer bottom">
+    <div class="char-count-limit  sub-last" *ngIf="jsonBuilderHelper.isTempType(['Recommendation']) && (froalaHeader.textCount>15)">{{froalaHeader.textCount}}</div>
+    <div class="help-text">Recommended limit of 15 characters is exceeded</div>
+  </div>
+  <span class="break"></span>
+  <div [froalaEditor]="froalaHeader.options" [(froalaModel)]="control.name" *ngIf="jsonBuilderHelper.isTempType(['Recommendation']) && froalaHeader.options"></div>
+  <div class="form-label" [class.sub-last]="jsonBuilderHelper.isTempType(['Recommendation'])" *ngIf="jsonBuilderHelper.isTempType(['Recommendation'])">DESCRIPTION</div>
+  <div class="icon-outer bottom">
+    <div class="char-count-limit sub-last" *ngIf="jsonBuilderHelper.isTempType(['Recommendation']) && (froalaSubHeader.textCount >(leadExists?105:400))">{{froalaSubHeader.textCount}}</div>
+    <div class="help-text">Recommended limit of {{(froalaSubHeader.textCount > leadExists)?105:400}} characters is exceeded</div>
+  </div>
+  <span class="break"></span>
+  <div [froalaEditor]="froalaSubHeader.options" [(froalaModel)]="control.html" *ngIf="jsonBuilderHelper.isTempType(['Recommendation']) && froalaSubHeader.options"></div>
+</div>

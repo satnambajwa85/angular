@@ -1,0 +1,348 @@
+<!-- <div class="col-md-12 col-sm-12 col-xs-12 np grad-bg login-outer hide">
+  <button class="close btn-close" id="signup-close" type="button" (click)="close()">
+    <i class="material-icons">close</i>
+  </button>
+  <div class="login-inner">
+    <div class="col-md-12 col-sm-12 col-xs-12 np text-center">
+      <a href="javascript:void(0)" (click)="home()">
+        <img class="login-logo" src="assets/images/white-logo.png" alt="Logo"> </a>
+      <div class="main-heading">
+        <h1>Start 7 Days Free Trial</h1>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 np">
+      <form class="form-outer">
+        <div class="form-inner">
+          <div id="signup-1">
+            <div class="col-md-7 col-sm-7 col-xs-12 form-left">
+              <div class="form-left-inner">
+                <h4>Sign Up</h4>
+                <form [formGroup]="signupFormDetail" (ngSubmit)="userSignUp(signupFormDetail.value,saveButton)">
+                  <div id="emailError" *ngIf="errorMsg && errorMsg!='no_error'" class="alert alert-danger custom-alert">
+                    <i class="material-icons">report_problem</i>
+                    <span id="server-error-msg">{{errorMsg}}</span>
+                  </div>
+                  <div class="form-group" [ngClass]="validationClass['name'] ||
+                        (signupFormDetail?.controls.name.valid ? 'input-success-msg' :
+                        (signupFormDetail?.controls.name.value ? 'input-danger-msg' : ''))">
+                    <div class="position-r ">
+                      <input id="name" type="text" class="form-control" name="name" placeholder="Name" formControlName="name" tabindex="1">
+                      <span class="input-icon-msg"> </span>
+                      <div class="er-msg" *ngIf="signupFormDetail.controls.name.dirty && !signupFormDetail.controls.name.valid">
+                        <span *ngIf="signupFormDetail.controls.name.errors.required">
+                          Name is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.name.errors.minlength">
+                          Min 3 character is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.name.errors.pattern">
+                          Invalid Name
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" [ngClass]="validationClass['email'] ||
+                        (signupFormDetail?.controls.email.valid ? 'input-success-msg' :
+                        (signupFormDetail?.controls.email.value ? 'input-danger-msg' : ''))">
+                    <div class="position-r ">
+                      <input id="signup_email" tabindex="2" name="email" type="text" class="form-control" formControlName="email" placeholder="Company email"
+                      />
+                      <span class="input-icon-msg"> </span>
+                      <div class="er-msg" *ngIf="signupFormDetail.controls.email.dirty  && !signupFormDetail.controls.email.valid">
+                        <span *ngIf="signupFormDetail.controls.email.errors.required">
+                          Email is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.email.errors.minlength">
+                          Min 3 character is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.email.errors.checkmail">
+                          Invalid Email.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" [ngClass]="validationClass['password'] ||
+                      (signupFormDetail?.controls.password.valid ? 'input-success-msg' :
+                      (signupFormDetail?.controls.password.value ? 'input-danger-msg' : ''))">
+                    <div class="position-r">
+                      <input id="password" #passField type="password" class="form-control" formControlName="password" name="password" placeholder="Password (min 8 characters)"
+                        tabindex="3">
+                      <span *ngIf="passField.type==='password'" id="btnShowPassword" class="input-icon" (click)="passField.type='text'">
+                        <i class="material-icons">visibility_off</i>
+                      </span>
+                      <span *ngIf="passField.type==='text'" id="btnHidePassword" class="input-icon" (click)="passField.type='password'">
+                        <i class="material-icons">visibility</i>
+                      </span>
+
+                      <span class="input-icon-msg"> </span>
+                      <div class="er-msg" *ngIf="signupFormDetail.controls.password.dirty && !signupFormDetail.controls.password.valid">
+                        <span *ngIf="signupFormDetail.controls.password.errors.required">
+                          Password is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.password.errors.minlength">
+                          Min 8 character is required.
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="border-center"></div>
+                  <div class="form-group" [ngClass]="validationClass['companyname'] ||
+                        (signupFormDetail?.controls.companyname.valid ? 'input-success-msg' :
+                        (signupFormDetail?.controls.companyname.value ? 'input-danger-msg' : ''))">
+                    <div class="position-r">
+                      <input id="companyname" tabindex="4" type="text" class="form-control" formControlName="companyname" name="companyName" placeholder="Company name (min 4 characters)"
+                      />
+
+                      <span class="input-icon-msg"></span>
+                      <div class="er-msg" *ngIf="signupFormDetail.controls.companyname.dirty  && !signupFormDetail.controls.companyname.valid || isSubmit && !signupFormDetail.controls.companyname.valid">
+                        <span *ngIf="signupFormDetail.controls.companyname.errors.required">
+                          Company Name is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.companyname.errors.minlength">
+                          Min 4 character is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.companyname.errors.pattern && !signupFormDetail.controls.companyname.errors.minlength">
+                          Invalid Company Name
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group" [ngClass]="validationClass['domain'] ||
+                        (signupFormDetail?.controls.domain.valid ? 'input-success-msg' :
+                        (signupFormDetail?.controls.domain.value ? 'input-danger-msg' : ''))" id="url">
+                    <div class="position-r">
+                      <input id="domain" type="text" tabindex="5" class="form-control" formControlName="domain" name="url" placeholder="Your Outgrow URL"
+                        (input)="domainsuggestion($event.target.value)" />
+                      <label class="outgrow-domain">{{domainExtension}}</label>
+
+                      <span class="input-icon-msg"></span>
+                      <div class="er-msg" *ngIf="signupFormDetail?.controls.domain.dirty && !signupFormDetail?.controls.domain.valid || isSubmit && !signupFormDetail?.controls.domain.valid">
+                        <span *ngIf="signupFormDetail.controls.domain.errors.required">
+                          Domain is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.domain.errors.minlength && !signupFormDetail.controls.domain.errors.pattern">
+                          Min 3 character is required.
+                        </span>
+                        <span *ngIf="signupFormDetail.controls.domain.errors.pattern">
+                          Invalid Url
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sugUrls-box" *ngIf="suggestions.length > 1">
+                    <span class="sugUrls-title">Suggested URLs- </span>
+                    <span class="urls-list">
+                      <label (click)="changeDomain(domain)" *ngFor="let domain of suggestions">{{domain}}.{{domainExtensionShow}}</label>
+                    </span>
+                  </div>
+                  <div class="col-md-12 col-sm-12 col-xs-12 np">
+                    <label class="check-icon">
+                      <input type="checkbox" id="check-signin">
+                      <label for="check-signin"></label>Keep me signed In
+                    </label>
+                  </div>
+                  <button [disabled]="!signupFormDetail.valid" #saveButton class="btn btn-red-filled btn-hover">Get Started</button>
+                  <p class="already-signedUp">Already signed up?
+                    <a href="javascript:void(0)" (click)="login()" class="text-red" tabindex="6">Login</a> instead
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="tc-outr">
+        <span class="toc-text">Our
+          <a class="" href="https://outgrow.co/tos/" target="_blank">T&C </a> and
+          <a class="" target="_blank" href="https://outgrow.co/privacy-policy/">Privacy Policy</a> Applies to all Outgrow Users.</span>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+<form *ngIf="isSignup==='sign_up'" class="signup" [formGroup]="signupFormDetail" (ngSubmit)="userSignUp(signupFormDetail.value,saveButton)">
+  <div class="outer">
+    <div id="emailError" *ngIf="errorMsg && errorMsg!='no_error'" class="alert alert-danger custom-alert">
+      <i class="material-icons">report_problem</i>
+      <span id="server-error-msg">{{errorMsg}}</span>
+    </div>
+    <div class="form-group" [ngClass]="validationClass['name'] ||
+              (signupFormDetail?.controls.name.valid ? 'input-success-msg' :
+              (signupFormDetail?.controls.name.value ? 'input-danger-msg' : ''))">
+      <input id="name" type="text" class="form-control" name="name" placeholder="Name" formControlName="name" tabindex="1" />
+      <span class="input-icon-msg"></span>
+      <div class="er-msg" *ngIf="signupFormDetail.controls.name.dirty  && !signupFormDetail.controls.name.valid">
+        <span>
+          Name is required.
+        </span>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="validationClass['email'] ||
+          (signupFormDetail?.controls.email.valid ? 'input-success-msg' :
+          (signupFormDetail?.controls.email.value ? 'input-danger-msg' : ''))">
+      <input id="email" type="text" class="form-control" name="email" placeholder="Company Email" formControlName="email" tabindex="1"
+      />
+      <span class="input-icon-msg"></span>
+      <div class="er-msg" *ngIf="signupFormDetail.controls.email.dirty  && !signupFormDetail.controls.email.valid">
+        <span *ngIf="signupFormDetail.controls.email.errors.required">
+          Email is required.
+        </span>
+        <span *ngIf="signupFormDetail.controls.email.errors.checkmail">
+          Invalid Email.
+        </span>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="validationClass['password'] ||
+            (signupFormDetail?.controls.password.valid ? 'input-success-msg' :
+            (signupFormDetail?.controls.password.value ? 'input-danger-msg' : ''))">
+      <div class="position-r">
+        <input id="password" #passField type="password" class="form-control" formControlName="password" name="password" placeholder="Password (min 8 characters)"
+          tabindex="3">
+        <span *ngIf="passField.type==='password'" id="btnShowPassword" class="input-icon" (click)="passField.type='text'">
+          <i class="material-icons">visibility_off</i>
+        </span>
+        <span *ngIf="passField.type==='text'" id="btnHidePassword" class="input-icon" (click)="passField.type='password'">
+          <i class="material-icons">visibility</i>
+        </span>
+
+        <span class="input-icon-msg"> </span>
+        <div class="er-msg" *ngIf="signupFormDetail.controls.password.dirty && !signupFormDetail.controls.password.valid">
+          <span *ngIf="signupFormDetail.controls.password.errors.required">
+            Password is required.
+          </span>
+          <span *ngIf="signupFormDetail.controls.password.errors.minlength">
+            Min 8 character is required.
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="border-center"></div>
+    <div class="form-group" [ngClass]="validationClass['companyname'] ||
+              (signupFormDetail?.controls.companyname.valid ? 'input-success-msg' :
+              (signupFormDetail?.controls.companyname.value ? 'input-danger-msg' : ''))">
+      <div class="position-r">
+        <input id="companyname" tabindex="4" type="text" class="form-control" formControlName="companyname" name="companyName" placeholder="Company name (min 4 characters)"
+        />
+
+        <span class="input-icon-msg"></span>
+        <div class="er-msg" *ngIf="signupFormDetail.controls.companyname.dirty  && !signupFormDetail.controls.companyname.valid || isSubmit && !signupFormDetail.controls.companyname.valid">
+          <span *ngIf="signupFormDetail.controls.companyname.errors.required">
+            Company Name is required.
+          </span>
+          <span *ngIf="signupFormDetail.controls.companyname.errors.minlength">
+            Min 4 character is required.
+          </span>
+          <span *ngIf="signupFormDetail.controls.companyname.errors.pattern && !signupFormDetail.controls.companyname.errors.minlength">
+            Invalid Company Name
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" [ngClass]="validationClass['domain'] ||
+              (signupFormDetail?.controls.domain.valid ? 'input-success-msg' :
+              (signupFormDetail?.controls.domain.value ? 'input-danger-msg' : ''))" id="url">
+      <div class="position-r">
+        <input id="domain" type="text" tabindex="5" class="form-control" formControlName="domain" name="url" placeholder="Your Outgrow URL"
+          (input)="domainsuggestion($event.target.value)" />
+        <label class="outgrow-domain">{{domainExtension}}</label>
+
+        <span class="input-icon-msg"></span>
+        <div class="er-msg" *ngIf="signupFormDetail?.controls.domain.dirty && !signupFormDetail?.controls.domain.valid || isSubmit && !signupFormDetail?.controls.domain.valid">
+          <span *ngIf="signupFormDetail.controls.domain.errors.required">
+            Domain is required.
+          </span>
+          <span *ngIf="signupFormDetail.controls.domain.errors.minlength && !signupFormDetail.controls.domain.errors.pattern">
+            Min 3 character is required.
+          </span>
+          <span *ngIf="signupFormDetail.controls.domain.errors.pattern">
+            Invalid Url
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="sugUrls-box" *ngIf="suggestions.length > 1">
+      <span class="sugUrls-title">Suggested URLs- </span>
+      <span class="urls-list">
+        <label (click)="changeDomain(domain)" *ngFor="let domain of suggestions">{{domain}}.{{domainExtensionShow}}</label>
+      </span>
+    </div>
+    <div class="row-outer">
+      <label class="check-icon">
+        <input type="checkbox" id="check-signin">
+        <label for="check-signin"></label>Keep me signed In
+      </label>
+    </div>
+    <div class="row-outer">
+      <button [disabled]="!signupFormDetail.valid" #saveButton class="btn btn-red-filled btn-hover">Sign up </button>
+    </div>
+    <div class="row-outer">
+      <p class="already-signedUp">Already signed up?
+        <a class="text-red" href="javascript:void(0)" (click)="isSignup='log_in';errorMsg=''">Login</a> instead
+      </p>
+    </div>
+    <div class="row-outer">
+      <div class="tc-outr">
+        <span class="toc-text">Our
+          <a href="https://outgrow.co/tos/" target="_blank">T&C </a> and
+          <a target="_blank" href="https://outgrow.co/privacy-policy/">Privacy Policy</a> Applies to all Outgrow Users.</span>
+      </div>
+    </div>
+  </div>
+</form>
+
+<form class="login" *ngIf="isSignup==='log_in'" [formGroup]="logInForm" (ngSubmit)="login(logInForm.value,logInButton)">
+  <div class="outer">
+    <div id="emailError" *ngIf="errorMsg && errorMsg!='no_error'" class="alert alert-danger custom-alert">
+      <i class="material-icons">report_problem</i>
+      <span id="server-error-msg">{{errorMsg}}</span>
+    </div>
+    <div class="social-icons">
+      <img class="" src="assets/images/icon-g+.png" (click)="signUpWithAuth('google')" alt="Google Plus">
+      <img class="" src="assets/images/icon-fb1.png" (click)="signUpWithAuth('facebook')" alt="Facebook">
+      <img class="" src="assets/images/icon-in1.png" (click)="signUpWithAuth('linkedIn')" alt="LinkedIn">
+    </div>
+    <div class="border-overlay">
+      <span>OR</span>
+    </div>
+    <div class="form-group" [ngClass]="logInValidation['email'] ||
+    (logInForm?.controls.email.valid ? 'input-success-msg' :
+    (logInForm?.controls.email.value ? 'input-danger-msg' : ''))">
+      <input id="email" type="text" class="form-control" name="email" placeholder="Your work email" formControlName="email" tabindex="1"
+      />
+      <span class="input-icon-msg">
+        <div class="popover-block">
+          <span>Email is required.</span>
+          <span>Invalid Email. </span>
+        </div>
+      </span>
+    </div>
+    <div class="form-group" [ngClass]="logInValidation['password'] ||
+    (logInForm?.controls.password.valid ? 'input-success-msg' :
+    (logInForm?.controls.password.value ? 'input-danger-msg' : ''))">
+      <input id="password" type="password" class="form-control" name="password" placeholder="Password" formControlName="password" tabindex="1"
+      />
+      <span class="input-icon-msg">
+        <div class="popover-block">
+          <span>Password is required.</span>
+        </div>
+      </span>
+    </div>
+    <div class="row-outer">
+      <button type="submit" class="btn btn-red-filled btn-hover" #logInButton>Get Started</button>
+    </div>
+    <div class="row-outer">
+      <p class="already-signedUp">Logging in for the first time?
+        <a class="text-red" href="javascript:void(0)" (click)="isSignup='sign_up';errorMsg=''">Signup</a> instead
+      </p>
+    </div>
+    <div class="row-outer">
+      <div class="tc-outr">
+        <span class="toc-text">Our
+          <a href="https://outgrow.co/tos/" target="_blank">T&C </a> and
+          <a target="_blank" href="https://outgrow.co/privacy-policy/">Privacy Policy</a> Applies to all Outgrow Users.</span>
+      </div>
+    </div>
+  </div>
+</form>

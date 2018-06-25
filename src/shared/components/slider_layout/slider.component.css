@@ -1,0 +1,8 @@
+.parent {
+    height: 100%;
+    width: 300%;      /* Make the parent element to take up twice
+                         of the component's width */
+    display: flex;    /* Align all children in a row */
+    /* Evenly divide width between children */
+}
+.parent div { flex: 1; }  

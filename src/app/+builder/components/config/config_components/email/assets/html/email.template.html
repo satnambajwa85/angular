@@ -1,0 +1,393 @@
+<div class="col-xs-12 col-sm-12 np new-email-outr email-parent">
+    <div class="preloader-email" *ngIf="!loader">
+        <div class="status-email">&nbsp;</div>
+    </div>
+    <div class="col-xs-12 text-center email-tabs confirm-email-tabs">
+        <ul class="nav nav-tabs nav-justified" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#email-user" role="tab" data-toggle="tab">User Notification
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>
+            </li>
+            <li role="presentation">
+                <a href="#email-team" role="tab" data-toggle="tab">Notification to Self
+                    <i class="material-icons">keyboard_arrow_right</i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-content gen-seo-outer confirm-email-outer">
+        <div class="my-emailform w750 active tab-pane" id="email-user" role="tabpanel">
+            <div class="col-md-12 no-padding ">
+                <div class="col-sm-12 np confir-pad no-mrg">
+                    <div class="new-lnn">
+                        <h3 class="col-sm-10 np email-heading">Send custom email to users</h3>
+                        <div class="new-libbn  logo-branding-outer col-xs-12 no-padding new-space">
+                            <!-- <p class="send-text">Send Email to Leads</p> -->
+                            <span class="email-subheading form-label">Toggle on to trigger this email to your leads</span>
+                            <div class="switch" [class.alwaysOff]="!isSendToUser">
+                                <div class="onoffswitch">
+                                    <input class="onoffswitch-checkbox" id="myono" (change)="activateToggled($event)" [checked]="finishCalcEmail.sendEmail" [disabled]="!emailForm.valid"
+                                        type="checkbox">
+                                    <label class="onoffswitch-label" for="myono">
+                                        <span class="onoffswitch-inner"></span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="new-text-line logo-branding-outer" *ngIf="jsonBuilderHelper.isTempType(['Recommendation']) && finishCalcEmail.sendEmail">
+                        <p>Send custom emails based on the outcome the user gets </p>
+                        <div class="switch">
+                            <div class="onoffswitch">
+                                <input class="onoffswitch-checkbox" id="myonoffswitch2" type="checkbox" [checked]="finishCalcEmail.resultBasedEmail" (change)="outcomeBasedEmailsToggle()">
+                                <label class="onoffswitch-label" for="myonoffswitch2">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-group email-accordian " id="accordion">
+                    <ng-template [ngIf]="finishCalcEmail">
+                        <div class="panel no-panel" [class.hide]="finishCalcEmail.resultBasedEmail">
+                            <!-- class.hide]="finishCalcEmail.resultBasedEmail" -->
+                            <div class="email-overlay" *ngIf="!finishCalcEmail.sendEmail">&nbsp;</div>
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                        <p>{{jsonBuilderHelper.isTempType(['Recommendation']) ? 'Default Outcome':'Email Settings'}}</p>
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <form [formGroup]="emailForm">
+                                        <div class="form-group" [class.is-focused]="isFocused ==='sendFromEmail'">
+                                            <div class="email-replto-input">
+                                                <label class="g-upload-label">
+                                                    Send From&nbsp;
+                                                    <div class="help-tip">
+                                                        <i class="material-icons">info_outline</i>
+                                                        <div class="help-checktip config-tip">Your users will get their confirmation emails from this email ID.</div>
+                                                    </div>
+                                                </label>
+                                                <input type="email" autocomplete="off" formControlName="email" name="email" (blur)="onFieldBlur(finishCalcEmail,'emailForm')" [(ngModel)]="finishCalcEmail.email"
+                                                    placeholder="Sender's Email Address" class="form-control upload-placeholder"
+                                                    (click)="onClick()" (focus)="isFocused ='sendFromEmail'" />
+                                                <p *ngIf="emailForm.get('email').touched && !emailForm.get('email').valid" class="editor-alert-danger">
+                                                    <i class="material-icons">report_problem</i> Not a valid email.</p>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <div class="form-group form-subject" [class.is-focused]="isFocused ==='sendFromName'">
+                                        <div class="email-select-outr">
+                                            <label class="g-upload-label set-label">Sender's Name</label>
+                                            <input type="text" class="form-control upload-placeholder" (blur)="onFieldBlur(finishCalcEmail,'emailForm')" [(ngModel)]="finishCalcEmail.sendFromName"
+                                                placeholder="Sender's Name" (focus)="isFocused ='sendFromName'" (click)="onClick()">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-subject" [class.is-focused]="isFocused ==='subject'">
+                                        <div class="email-select-outr">
+                                            <label class="g-upload-label set-label g-setting-label">Subject</label>
+
+                                            <div class="col-xs-12 no-padding email-setting-outr">
+                                                <textarea id="froala-editorSubject"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 no-padding email-setting-outr">
+                                        <label class="g-setting-label">Message</label>
+                                        <div class="col-xs-12 no-padding">
+                                            <textarea id="froala-editorFinish" [attr.readonly]="!_featureAuthService.features.confirmation_emails.active">
+                                            </textarea>
+                                            <button class="btn btn-grey" type="submit" (click)="sendTestMessage()">
+                                                <i class="fa fa-paper-plane"></i>Send Test Email
+                                                <i class="fa fa-circle-o-notch fa-spin  fa-fw spining" *ngIf="loaderMail"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <!--- ****************** Outcome Options for Emails ***************** -->
+                    <ng-template [ngIf]="jsonBuilderHelper.isTempType(['Recommendation']) && finishCalcEmail && finishCalcEmail.resultBasedEmail">
+                        <div class="panel" *ngFor="let outcome of finishCalcEmail.resultEmails; let i = index;">
+                            <div class="email-overlay" *ngIf="!finishCalcEmail.sendEmail">&nbsp;</div>
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo_{{'_'+ i}}">
+                                        {{(outcome.resultName | removeTags )?((i+1)+'. '+ (outcome.resultName| removeTags)) : ('OUTCOME '+(i+1))}}
+                                    </a>
+                                    <!-- <span class="out-mail">
+                                        <input type="checkbox" name="out-email" id="out-email"  />
+                                        <label for="out-email"> From Default Outcome Email</label>
+                                    </span> -->
+                                </h4>
+                            </div>
+                            <div id="collapseTwo_{{'_'+ i}}" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <form [formGroup]="outcomeBasedForm" *ngIf="outcomeBasedForm" >
+                                    <div class="form-group" [class.is-focused]="isFocused ==='sendFromEmail'">
+                                        <div class="email-replto-input">
+                                            <label class="g-upload-label">
+                                                Send From&nbsp;
+                                                <div class="help-tip">
+                                                    <i class="material-icons">info_outline</i>
+                                                    <div class="help-checktip config-tip">Your users will get their confirmation emails from this email ID.</div>
+                                                </div>
+                                            </label>
+                                            <input type="email" formControlName="email_{{i}}" name="email_{{i}}" autocomplete="off" (blur)="onFieldBlur(finishCalcEmail)" [(ngModel)]="outcome.sendFrom" placeholder="Sender's Email Address"
+                                                class="form-control upload-placeholder" (click)="onClick()" (focus)="isFocused ='sendFromEmail'"
+                                            />
+                                            <p *ngIf="outcomeBasedForm.get(emailIndexing(i)).touched && !outcomeBasedForm.get(emailIndexing(i)).valid" class="editor-alert-danger">
+                                                <i class="material-icons">report_problem</i> Not a valid email.</p>
+                                        </div>
+                                    </div>
+                                    </form>
+                                    <div class="form-group form-subject" [class.is-focused]="isFocused ==='sendFromName'">
+                                        <div class="email-select-outr">
+                                            <label class="g-upload-label set-label">Sender's Name</label>
+                                            <input type="text" class="form-control upload-placeholder" (blur)="onFieldBlur(finishCalcEmail)" [(ngModel)]="outcome.sendFromName"
+                                                placeholder="Sender's Name" (focus)="isFocused ='sendFromName'" (click)="onClick()">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-subject" [class.is-focused]="isFocused ==='subject'">
+                                        <div class="email-select-outr">
+                                            <label class="g-upload-label set-label g-setting-label">Subject</label>
+                                            <div class="col-xs-12 no-padding email-setting-outr">
+                                                <div class="wysiwyg" *ngIf="outcomeSubOptions.options" [froalaEditor]="outcomeSubOptions.options" (blur)="onFieldBlur(finishCalcEmail)"
+                                                    [(froalaModel)]="outcome.subject">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-12 no-padding email-setting-outr">
+                                        <label class="g-setting-label">Message</label>
+                                        <div class="col-xs-12 no-padding">
+                                            <div class="wysiwyg" *ngIf="outcomeMessageOptions.options" [froalaEditor]="outcomeMessageOptions.options" (blur)="onFieldBlur(finishCalcEmail)"
+                                                [(froalaModel)]="outcome.message">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                    <!--- ****************** Outcome Options for Emails ***************** -->
+                    <div class="col-xs-12 no-padding g-setting-outr logo-branding-outer remove-unsubsLink">
+                        <!--<label class="g-setting-label">Mode</label>-->
+                        <div class="col-xs-12 no-padding top-space10">
+                            <span class="form-label">
+                                <i *ngIf="!isRemoveUnsubscribeEnabled" class="material-icons">lock_outline</i> Remove Unsubscribe link from email</span>
+                            <div class="switch">
+                                <div class="onoffswitch">
+                                    <input type="checkbox" [checked]="finishCalcEmail.is_unsubsribed_removed" (change)="removeUnsubscribeLink($event)" class="onoffswitch-checkbox"
+                                        id="myonoffswitch3" [disabled]="!emailForm.valid">
+                                    <label class="onoffswitch-label" for="myonoffswitch3">
+                                        <span class="onoffswitch-inner">
+                                            <p id="remove_unsubscribe">
+                                                <i class="material-icons">report_problem</i>
+                                                By removing the unsubscribe link, you risk emails landing up in the spam folder of the recipient.
+                                            </p>
+                                        </span>
+                                        <span class="onoffswitch-switch"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="my-emailform w750 tab-pane" id="email-team" role="tabpanel">
+            <div class="col-xs-12 no-padding seo-setting-outr logo-branding-outer ">
+                <div class="col-md-12 no-padding">
+                    <div class="col-xs-12 no-padding ">
+                        <div class="col-xs-12 no-padding top-space10 hide">
+                            <span class="form-label">
+                                <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.confirmation_emails.to_self">lock_outline</i>Notify Me
+                            </span>
+                        </div>
+                        <div class="col-sm-12 np confir-pad confirSelf-pad">
+                            <h3 class="col-sm-12 np email-heading">Receive an email when someone uses your {{jsonBuilderHelper.isTempType(['Numerical'])?'calculator':(jsonBuilderHelper.isTempType(['Poll'])?'poll':'quiz')}}</h3>
+                            <!-- <div class="switch pull-right" [class.alwaysOff]="!isSendToSelf">
+                                <label>
+                                    <input type="checkbox" class="show-check" (change)="notifyMeToggled()"
+                                    [checked]="finishCalcEmail.notifyMe" [disabled]="!emailForm.valid">
+                                    <span class="lever"></span>
+                                </label>
+                            </div> -->
+                            <div class="col-xs-12 no-padding new-space mbtm15">
+                                <span class="form-label">Toggle to enable email notification to your team when new leads come through
+                                    <!--bindings={
+                                "ng-reflect-ng-if": "false"
+                              }-->
+                                </span>
+                                <div class="switch left" [class.alwaysOff]="!isSendToSelf">
+                                    <div class="onoffswitch">
+                                        <input class="onoffswitch-checkbox" id="notify" (change)="notifyMeToggled($event)" [checked]="finishCalcEmail.notifyMe" [disabled]="!emailFormSelf.valid"
+                                            type="checkbox">
+                                        <label class="onoffswitch-label" for="notify">
+                                            <span class="onoffswitch-inner"></span>
+                                            <span class="onoffswitch-switch"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- <p class="email-subheading">Toggle to enable email notification to your team when new leads come through and select which team members
+                                should get notifications.</p> -->
+
+                        </div>
+                        <div class="col-xs-12 no-padding hide">
+                            <span class="form-label">Send Result as an attachment</span>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" class="show-check" checked>
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--- ****************** custom notify mail ***************** -->
+                    <div *ngIf="finishCalcEmail.notifyTeam">
+                        <!--- custom Notify mail -->
+                        <div class="col-sm-12 np confir-pad" *ngIf="!finishCalcEmail.customNotifyMail && finishCalcEmail.notifyMe">
+                            <h3 class="col-sm-10 np email-heading">Custom Notify Email</h3>
+
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" class="show-check" (change)="finishCalcEmail.customNotifyMail =! finishCalcEmail.customNotifyMail; onFieldBlur(finishCalcEmail,'emailFormSelf')"
+                                        [checked]="finishCalcEmail.customNotifyMail" [disabled]="!emailFormSelf.valid" >
+                                    <span class="lever"></span>
+                                </label>
+                            </div>
+                            <p class="email-subheading">Toggle on to trigger this email to your leads</p>
+                        </div>
+                        <!--- custom Notify mail End -->
+
+                        <!--- SendFrom  -->
+                        <form [formGroup]="emailFormSelf">
+                            <div class="form-group sentEmail-div-outer">
+                                <div class="email-replto-input sentEmail-div">
+                                    <label class="g-upload-label">
+                                        Sent To&nbsp;
+                                    </label>
+                                    <label *ngFor="let user of usersObj; let i =index" class="selected-items-outer">
+                                        <input type="checkbox" name="user" id="check{{i}}" [checked]="getSelection(user)" (change)="addUserToMail($event,user)">
+                                        <label class="selected-items" for="check{{i}}">
+                                            <i class="material-icons" *ngIf="getSelection(user)">check</i> {{user.name}}</label>
+                                    </label>
+
+                                    <div class="btn-right-outer">
+                                        <button class="btn-addEmailAddress btn-hover" type="button" (click)="openAddUserPopup()">
+                                            <i class="material-icons" *ngIf="!_featureAuthService.features.confirmation_emails.add_users_to_self">lock_outline</i>
+                                            Add Email Address
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" [class.is-focused]="isFocused ==='sendFromEmail'">
+                                <div class="email-replto-input">
+                                    <label class="g-upload-label">
+                                        Send From&nbsp;
+                                        <div class="help-tip">
+                                            <i class="material-icons">info_outline</i>
+                                            <div class="help-checktip config-tip">Your users will get their confirmation emails from this email ID.</div>
+                                        </div>
+                                    </label>
+                                    <input type="email" autocomplete="off" formControlName="emailSelf" name="email" (blur)="onFieldBlur(finishCalcEmail,'emailFormSelf')" [(ngModel)]="finishCalcEmail.notifyTeam.sendFrom"
+                                        placeholder="Sender's Email Address" class="form-control upload-placeholder" (click)="onClick()"
+                                        (focus)="isFocused ='sendFromEmail'" />
+                                    <p *ngIf="emailFormSelf.get('emailSelf').touched && !emailFormSelf.get('emailSelf').valid" class="editor-alert-danger">
+                                        <i class="material-icons">report_problem</i> Not a valid email.
+                                    </p>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="form-group form-subject" [class.is-focused]="isFocused ==='NT_subject'">
+                            <div class="email-select-outr">
+                                <label class="g-upload-label set-label g-setting-label">Subject</label>
+                                <!-- <input type="text" class="form-control upload-placeholder" (blur)="onFieldBlur(finishCalcEmail)" [(ngModel)]="finishCalcEmail.notifyTeam.subject"
+                                    placeholder="Add Subject Here" (focus)="isFocused ='NT_subject'" (click)="onClick()"> -->
+                                <div class="col-xs-12 no-padding email-setting-outr">
+                                    <textarea id="froala-editorNotifyMeSubject"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--- custom notify message -->
+                        <div class="col-xs-12 no-padding email-setting-outr">
+                            <label class="g-setting-label">Message</label>
+                            <div class="col-xs-12 no-padding">
+                                <textarea id="froala-editorNotifyMe">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--- custom notify message End -->
+                    <!--- ****************** custom notify mail End***************** -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -> ADD USER IN EMAIL -->
+<div id="add-userEmail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close btn-close" data-dismiss="modal">
+                    <i class="material-icons">close</i>
+                </button>
+                <h4 class="modal-title">Add Email Address</h4>
+            </div>
+            <form [formGroup]="AddUserForm" (ngSubmit)="formSubmitted = true; addUserEmail();">
+                <div class="modal-body">
+                    <!-- *********************** addUser  *********************************** -->
+                    <div class="sahil-material">
+                        <div class="form-group label-floating name" [ngClass]="(isFocused ==='add_user_name' || AddUserForm.get('name').value)?'is-focused':'is-empty'">
+                            <label class="control-label" for="inputName"> Name</label>
+                            <input class="form-control" type="text" formControlName="name" name="name_user" (focus)="isFocused ='add_user_name'">
+                        </div>
+                        <div *ngIf="!AddUserForm.get('name').valid && AddUserForm.get('name').touched" class="alert alert-danger">
+                            <p>
+                                <span class="mat-icon">
+                                    <i class="material-icons">report_problem</i>
+                                </span> Name is required.
+                            </p>
+                        </div>
+                        <div class="form-group label-floating email" [ngClass]="(isFocused  ==='add_user_Email' || AddUserForm.get('email').value)?'is-focused':'is-empty'">
+                            <label class="control-label" for="inputEmail"> Email Address</label>
+                            <input type="email" autocomplete="off" formControlName="email" name="email_user" class="form-control" (click)="onClick()"
+                                (focus)="isFocused ='add_user_Email'" />
+                        </div>
+                        <div *ngIf="!AddUserForm.get('email').valid && AddUserForm.get('email').touched" class="alert alert-danger">
+                            <p>
+                                <span class="mat-icon">
+                                    <i class="material-icons">report_problem</i>
+                                </span> Invalid Email.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- *********************** addUser  *********************************** -->
+                </div>
+                <div class="modal-footer">
+                    <a aria-label="Close" class="text-cancel" data-dismiss="modal">Cancel</a>
+                    <button class="btn btn-red-outline btn-add-user btn-hover" type="submit" [disabled]="!AddUserForm.valid">
+                        Add New User
+                        <i class="fa fa-circle-o-notch fa-spin  fa-fw spining" *ngIf="AddUserForm.valid && formSubmitted"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

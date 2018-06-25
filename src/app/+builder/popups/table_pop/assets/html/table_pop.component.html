@@ -1,0 +1,203 @@
+<!-- Start: Modal Table -->
+<div id="table-modal" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-lg" [class.gradedModalmd]="jsonBuilderHelper.isTempType(['Graded'])">
+    <!-- Modal content-->
+    <div class="modal-content modal-bg">
+      <div class="modal-body">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" (click)="table_prop = false">
+          <i class="material-icons">close</i>
+        </button>
+        <div class="content-area">
+          <!--<div class="left-nav-outer"></div>-->
+          <div class="col-md-12 np form-outer" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+            <div class="form-group col-sm-5 chart-title">
+              <i class="material-icons table-icon">grid_on</i>
+              <input type="text" required="required" [(ngModel)]="visuals.table.title" />
+              <label class="control-label" for="input">Table Title</label>
+              <i class="bar"></i>
+            </div>
+            <div class="input-file-container">
+              <label class="file-label">Edit Data:</label>
+              <input type="file" id="upload_file" (change)='uploadXls($event)' accept=".xls">
+
+              <label for="upload_file" class="input-file-trigger help-tip">
+                <i class="material-icons">cloud_upload</i> Upload File
+                <div class="help-checktip upload-tooltip">Upload File (xls, xlsx, csv)</div>
+              </label>
+              <!-- <label for="upload_file" class="input-file-trigger"><span></span> <strong><svg xmlns="http://www.w3.org/2000/svg" width="20" height="17" viewBox="0 0 20 17"><path d="M10 0l-5.2 4.9h3.3v5.1h3.8v-5.1h3.3l-5.2-4.9zm9.3 11.5l-3.2-2.1h-2l3.4 2.6h-3.5c-.1 0-.2.1-.2.1l-.8 2.3h-6l-.8-2.2c-.1-.1-.1-.2-.2-.2h-3.6l3.4-2.6h-2l-3.2 2.1c-.4.3-.7 1-.6 1.5l.6 3.1c.1.5.7.9 1.2.9h16.3c.6 0 1.1-.4 1.3-.9l.6-3.1c.1-.5-.2-1.2-.7-1.5z"/></svg> Choose a file&hellip;</strong></label> -->
+              <button type="button" class="btn btn-red-outline btn-jason-trigger" (click)="tableshow=true">Json</button>
+            </div>
+          </div>
+          <div class="col-md-12 np form-outer" *ngIf="jsonBuilderHelper.isTempType(['Graded'])">
+            <div class="form-group col-sm-5 chart-title hide">
+              <i class="material-icons table-icon">grid_on</i>
+              <input type="text" required="required" [(ngModel)]="visuals.table.tableTitle" />
+              <label class="control-label" for="input">Table Title</label>
+              <i class="bar"></i>
+            </div>
+          </div>
+          <div class="jason-feed" *ngIf="table_prop && tableshow">
+            <i class="material-icons icon-div-close" (click)="tableshow=false">close</i>
+            <div class="col-sm-12 np">
+              <label class="jason-title col-sm-2 np">Json Feed URL</label>
+              <div class="form-group jason-input col-sm-10 np">
+                <input required="" type="text" [(ngModel)]="visuals.table.JsonFeed.jsonUrl" (focus)="jsonIcons=true;jsonConnected=false;visuals.table.JsonFeed.autoUpdate=false;visuals.table.JsonFeed.JsonFeedstatus='Disconnected';jsonError=false"
+                  placeholder="Enter your JSON feed URL here">
+                <div class="actions-icon" *ngIf="jsonIcons && visuals.table.JsonFeed.jsonUrl!='' && urlValidation(visuals.table.JsonFeed.jsonUrl)">
+                  <i class="material-icons icon-check" (click)="fetchJson()">check</i>
+                  <i class="material-icons icon-close" (click)="visuals.table.JsonFeed.jsonUrl=''">close</i>
+                </div>
+
+                <span class="jason-connecting" *ngIf="dataLoader">
+                  <i class="fa fa-spinner" aria-hidden="true"></i> Connecting
+                </span>
+
+                <div class="jason-reset" *ngIf="jsonError">
+                  <a href="javascript:void(0);" (click)="resetjsonfeed()">
+                    <i class="fa fa-repeat" aria-hidden="true"></i> Reset</a>
+                </div>
+
+                <div class="jason-error" *ngIf="jsonError">
+                  <span>
+                    <i class="material-icons">error_outline</i> Failed to connect</span>
+                </div>
+
+                <div class="jason-switch" *ngIf="jsonConnected">
+                  <div class="switch">
+                    <label>
+                      <span>JSON: {{visuals.table.JsonFeed.JsonFeedstatus}}</span>
+                      <input class="show-check" type="checkbox" [checked]="visuals.table.JsonFeed.JsonFeedstatus=='Connected'" (change)="statuschange()">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <div class="switch" *ngIf="jsonConnected">
+                    <label>
+                      <span>Auto Update
+                        <!-- <div class="help-tip editor-helptip autoUpdate-tip">
+                              <i class="material-icons">info_outline</i>
+                              <div class="help-checktip">In case the JSON is getting Auto updated and a formula has been added to the table area, the formula will get removed after the update.</div>
+                            </div> -->
+                      </span>
+                      <input class="show-check" type="checkbox" [(ngModel)]="visuals.table.JsonFeed.autoUpdate" [checked]="visuals.table.JsonFeed.autoUpdate">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                  <!-- <div class="" *ngIf="JsonConnected">
+                    <label>
+                        <span>Duration</span>
+                        <select>
+                          <option></option>
+                        </select>
+                    </label>
+                </div>  -->
+                </div>
+
+                <small>
+                  Data should be in proper JSON Format, with sheets as the outer dimension.
+                  <a href="http://myjson.com/11irtz" target="_blank" class="text-red"> View sample feed. </a>
+                </small>
+              </div>
+            </div>
+          </div>
+          <div class="property-outer">
+            <ul class="top-link" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+              <li class="help-tip" [class.active]="table_prop" (click)="table_prop = true">
+                <a>
+                  <i class="material-icons">view_module</i>
+                </a>
+                <div class="help-checktip">Table</div>
+              </li>
+              <li [class.active]="!table_prop" class="help-tip" (click)="table_prop = false">
+                <a>
+                  <i class="material-icons">color_lens</i>
+                </a>
+                <div class="help-checktip">Display</div>
+              </li>
+              <li class="help-tip">
+                <a href="https://support.outgrow.co/docs/charts-graphs" target="_blank">
+                  <i class="material-icons">help_outline</i>
+                </a>
+                <div class="help-checktip">Help</div>
+              </li>
+            </ul>
+            <div class="content-outer" [class.hide]="!table_prop">
+              <div class="excel-outer" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <div id="og-excel-table"></div>
+              </div>
+              <div class="table-outer" *ngIf="jsonBuilderHelper.isTempType(['Graded'])">
+                <span class="table-title">Insert a table to show how other respondents did on this quiz.</span>
+                <div class="graph-perdropdown">
+                  <div class="form-group col-sm-6 chart-title">
+                    <input type="text" [(ngModel)]="visuals.table.tableTitle" required="required" />
+                    <label class="control-label" for="input">Chart Title</label>
+                    <i class="bar"></i>
+                  </div>
+                  <div class="col-sm-6 chart-title">
+                    <p>Show Score Distribution as: </p>
+                    <select *ngIf="jsonBuilderHelper.isTempType(['Graded'])" class="form-control" (change)="showGradedTable()" [(ngModel)]="visuals.table.title"
+                      data-width="fit">
+                      <option value="percentage">Percentage</option>
+                      <option value="absolute">Absolute Number</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="t-outer">
+                  <table *ngIf="tableData">
+                    <thead>
+                      <tr>
+                        <th *ngFor="let th of tableData[0]" [class.add_padding]="tableData[0].length <= 4">{{th}}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr [class.dark]="i%2!=0" [class.light]="i%2==0" *ngFor="let tr of tableData.slice(1);let i=index">
+                        <ng-template ngFor let-th [ngForOf]="tr" let-i="index">
+                          <td *ngIf="i!=2" [class.correct_graded]="tr[2]=='correct'">{{th}}</td>
+                        </ng-template>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <div class="content-outer table-prop" [class.hide]="table_prop" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+              <h3>Number of rows and columns to display:</h3>
+              <div class="col-md-12 np form-outer" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <div class="col-md-3 form-group row-count">
+                  <input type="text" required="required" [(ngModel)]="visuals.table.rows" />
+                  <label class="control-label" for="input">No. of Rows</label>
+                  <i class="bar"></i>
+                </div>
+                <div class="col-md-3 form-group column-count">
+                  <input type="text" required="required" [(ngModel)]="visuals.table.columns" />
+                  <label class="control-label" for="input">No. of Columns</label>
+                  <i class="bar"></i>
+                </div>
+              </div>
+              <div class="col-md-3 np" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+                <div class="small-section text">Decimals</div>
+                <div class="small-section horz-control">
+                  <select class="form-control" (change)="onChangeDecimalPlaces($event.target.value)">
+                    <option [selected]="visuals.table.decimal==0" value="0">No Decimal</option>
+                    <option [selected]="visuals.table.decimal==1" value="1">.0</option>
+                    <option [selected]="visuals.table.decimal==2" value="2">.00</option>
+                    <option [selected]="visuals.table.decimal==3" value="3">.000</option>
+                    <option [selected]="visuals.table.decimal==4" value="4">.0000</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="table-btn-outer">
+            <div class="graph-help-text np" *ngIf="jsonBuilderHelper.isTempType(['Numerical'])">
+              Feel free to use this spreadsheet just like you would use excel. You can perform mathematical operations inside cells and
+              also use variables from the calculator like Q_1 and R_1. Make sure to add an underscore in the variables in
+              order to differentiate from the cell numbers.
+            </div>
+            <a href="javascript:void(0)" (click)="saveData()" data-dismiss="modal" class="btn btn-saveGraph btn-hover">{{(visuals.table.rawJSON || jsonBuilderHelper.isTempType(['Graded']))?'Update Table':'Insert Table'}}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal Table -->

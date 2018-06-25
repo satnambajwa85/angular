@@ -1,0 +1,230 @@
+<div class="panel-body panel-scroll scrollbar">
+  <div class="ed-sidebar {{page.type}}" *ngFor="let page of templateJson.pages, let i=index" (mousedown)="jsonBuilderHelper.setSelectedPage(page)"
+    (click)="selectModel($event,'Page','.page_',i)">
+    <span class="link section-head" [ngClass]="{
+              'hide': page.type!='Landing',
+              'active': jsonBuilderHelper.getSelectedPage() === page
+              && jsonBuilderHelper.getSelectedModel() === 'Page'
+          }" [class.not-visible]="!page.visible">
+      <a href="javascript:void(0)">
+        {{(page.type=='Landing'?'WELCOME SCREEN':page.type)}}
+        <span class="have-lead" [class.hide]="!getVisibleLeadinPage(page)">with Lead Generation Form</span>
+      </a>
+      <i class="material-icons visible-eye" *ngIf="!page.visible">visibility_off</i>
+    </span>
+
+    <!-- For questionare Page -->
+    <!--*ngIf="page.type=='Questionnaire' && jsonBuilderHelper.getJSONBuilt().template !== 'sound-cloud' " -->
+    <span class="link section-head" [ngClass]="{
+              'hide':true,
+              'active': jsonBuilderHelper.getSelectedPage() === page && jsonBuilderHelper.getSelectedModel() === 'Page'
+            }">
+      <a href="javascript:void(0)">
+        Questionnaire
+        <span class="have-lead" [class.hide]="!getVisibleLeadinPage(page)">with Lead Generation Form</span>
+      </a>
+    </span>
+    <!-- For questionare Page End-->
+
+    <span class="link section-head" [ngClass]="{
+          'hide': page.type!='Result' || (jsonBuilderHelper.getJSONBuilt().templateType=='Recommendation' || jsonBuilderHelper.getJSONBuilt().templateType=='Ecom'),
+					'active': jsonBuilderHelper.getSelectedPage() === page && jsonBuilderHelper.getSelectedModel() === 'Page'
+                }">
+      <a href="javascript:void(0)">
+        Result
+        <span class="have-lead" [class.hide]="!getVisibleLeadinPage(page)">with Lead Generation Form</span>
+      </a>
+
+    </span>
+
+    <!--landing page end-->
+    <div *ngIf="page.type=='Questionnaire'" class="ch-sortable">
+      <div *ngFor="let section of getVisibleSections(page),let s=index" [attr.data-section]="section._id" [attr.data-sec]="s+1"
+        class="ed-sidebar-sub {{ section.type }}" (mousedown)="jsonBuilderHelper.setSelectedSection(section)" (click)="selectModel($event,'Section','.sec_',s)"
+        [class.fixed]="section.type ==='LeadFormQ'" [ngClass]="{
+						'hide': section.items.length == 0 || !section.visible
+					}" id="{{section._id}}">
+
+        <!-- Lead form in  Questionnaire Page -->
+        <!--'bh': section.type==='LeadFormQ', 'hide':jsonBuilderHelper.getJSONBuilt().template === 'one-page-card' && section.type!=='LeadFormQ'-->
+        <span class="sub-head" [ngClass]="{
+          'active':(jsonBuilderHelper.getSelectedSection() === section
+          && jsonBuilderHelper.getSelectedModel() === 'Section'),
+          'bh': section.type==='LeadFormQ' || section.type==='CustomHtml',
+          'hide':section.type!=='LeadFormQ' && !jsonBuilderHelper.componentManager('section')
+          }
+
+          ">
+          <a href="javascript:void(0);" (click)="selectModel($event,'Section','.sec_',s)">
+            <span class="section-subhead" *ngIf="section.type!=='LeadFormQ' && section.type!=='CustomHtml'">
+              SECTION {{sectionNumber.indexOf(tempName)==-1?(getSectionsList().indexOf(section) + 1):''}}
+            </span>
+            <i class="font-11" *ngIf="!section.title?.length && section.type!=='LeadFormQ' && section.type!=='CustomHtml'">Section {{s+1}} </i>
+            <span *ngIf="section.type!=='LeadFormQ'&& section.type!=='CustomHtml'" [innerHtml]="section.title"></span>
+            <span class="ques-LD" *ngIf="section.type==='LeadFormQ'">
+              <!-- <i class="material-icons lead-icon">person_add</i> -->
+              <p>LEAD GENERATION FORM</p>
+            </span>
+            <span *ngIf="section.type==='CustomHtml'">
+              <i class="material-icons lead-icon">clear_all</i>
+              Custom HTML
+            </span>
+          </a>
+          <div class="dropdown-menu-parent">
+            <a href="javascript:void(0);" class="sublist-action" [ngClass]="{
+                            'hide': getQuestionSections(page, section) || section.type === 'LeadFormQ'}">
+              <i class="material-icons">more_vert</i>
+            </a>
+            <ul class="dropdown-menu action">
+              <li>
+                <a href="#" (click)="OnDeleteSection();callGA('DELETESECTION')">
+                  <i class="material-icons add-options-i">clear</i>Delete</a>
+              </li>
+              <li *ngIf="(jsonBuilderHelper.editors('sectionalLogicJump'))">
+                <a href="#" (click)="_ItemTrackService.setUnSavedSections(section); openLogicPopup();">
+                  <i class="material-icons add-options-i" *ngIf="_featureAuthService.features.logic_jump.active">redo</i>
+                  <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.logic_jump.active">lock_outline</i>Logic Jump</a>
+              </li>
+            </ul>
+          </div>
+          <div class="help-tip left-sidebar-helptip" *ngIf="!jsonBuilderHelper.editors('logicJump') && section.condition && jsonBuilderHelper.editors('sectionalLogicJump')">
+            <a href="javascript:void(0)" (click)="_ItemTrackService.setUnSavedSections(section); openLogicPopup();" class="sublist-action jump">
+              <i class="material-icons">redo</i>
+            </a>
+            <div class="help-checktip">Logic Jump</div>
+          </div>
+        </span>
+        <!-- Lead form in  Questionnaire Page End -->
+
+        <!-- section type -->
+        <ul [class.sortable1]="section.type != 'LeadFormQ'" [attr.data-section]="section._id" [attr.data-sec]="s+1">
+          <li *ngFor="let control of section.items,let i=index" [attr.data-order]="control._id" [attr.data-odr]="control.order" (mousedown)="selectControl(control)"
+            (click)="selectModel($event,'Control','.sec_'+s+'_q_',i)" class="{{control._id}}" [ngClass]="{
+                    'hide':control.type === 'leadform_question' || ((tempName === 'inline-temp-new' || tempName === 'template-five' || tempName === 'template-five-oldresult')&& control.type === 'custom_html'),
+                'active': jsonBuilderHelper.getSelectedControl() === control && jsonBuilderHelper.getSelectedModel() === 'Control'}">
+            <a href="javascript:void(0);" class="head">
+              <!--[ogIf] ="['inline-temp','inline-temp-new']" means either 'inline-temp or inline-temp-new' then true-->
+              <!--[ogIf] ="['!inline-temp','!inline-temp-new']" means neither 'inline-temp nor inline-temp-new' then true-->
+              <span *ngIf="control.type !== 'leadform_question'">
+                <span class="head-number" *ngIf="control.type !== 'custom_html'">Q{{getTemplateQuestionareWithEmittedLeadFormQuestion().indexOf(control)+1}}.</span>
+                <span *ogIf="['inline-temp','inline-temp-new']" [innerHtml]="control.props.title+'___'+control.props.followUpText |removeTags"></span>
+                <span *ogIf="['!inline-temp','!inline-temp-new']" [innerHtml]="control.props.title |removeTags"></span>
+              </span>
+              <span *ngIf="control.type === 'leadform_question'"> LEAD GENERATION FORM</span>
+            </a>
+            <div class="dropdown-menu-parent">
+              <a href="javascript:void(0);" class="sublist-action" [ngClass]="{
+                                    'hide': control.type === 'leadform_question'
+                                     }">
+                <i class="material-icons">more_vert</i>
+              </a>
+              <ul class="dropdown-menu action">
+                <li *ngIf="jsonBuilderHelper.editors('logicJump') && !jsonBuilderHelper.editors('sectionalLogicJump')">
+                  <a href="#" (click)="_ItemTrackService.setUnSavedItems(control);openLogicPopup();">
+                    <i class="material-icons add-options-i" *ngIf="_featureAuthService.features.logic_jump.active">redo</i>
+                    <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.logic_jump.active">lock_outline</i>Logic Jump</a>
+                </li>
+                <li>
+                  <a href="#" (click)="addControl('duplicate');callGA('DUPLICATEQUESTION')">
+                    <i class="material-icons add-options-i">filter_none</i>Duplicate</a>
+                </li>
+                <li>
+
+                  <a href="#" (click)="OnDeleteControl(s);callGA('DELETEQUESTION')" [ngClass]="{
+										              'hide':s === 0 && section.items.length ===1
+						                   }">
+                    <i class="material-icons add-options-i">clear</i>Delete</a>
+                </li>
+              </ul>
+            </div>
+            <div class="help-tip left-sidebar-helptip" *ngIf="jsonBuilderHelper.editors('logicJump') && control.condition &&  !jsonBuilderHelper.editors('sectionalLogicJump')">
+              <a href="javascript:void(0)" (click)="_ItemTrackService.setUnSavedItems(control); openLogicPopup();" class="sublist-action jump">
+                <i class="material-icons">redo</i>
+              </a>
+              <div class="help-checktip">Logic Jump</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <ng-container *ngIf="page.type=='Questionnaire'">
+      <div [attr.data-section]="getResultLead()._id" class="ed-sidebar-sub fixed LeadFormQ" *ngIf="(getResultLeadControl().visible && getResultLeadControl().config.direction == 'beforeResult')"
+        id="{{getResultLead()._id}}" (click)="selectModel($event,'Section')" (mousedown)="jsonBuilderHelper.setSelectedSection(getResultLead())">
+        <ul [attr.data-section]="getResultLead()._id">
+          <li (mousedown)="selectControl(getResultLeadControl()); jsonBuilderHelper.setSelectedPage(jsonBuilderHelper.getPage('Result'));" (click)="selectLeadPopup($event)" class="{{getResultLeadControl()._id}}"
+            [ngClass]="{ 'active': jsonBuilderHelper.getSelectedControl() === getResultLeadControl() && (jsonBuilderHelper.getSelectedModel() === 'Section' || jsonBuilderHelper.getSelectedModel() === 'Control') }">
+            <a href="javascript:void(0);" class="head">
+              <span> LEAD GENERATION FORM</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </ng-container>
+    <div *ngIf="page.type=='Questionnaire'">
+      <ul class="add-parent option">
+        <li *ngIf="jsonBuilderHelper.componentManager('+add')">
+          <a href="javascript:void();" (mousedown)="stopPropagation($event)" (click)="addDropdown($event)">
+            <i class="material-icons">add</i> Add</a>
+          <ul class="add-dropdown-menu">
+            <li>
+              <a href="#" (click)="addNewQuestion($event);callGA('ADDQUESTION')" (mousedown)="jsonBuilderHelper.setSelectedPage(page)">
+                <i class="material-icons">add</i> Question</a>
+            </li>
+            <li *ngIf="jsonBuilderHelper.componentManager('addsection')">
+              <a href="#" (click)="addNewSection();callGA('ADDSECTION')" (mousedown)="jsonBuilderHelper.setSelectedPage(page)">
+                <i class="material-icons">add</i> Section</a>
+            </li>
+            <li *ngIf="jsonBuilderHelper.componentManager('addleadform')">
+              <a href="#" (click)="addLead(page,$event)">
+                <i class="material-icons" *ngIf="!jsonBuilderHelper.leadFormVisibility">add</i>
+                <i class="material-icons" *ngIf="jsonBuilderHelper.leadFormVisibility">remove</i> LEAD GENERATION FORM</a>
+            </li>
+            <li *ngIf="jsonBuilderHelper.componentManager('addcustomhtml')">
+              <a href="#" (mousedown)="jsonBuilderHelper.setSelectedPage(page)" (click)="addNewSection('customHtml', $event)">
+                <i class="material-icons">add</i> Custom HTML</a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="!jsonBuilderHelper.componentManager('+add')">
+          <a href="javascript:void();" (click)="addNewQuestion($event);callGA('ADDQUESTION')" (mousedown)="stopPropagation($event)">
+            <i class="material-icons">add</i> Add Question</a>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="page.type=='Result'">
+      <!--settings -->
+      <div *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Recommendation'">
+        <div class="ed-sidebar-sub " (click)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);" (mouseup)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)"
+          (mousedown)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)">
+          <span class="sub-head" [ngClass]="{
+										'active':(jsonBuilderHelper.getSelectedModel()=='Page'
+											&&  jsonBuilderHelper.getSelectedPage().type == 'Result'
+											&& jsonBuilderHelper.getJSONBuilt().templateType == 'Recommendation')
+									}">
+            <a href="javascript:void(0);" (click)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);" (mouseup)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)"
+              (mousedown)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);">
+              OUTCOMES
+              <span class="have-lead" [class.hide]="!getVisibleLeadinPage(page)">with Lead Generation Form</span>
+            </a>
+          </span>
+        </div>
+      </div>
+      <div *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Ecom'">
+        <div class="ed-sidebar-sub " (click)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);" (mouseup)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)"
+          (mousedown)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)">
+          <span class="sub-head" [ngClass]="{
+										'active':(jsonBuilderHelper.getSelectedModel()=='Page'
+											&&  jsonBuilderHelper.getSelectedPage().type == 'Result')
+									}">
+            <a href="javascript:void(0);" (click)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);" (mouseup)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page)"
+              (mousedown)="selectModel($event,'Page');jsonBuilderHelper.setSelectedPage(page);">
+              ECOM
+              <span class="have-lead" [class.hide]="!getVisibleLeadinPage(page)">with Lead Generation Form</span>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

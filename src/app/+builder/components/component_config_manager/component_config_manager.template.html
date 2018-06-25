@@ -1,0 +1,101 @@
+<div class="panel-body">
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='settings')}" class="circle"></span>
+    <a (click)="onSelect('settings')" id="config-settings" href="#b-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">settings_applications</i> General & SEO Settings
+      <!--<label class="ed-sidebar-subhead ellipsis">Basic Settings</label>-->
+    </a>
+  </div>
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='email')}" class="circle">&nbsp;</span>
+    <a (click)="confirmationEmailClick($event)" href="#email-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">email</i>
+      <i class="material-icons lock-icon" *ngIf="!isConfirmationEmailAvailable">lock_outline</i> Email Notifications
+    </a>
+  </div>
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='integrations')}" class="circle"></span>
+    <a id="integration_nav" (click)="integrationClick($event)" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">dialpad</i> Integrations
+      <!--<span class="comming-soon-tag"> Beta</span>-->
+
+      <!--<label class="ed-sidebar-subhead ellipsis">Send data to 500+ web apps</label>-->
+    </a>
+  </div>
+  <!--<div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='share-your-calculator')}" class="circle"></span>
+    <a (click)="onSelect('share-your-calculator')" id="config-share-your-calculator" href="#cal-setting" data-toggle="tab" class="section-head gen-setting"><i class="material-icons">share</i> Sharing
+      <label class="ed-sidebar-subhead ellipsis">Generate A URL And Share It</label>
+    </a>
+  </div>-->
+  <!-- <div class="ed-sidebar editor-tab" *ngIf="jsonBuilderHelper.getJSONBuilt().template.split('-',2).join('-') != 'sound-cloud'">
+    <span [ngClass]="{active: (selected=='launch-popup')}" class="circle"></span>
+    <a (click)="onSelect('launch-popup')" href="#popup-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">launch</i> Launch in a popup
+    </a>
+  </div> -->
+  <!-- <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='embedded-code')}" class="circle"></span>
+    <a (click)="embeddingClick($event)" href="#code-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">share</i>
+      <i class="material-icons lock-icon" *ngIf="!isEmbeddCodeAvailable">lock_outline</i> SHARES -->
+      <!--<label class="ed-sidebar-subhead ellipsis">Generate It In Your Domain</label>-->
+    <!-- </a>
+  </div> -->
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='embedded-code')}" class="circle"></span>
+    <a (click)="embeddingClick($event)" href="#code-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">desktop_mac</i>
+      <i class="material-icons lock-icon" *ngIf="!isEmbeddCodeAvailable">lock_outline</i> Embed on a Webpage
+      <!--<label class="ed-sidebar-subhead ellipsis">Generate It In Your Domain</label>-->
+    </a>
+  </div>
+
+  
+
+
+  <div class="ed-sidebar editor-tab ">
+    <span [ngClass]="{active: (selected=='promotion-checklist')}" class="circle"></span>
+    <a (click)="promotionChecklistClick($event)" href="#promotion-checkList" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">playlist_add_check</i> Promotion Checklist
+
+    </a>
+  </div>
+
+  <div class="ed-sidebar editor-tab">
+    <span [ngClass]="{active: (selected=='opinion-email')}" class="circle"></span>
+    <a (click)="launchEmail($event)" href="#opinion-email" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">desktop_mac</i>
+      <i class="material-icons lock-icon" *ngIf="!inLaunchEmailAvailable">lock_outline</i>Launch in an Email
+      <!-- <span class="tag-beta"> Beta</span> -->
+    </a>
+  </div>
+  <div class="ed-sidebar editor-tab ">
+    <span [ngClass]="{active: (selected=='customJS')}" class="circle"></span>
+    <a (click)="customJS($event)" href="#customJS-setting" data-toggle="tab" class="section-head gen-setting">
+      <i class="material-icons">code</i>
+      <i class="material-icons lock-icon" *ngIf="!isCustomJSAvailable">lock_outline</i>EXTERNAL SCRIPTS
+    </a>
+  </div>
+
+
+  <div class="ed-sidebar editor-tab ">
+    <span [ngClass]="{active: (selected=='customCSS')}" class="circle"></span>
+    <a (click)="customCSS($event)" href="#customCSS-setting" data-toggle="tab" class="section-head gen-setting">
+      <img src="https://cdn.filestackcontent.com/JcJFbUouRgewWfJBjAZp" class="custom-css-icon grey" />
+      <img src="https://cdn.filestackcontent.com/VWXFuLSITyKCFRXuo2eT" class="custom-css-icon" />
+      <i class="material-icons lock-icon" *ngIf="!isCustomCSSAvailable">lock_outline</i>Custom Style Sheets
+      <!-- <img src="https://cdn.filestackcontent.com/VWXFuLSITyKCFRXuo2eT" class="custom-css-icon" *ngIf="!isCustomJSAvailable" />Custom Style Sheets -->
+    </a>
+  </div>
+
+  <!--<div class="ed-sidebar editor-tab hide">-->
+  <!--<span [ngClass]="{active: (selected=='webhook')}" class="circle"></span>-->
+  <!--<a (click)="webhookSettingClick($event)" href="#webhook-setting"-->
+  <!--data-toggle="tab" class="section-head gen-setting">-->
+  <!--<i class="material-icons">developer_board</i> Webhooks-->
+  <!--<span class="tag-beta"> Beta</span>-->
+  <!--<i class="material-icons lock-icon" *ngIf="!isWebhookAvailable">lock_outline</i>-->
+  <!--</a>-->
+  <!--</div>-->
+</div>

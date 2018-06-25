@@ -1,0 +1,296 @@
+<div class="native-int-box links-outer" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')">
+  <div class="logo-sec ml10">
+    <img class="img-responsive" src="assets/images/ac.png" />
+  </div>
+  <div class="integration-name">
+    ActiveCampaign
+  </div>
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div class="i-outer-red">
+          <a href="javascript:void(0)">
+            <i class="material-icons small-icon">lock_outline</i>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="native-int-box" [class.links-outer]="isConfigured" *ngIf="returnFeatureAccess()">
+  <div *ngIf="isConfigured && !config.active" class="red-bar"></div>
+  <div *ngIf="isConfigured && config.active" class="green-bar"></div>
+  <div class="logo-sec">
+    <img class="img-responsive" src="assets/images/ac.png" />
+  </div>
+  <div class="integration-name">
+    Active Campaign
+  </div>
+  <button class="btn configure-btn" *ngIf="!isConfigured" (click)="openConnectModal()">Configure</button>
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div *ngIf="isConfigured && !config.active" class="i-outer-red">
+          <i class="material-icons">error</i>
+        </div>
+        <div *ngIf="isConfigured && config.active" class="i-outer-green">
+          <i class="material-icons">check_circle</i>
+        </div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <img class="img-responsive" src="assets/images/config-icon-active.png" />
+        </a>
+        <div class="help-checktip config-tip">Test</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured">
+        <a href="javascript:void(0)" (click)="getAccounts()">
+          <img class="img-responsive" src="assets/images/config-icon.png" />
+        </a>
+        <div class="help-checktip config-tip">Reconfigure</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active && isLeadsPending">
+        <a href="javascript:void(0)" (click)="sync()">
+          <i class="material-icons">autorenew</i>
+        </a>
+        <div class="help-checktip config-tip">Sync</div>
+      </li>
+      <li class="help-tip" (click)=syncTask() *ngIf="config?.map_fields?.length > 0 && isConfigured && config.active">
+        <a href="javascript:void(0)">
+          <i class="material-icons">restore</i>
+        </a>
+        <div class="help-checktip config-tip">Task History</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="updateIntegrationStatus(false)">
+          <i class="material-icons ">do_not_disturb_alt</i>
+        </a>
+        <div class="help-checktip config-tip">Deactivate</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && !config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <i class="material-icons">playlist_add_check</i>
+        </a>
+        <div class="help-checktip config-tip">Activate</div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<div id="activecampaign-new" class="modal fade integration-modal" role="dialog">
+  <div class="modal-dialog ">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" data-dismiss="modal" (click)="close()" aria-label="Close">
+          <i class="material-icons modal-close">close</i>
+        </button>
+        <img src="assets/images/active-campaign.png">
+        <h4>Connect to your ActiveCampaign Account.</h4>
+      </div>
+      <div class="modal-body">
+        <!-- MultiStep Form -->
+        <form [formGroup]="activeCampaignForm">
+          <!-- progressbar -->
+          <ul class="progressbar">
+            <li class="active fourOption" [class.icon]="isConnected">Configure
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isConnected" [class.icon]="isListSelected">Select List
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isListSelected" [class.icon]="isMapped">Map Fields
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" [class.active]="isMapped">Test Connection
+              <i class="material-icons">check_circle</i>
+            </li>
+            <!-- <li class="fiveOption" [class.active]="isDoubleOptin">Double Optin<i class="material-icons">check_circle</i></li> -->
+          </ul>
+          <!-- fieldsets -->
+          <fieldset *ngIf="!isAccountSelected && !isConnected && !isListSelected && !isMapped">
+              <div class="error-main" *ngIf="isActiveCampaignError">
+                  <i class="material-icons">check_circle</i> {{activeCampaignErrorMsg}}
+                </div>
+            <h5 class="align-left">Choose activeCampaign account you want to use for this integration</h5>
+            <h6>Select a activeCampaign Connection</h6>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+              <i class="material-icons loader-plan">autorenew</i>
+            </div>
+            <div class="radio-o" [class.active]="account.key==activeAccount" *ngFor="let account of accounts; let i = index">
+              <input type="radio" [id]="account.name" (click)="setAccount(account.key, 'edit')" name="radio-group"
+                [checked]="account.status">
+              <label [for]="account.name">{{account.name}}</label>
+              <a *ngIf="accounts.length!=1 && account.key!==activeAccount" href=" javascript:void(0);" class="after-test-link" (click)="setAccount(account.key,'delete')">Delete</a>
+              <!-- <a href="javascript:void(0);" class="after-test-link" (click)="editAccount(account.key,account.name,account.instanceurl)">Edit</a> -->
+              <a href="javascript:void(0);" *ngIf="account.key!==activeAccount" class="after-test-link" (click)="testAccount(account.key,account.instanceurl)">Test</a>
+              <div class="after-test hide" [id]="account.key"><i class="material-icons">check</i> Success</div> 
+
+            </div>
+            <a href="javascript:void(0);" (click)="openNewConnectModal()" class="single-link align-left mt5">Add another Active Campaign connection</a>
+            <input type="button" name="submit" class="submit action-button button btn" (click)="showList()" value="Proceed" />
+          </fieldset>
+
+          <fieldset *ngIf=" isAccountSelected && !isConnected && !isListSelected && !isMapped">
+            <div class="error-main" *ngIf="isActiveCampaignError">
+              <i class="material-icons">check_circle</i> {{activeCampaignErrorMsg}}
+            </div>
+            <h5 class="align-left">Connect to your ActiveCampaign Account</h5>
+            <h6 class="align-left">Once logged in to Active Campaign, click on the Account Name at the Top Right side bar and select My Settings
+              and then select Developer. Here you will find your API Key and URL.</h6>
+              <div class="form-group">
+                <input class="form-control"  type="text" placeholder="Enter ActiveCampaign account name" name="hubspotAccount" formControlName="accountName" [(ngModel)]="integrations.account_name">
+                <label class="control-label" for="input">Select Account Name</label>
+                <i class="bar"></i>
+                <!-- <p class="error" *ngIf="mailChimpForm.controls.accountName.touched && !mailChimpForm.controls.accountName.valid">
+                <span *ngIf="mailChimpForm.controls.accountName.errors.required">
+                <i class="material-icons">report_problem</i> Account Name is required.
+                </span> 
+              </p> -->
+              </div>
+            <div class="form-group">
+              <input class="form-control" placeholder="Enter ActiveCampaign api key" type="text" name="hubspotKey" formControlName="apiKey"
+                [(ngModel)]="integrations.api_key" (focus)="addIsfocusedKey('activeCampaignKey')" (blur)="removeIsfocusedKey('activeCampaignKey')">
+              <!-- <input type="text" placeholder="palceholder"/> -->
+              <label class="control-label" for="input">ActiveCampaign Api Key</label>
+              <i class="bar"></i>
+
+              <p class="error" *ngIf="activeCampaignForm.controls.apiKey.touched && !activeCampaignForm.controls.apiKey.valid">
+                <span *ngIf="activeCampaignForm.controls.apiKey.errors.required">
+                  <i class="material-icons">report_problem</i> Api Key is required.
+                </span>
+              </p>
+            </div>
+            <div class="form-group mb20">
+              <input class="form-control" placeholder="Enter ActiveCampaign account url" type="text" name="account" formControlName="account"
+                [(ngModel)]="integrations.account" (focus)="addIsfocusedKey('activeCampaignAccount')" (blur)="removeIsfocusedKey('activeCampaignAccount')">
+              <!-- <input type="text" placeholder="palceholder"/> -->
+              <label class="control-label" for="input">ActiveCampaign Account url</label>
+              <i class="bar"></i>
+
+              <p class="error" *ngIf="activeCampaignForm.controls.account.touched && !activeCampaignForm.controls.account.valid">
+                <span *ngIf="activeCampaignForm.controls.account.errors.required">
+                  <i class="material-icons">report_problem</i> Account url is required.
+                </span>
+              </p>
+            </div>
+            <button id="btnmActiveCampaign" type="submit" [disabled]="!activeCampaignForm.valid" class="action-button button btn" (click)="connectActiveCampaign()">Authenticate with Active Campaign</button>
+          </fieldset>
+          <fieldset *ngIf="isConnected && !isListSelected && !isMapped">
+            <div class="error-main" *ngIf="isError">
+              <i class="material-icons">check_circle</i> {{errorMsg}}
+            </div>
+            <h5 class="align-left">Choose Active Campaign list where you want to add subscribers from this {{calcType}}</h5>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+              <i class="material-icons loader-plan">autorenew</i>
+            </div>
+          
+            <div class="dropdown-outer">
+              <div class="heading">Select ActiveCampaign List</div>
+              <select class="listName" (change)="requestList($event.target.value)">
+                <option value="0"> Select </option>
+                <option *ngFor="let list of lists" [selected]="list.list_id == selectedList" [value]="list.id">{{list.name}}</option>
+              </select>
+            </div>
+            <button (click)="getMapFields('active_campaign')" name="submit" class="submit action-button button btn" id="btnactive_campaignList">Configure</button>
+          </fieldset>
+          <fieldset *ngIf="isConnected && !isMapped">
+            <div class="error-main" *ngIf="isActiveCampaignError">
+              <i class="material-icons">check_circle</i> {{activeCampaignErrorMsg}}
+            </div>
+            <div class="error-main" *ngIf="isLeadGenError">
+              <i class="material-icons">check_circle</i> {{activeCampaignErrorMsg}}
+            </div>
+            <h5 class="align-left">Choose ActiveCampaign fields where you want to send Outgrow {{calcType}} data </h5>
+            <div class="table-outer">
+              <div class="row-outer header align-left" *ngIf="!isLoading && selectedlistId!='' && !isMapError">
+                <div class="col-outer-half">Outgrow Field</div>
+                <div class="col-outer-half">ActiveCampaign Field</div>
+                <!-- <div class="col-outer">Type</div> -->
+              </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+                <i class="material-icons loader-plan">autorenew</i>
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calcfields of calcAllFileds">
+                  <div class="col-outer-half">{{calcfields.calc_name}}</div>
+                  <div class="col-outer-half">
+                    <select [disabled]="isLeadGenError" (change)="insertMapData(calcfields?.calc_key,$event)">
+                      <option value="0">Not mapped</option>
+                      <option *ngFor="let crmfields of crmAllFileds" [selected]="crmfields.calc_key == calcfields.calc_key" [value]="crmfields.crm_key">{{crmfields.crm_name}}</option>
+                      <!-- <option >Option</option>                    -->
+                    </select>
+                  </div>
+                  <!-- <div class="col-outer">Type</div> -->
+                </div>
+              </div>
+              <!-- <p>Send Outgrow leads to different lists based on results</p> -->
+            </div>
+            <!-- <input type="button" name="previous" class="previous action-button-previous btn button-light" value="Previous"/> -->
+            <!-- <input type="button" (click)="test()" class="action-button button btn btn-test" value="Test Connection"/> -->
+            <button (click)="sendTestLeads()" *ngIf="!isLoading && selectedlistId!='' && !isMapError" class="action-button button btn btn-test"
+              href="javascript:void(0);" type="button" id="btn-ac">TEST CONNECTION</button>
+          </fieldset>
+          <fieldset *ngIf="isMapped">
+            <div class="success">
+              <i class="material-icons">check_circle</i> MAPPING SUCCESSFUL.
+            </div>
+            <h6>Following test record will be pushed to ActiveCampaign to test the connection</h6>
+            <div class="table-outer">
+              <div class="row-outer header align-left">
+                <div class="col-outer-half">ActiveCampaign Field</div>
+                <div class="col-outer-half">ActiveCampaign Field value</div>
+
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calc of testLeads">
+                  <div class="col-outer-half">{{calc.key}}</div>
+                  <div class="col-outer-half">{{calc.value}} </div>
+                </div>
+              </div>
+
+              <!-- <p>Send Outgrow leads to different lists based on results</p> -->
+            </div>
+            <input type="button" class="action-button-previous btn button-light-back" (click)="back()" value="Back" />
+            <input type="button" name="submit" class="submit action-button button btn" (click)="close()" value="Finish" />
+          </fieldset>
+          <fieldset class="" *ngIf="GDPR">
+						<h5 class="align-left">Users receive an email and click a link to confirm their subscription, which is then added to your Salesforce account
+						  or chosen list.</h5>
+						<!-- <div class="check-outer">
+											<input type="checkbox" id="test1" />
+											<label for="test1">Send users of this calculator / quiz / poll an email to confirm subscription to a list </label>
+										</div>	 -->
+						<h6>Send users of this {{calcType}} an email to confirm subscription to a list </h6>
+						<div class="email-body-text">Email body</div>
+						<div class="email-outer" id="email">
+						  <textarea id="froala-editorIntegration"></textarea>
+						</div>
+						<div class="buttons-outer">
+                <a class="small-btn red-btn" href="javascript:void(0)" (click)="sendTestMail('save')">
+                    <span class="saveEmail1">Save</span>
+                    <i class="material-icons">save</i>
+                </a>
+                <a class="small-btn" href="javascript:void(0)" (click)="setemailBody(true)">
+                <i class="material-icons">autorenew</i> Reset</a>
+                <a class="small-btn" href="javascript:void(0)" (click)="sendTestMail('test')">
+                <i class="material-icons">send</i> Send Test Email</a>
+						</div>
+              <input type="button" name="submit" *ngIf="!config.doubleOptin" class="submit action-button button btn" value="SET DOUBLE OPTIN"
+                (click)="setDoubleoptin(true)" />
+              <input type="button" name="submit" *ngIf="config.doubleOptin" class="submit action-button button btn" value="FINISH" (click)="close()"
+              />
+              <input type="button" name="submit" *ngIf="config.doubleOptin" class="action-button-previous btn gray-btn" value="REMOVE DOUBLE OPTIN"
+                (click)="setDoubleoptin(false)" />
+              <input type="button" *ngIf="!config.doubleOptin" class="action-button-previous btn button-light-skip-small" (click)="close()"
+                value="SKIP" />
+					 </fieldset> 
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

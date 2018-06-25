@@ -1,0 +1,1840 @@
+<div class="">
+
+
+  <div class="col-xs-12 text-center email-tabs gen-seo-tabs">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+      <li role="presentation" class="active">
+        <a href="#gen-settings" role="tab" data-toggle="tab">General
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li role="presentation" *ngIf="jsonBuilderHelper.isGDPR()">
+        <a href="#cookies-settings" role="tab" data-toggle="tab">Cookies Notification
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#tracking-settings" role="tab" data-toggle="tab">Tracking & Events
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#seo-settings" role="tab" data-toggle="tab">SEO
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+      <li role="presentation">
+        <a href="#local-settings" role="tab" data-toggle="tab">Localization
+          <i class="material-icons">keyboard_arrow_right</i>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="tab-content gen-seo-outer">
+    <div class="my-emailform w750 active tab-pane" id="gen-settings" role="tabpanel">
+      <h3>General Settings</h3>
+      <div class="col-md-12 no-padding ">
+
+        <div class="form-group label-floating" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().name==''" [class.is-focused]="isFocused==='name'">
+          <label class="control-label" for="inputName">{{jsonBuilderHelper.isTempType(['Numerical'])?'Calculator':(jsonBuilderHelper.isTempType(['Poll'])?'Poll':'Quiz')}}
+            Name
+          </label>
+          <input class="form-control" type="text" (focusout)="onCalcNameChanged()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().name"
+            [class.is-empty]="jsonBuilderHelper.getJSONBuilt().name==''" (focus)="isFocused ='name'">
+          <p *ngIf="isempty" class="editor-alert-danger">
+            <i class="material-icons">report_problem</i> {{jsonBuilderHelper.isTempType(['Numerical'])?'Calculator':(jsonBuilderHelper.isTempType(['Poll'])?'Poll':'Quiz')}}
+            Name can't be empty</p>
+        </div>
+
+        <div class="form-group label-floating form-url-outr is-focused" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().url==''"
+          [class.is-focused]="isFocused==='url'">
+          <div class="test">
+            <label class="config-input-label" for="inputName">{{jsonBuilderHelper.isTempType(['Numerical'])?'Calculator':(jsonBuilderHelper.isTempType(['Poll'])?'Poll':'Quiz')}}
+              Url
+            </label>
+            <div class="form-url-inner">
+              <ul>
+                <li class="url-class1">
+                  <span class="config-label-url">{{srcUrl}}</span>
+                </li>
+                <li class="url-class">
+                  <input type="text" placeholder="URL" class="form-control config-input-url ellipsis" type="text" (keyup)="onCalcUrlChanged($event)"
+                    [(ngModel)]="name" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().url==''" (focus)="isFocused ='url'"
+                    (blur)="isFocused ='urll'" />
+                </li>
+                <!--<input class="form-control" type="text" (keyup)="onCalcUrlChanged()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().url"
+                                    [class.is-empty]="jsonBuilderHelper.getJSONBuilt().url==''" (focus)="isFocused ='url'">-->
+              </ul>
+            </div>
+            <span class="copy-link-outer" *ngIf="jsonBuilderHelper.isClipboardSupported">
+              <a href="javascript:void(0);" class="copy-btn" (click)="copyButton();callGA('COPYLINK')">Copy to Clipboard</a>
+            </span>
+          </div>
+          <p *ngIf="!unique" class="editor-alert-danger editor-urlTaken">
+            <i class="material-icons">report_problem</i> This {{jsonBuilderHelper.isTempType(['Numerical'])?'calculator':(jsonBuilderHelper.isTempType(['Poll'])?'poll':'quiz')}}
+            Url is already taken</p>
+          <p class="editor-alert-danger editor-calcUrl" *ngIf="!jsonBuilderHelper.getJSONBuilt().url">{{jsonBuilderHelper.isTempType(['Numerical'])?'Calculator':(jsonBuilderHelper.isTempType(['Poll'])?'Poll':'Quiz')}}
+            Url can't be empty
+            <button type="button" class="close btn-close" (click)="closeIt()">
+              <i class="material-icons">close</i>
+            </button>
+          </p>
+        </div>
+
+        <div *ngIf="cname!=''" class="form-group label-floating form-url-outr">
+          <div class="test">
+            <label class="config-input-label" for="inputName">Whitelabeled URL</label>
+            <div class="form-url-inner">
+              <ul>
+                <li class="url-class1">
+                  <span class="config-label-url">{{cname}}</span>
+                </li>
+                <li class="url-class">
+                  <input type="text" placeholder="CNAME" disabled class="form-control config-input-url ellipsis" type="text" (keyup)="onCalcUrlChanged($event)"
+                    [(ngModel)]="name" />
+                </li>
+              </ul>
+            </div>
+            <span class="copy-link-outer">
+              <a href="javascript:void(0);" class="copy-btn" (click)="copyCname();callGA('COPYLINK')">Copy to Clipboard</a>
+            </span>
+          </div>
+        </div>
+
+        <div class="form-group new-border">
+          <div class="input-group">
+            <label class="g-upload-label">Browser Favicon</label>
+            <span class="i-text ellipsis placeholder-favicon" [class.img-text]="jsonBuilderHelper.getJSONBuilt().favicon != ''">
+              {{(jsonBuilderHelper.getJSONBuilt().favicon != '')?jsonBuilderHelper.getJSONBuilt().favicon:'No Favicon Uploaded'}}
+            </span>
+            <span *ngIf="jsonBuilderHelper.getJSONBuilt().favicon" (click)="removeFavicon()">
+              <i class="material-icons">clear</i>
+            </span>
+
+            <span class="input-group-btn input-group-sm">
+              <button type="button" class="g-upload-btn" (click)="upload('favicon');">
+                Upload
+              </button>
+            </span>
+          </div>
+        </div>
+
+        <div *ngIf="!jsonBuilderHelper.getJSONBuilt().ga_enable" class="form-group label-floating label-seo config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''"
+          [class.is-focused]="isFocused === 'ga'">
+          <label class="label-static label-heltip" [class.pl16]="!_featureAuthService.features.analytics.google_analytics" id="shopping_button"
+            for="ga">
+            <i *ngIf="!_featureAuthService.features.analytics.google_analytics" class="material-icons gen-sett-lock">lock_outline</i> Google Analytics (Tracking ID : UA-8XXXXXX8-X)
+          </label>
+          <span class="icon-info" (mouseenter)="googleAnalyticsHover()">
+            <i class="material-icons">info_outline</i>
+            <div class="googleAna-infoDivwrapper">
+              <div id="btn-close" (click)="btnClose()">
+                <i class="material-icons">close</i>
+              </div>
+              You can connect your GA account with Outgrow to receive all analytics there.
+              <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/google-analytics-integration-for-calculator-and-quiz">Read more here </a>
+            </div>
+          </span>
+          <input class="form-control" (click)="ga()" [readonly]="!_featureAuthService.features.analytics.google_analytics" id="ga"
+            type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().ga" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''"
+            maxlength="55" (focus)="isFocused ='ga'" placeholder="Enter the text here">
+        </div>
+
+        <div *ngIf="!jsonBuilderHelper.getJSONBuilt().fbPixel_enable" class="form-group label-floating label-fb config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''"
+          [class.is-focused]="isFocused === 'fbPixel'">
+          <label class="label-static label-heltip" [class.pl16]="!_featureAuthService.features.analytics.facebook_pixel" for="fbPixel">
+            <i *ngIf="!_featureAuthService.features.analytics.facebook_pixel" class="material-icons gen-sett-lock">lock_outline</i>Facebook Pixel (ID : 12XXXXXXXXXX90)</label>
+          <span class="icon-info" (mouseenter)="fbPixelHover()">
+            <i class="material-icons">info_outline</i>
+            <div class="fbPixel-infoDivwrapper">
+              <div id="btn-close" (click)="btnClose()">
+                <i class="material-icons">close</i>
+              </div>
+              You can add your FB Pixel to your Outgrow {{jsonBuilderHelper.isTempType(['Numerical'])?'calculators':(jsonBuilderHelper.isTempType(['Poll'])?'polls':'quizzes')}}
+              and configure custom events like conversions and clicks.
+              <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/facebook-pixel-integration-for-calculator-and-quiz">Read more here: </a>
+            </div>
+          </span>
+          <input class="form-control" (click)="fb()" [readonly]="!_featureAuthService.features.analytics.facebook_pixel" id="fbPixel"
+            type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbPixel" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''"
+            maxlength="55" (focus)="isFocused ='fbPixel'" placeholder="Enter the text here">
+        </div>
+
+        <!--CNAME Facbook app id-->
+
+        <div *ngIf="cname!=''" class="form-group label-floating label-fb config-tip fb_app_id" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fb_app_id==''"
+          [class.is-focused]="isFocused === 'fb_app_id'">
+          <label class="label-static label-heltip" for="fbPixel">Facebook App (ID : 12XXXXXXXXXXXXXX)</label>
+          <span class="icon-info" (mouseenter)="fbCNAMEPixelHover()">
+            <i class="material-icons">info_outline</i>
+            <div class="fbCNAMEPixel-infoDivwrapper">
+              <div id="btn-close" (click)="btnClose()">
+                <i class="material-icons">close</i>
+              </div>
+              Add your FB App_id to your Outgrow {{jsonBuilderHelper.isTempType(['Numerical'])?'calculators':(jsonBuilderHelper.isTempType(['Poll'])?'polls':'quizzes')}}
+              when you use Cname.
+              <a class="text-red hide" target="_blank" href="https://support.outgrow.co/docs/facebook-pixel-integration-for-calculator-and-quiz">Read more here: </a>
+            </div>
+          </span>
+          <input class="form-control" id="fb_app_id" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fb_app_id" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fb_app_id==''"
+            maxlength="55" (focus)="isFocused ='fb_app_id'" placeholder="Enter the text here">
+        </div>
+
+
+        <div class="col-xs-12 np">
+          <div class="col-xs-12 no-padding top-space20 form-group new-border publicLogo">
+            <div class="input-group">
+              <label class="g-upload-label">PUBLIC PAGE LOGO</label>
+              <span class="i-text ellipsis placeholder-publicLogo" [class.img-text]="publicLogo != ''">
+                {{(publicLogo != '')?publicLogo:'No public page logo uploaded'}}
+              </span>
+              <span *ngIf="publicLogo!=''" (click)="removePublicLogo()">
+                <i class="material-icons">clear</i>
+              </span>
+
+              <span class="input-group-btn input-group-sm">
+                <button type="button" class="g-upload-btn" (click)="publicLogoUpload('publicLogo');">
+                  Upload
+                </button>
+              </span>
+            </div>
+          </div>
+          <div class="col-xs-12 no-padding publicLogo-input form-group focus-new">
+            <label class="g-upload-label">REDIRECT TO URL ON CLICK OF LOGO</label>
+            <input type="text" placeholder="http://" [(ngModel)]='navigateUrl' (change)="logoLink($event)" class="form-control" />
+          </div>
+        </div>
+        <!--// selectbox-->
+
+        <div class="col-xs-12 no-padding g-setting-outr logo-branding-outer new-set-des">
+          <!--<label class="g-setting-label">Mode</label>-->
+          <div class="col-xs-12 no-padding top-space20">
+            <span class="form-label">Outgrow branding
+              <i class="material-icons lock-icon bookmark-icon" *ngIf="editorControl.poweredby.visible && !_featureAuthService.features.custom_branding.cta_build_similar_calc">lock_outline</i>
+            </span>
+            <div class="switch">
+              <div class="onoffswitch">
+                <input type="checkbox" [checked]="editorControl.poweredby.visible" (change)="togglePoweredBy($event)" class="onoffswitch-checkbox"
+                  id="myonoffswitch2">
+                <label class="onoffswitch-label" for="myonoffswitch2">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+            <!-- <div class="switch" [class.alwaysOn]="editorControl.poweredby.visible && !_featureAuthService.features.custom_branding.cta_build_similar_calc" >
+                            <label>
+                                <input class="show-check" data-size="mini" [checked]="editorControl.poweredby.visible" (change)="togglePoweredBy()" name="multi-checkbox" type="checkbox">
+                                <span class="lever"></span>
+                            </label>
+                        </div> -->
+          </div>
+          <div class="col-xs-12 no-padding top-space20">
+            <span class="form-label">Publish on public page (
+              <span class="blue-text">{{hostUrl}}/public-calculators</span>)
+              <a class="live-link" target="_blank" href="{{protocol}}//{{hostUrl}}/public-calculators">
+                <i class="material-icons">open_in_new</i>
+              </a>
+            </span>
+            <div class="switch">
+              <div class="onoffswitch">
+                <input type="checkbox" (change)="onPublicModeChange()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().public" class="onoffswitch-checkbox"
+                  id="myonoffpublic">
+                <label class="onoffswitch-label" for="myonoffpublic">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 no-padding top-space20">
+            <span class="form-label">Show trending content
+              <i *ngIf="!_featureAuthService.features.show_trending.active" class="material-icons">lock_outline</i>
+            </span>
+            <div class="switch">
+              <div class="onoffswitch">
+                <input type="checkbox" (change)="onLiveCalculatorChange($event)" [checked]="_featureAuthService.features.show_trending.active && jsonBuilderHelper.getJSONBuilt().showLiveCalc"
+                  class="onoffswitch-checkbox" id="myonofflivecal">
+                <label class="onoffswitch-label" for="myonofflivecal">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 no-padding top-space20">
+            <span class="form-label">Allow cookies</span>
+            <div class="switch">
+              <div class="onoffswitch">
+                <input type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().cookie_enabled" class="onoffswitch-checkbox" id="myonoffswitchCookie"
+                  [checked]="jsonBuilderHelper.getJSONBuilt().cookie_enabled">
+                <label class="onoffswitch-label" for="myonoffswitchCookie">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-xs-12 no-padding g-setting-outr logo-branding-outer">
+                    <div class="col-xs-12 no-padding top-space10">
+                        <connect-instant-articles></connect-instant-articles>
+                    </div>
+                </div> -->
+
+        <div class="col-xs-12 no-padding g-setting-outr publish-calc publish-outer new-set-des">
+          <!--<label class="g-setting-label">Mode</label>-->
+          <div class="col-xs-12 no-padding switch-outer top-space20">
+            <span class="form-label">Publish this {{jsonBuilderHelper.isTempType(['Numerical'])?'calculator':(jsonBuilderHelper.isTempType(['Poll'])?'poll':'quiz')}}</span>
+            <div class="switch">
+              <div class="onoffswitch">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch4" (change)="onModeChange();callGA('CALCSTATUSTOGGLE')"
+                  [checked]="jsonBuilderHelper.getJSONBuilt().mode=='PUBLIC'">
+                <label class="onoffswitch-label" for="myonoffswitch4">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!--<div class="col-xs-12 no-padding">
+                            <span class="form-label">Show Outgrow logo</span>
+                            <div class="switch">
+                                <label>
+                                        <input type="checkbox" class="show-check" (change)="saveAppSettings()"  [(ngModel)]="jsonBuilderHelper.getJSONBuilt().poweredby" >
+                                        <span class="lever"></span>
+                                    </label>
+                            </div>
+                        </div>-->
+        </div>
+        <!-- <div class="col-xs-12 no-padding g-setting-outr logo-branding-outer new-set-des">
+          <div class="col-xs-12 no-padding top-space20">
+            <connect-instant-articles></connect-instant-articles>
+          </div>
+        </div> -->
+      </div>
+      <!--GIF section-->
+      <div *ngIf="!(this.jsonBuilderHelper.getJSONBuilt().gifUrl?.desktop)" class="col-xs-12 no-padding g-setting-outr publish-calc gif-sec-outer  top-space20">
+        <div class="gif-img-outer overflow-h">
+          <!-- overlay section start -->
+
+          <div class="white-overlay">
+            <span class="tag-beta position"> Beta</span>
+            <a *ngIf="!this.jsonBuilderHelper.getJSONBuilt().publishing_gif" href="javascript:void(0)" (click)="generateGif({target:$event.target})"
+              class="gif-button-new">Generate Gif</a>
+          </div>
+          <div *ngIf="(this.jsonBuilderHelper.getJSONBuilt().publishing_gif)" class="white-overlay">
+            <span class="tag-beta position"> Beta</span>
+            Creating the GIF for your {{templateType}}.
+            <br/>
+            <div class="small-text-1" [innerHTML]="text"></div>
+            <div *ngIf="this.jsonBuilderHelper.getJSONBuilt().publishing_gif && showRetry">
+              <a href="javascript:void(0)" (click)="generateGif({target:$event.target,retry:true})" class="gif-button-new">Retry</a>
+            </div>
+          </div>
+
+
+          <!-- overlay section end -->
+          <img [src]="jsonBuilderHelper.previewURL()" alt="gif-img">
+        </div>
+      </div>
+
+      <div *ngIf="gifUrl" class="col-xs-12 no-padding g-setting-outr publish-calc gif-sec-outer">
+        <div class="col-xs-12 no-padding switch-outer">
+          <span class="form-label">GIF of this {{templateType}}</span>
+        </div>
+        <div class="gif-img-outer">
+          <span class="tag-beta-gif"> Beta</span>
+          <!-- overlay section start -->
+          <div class="white-overlay hide">Gif will be generated when
+            <br/> calculator is published.</div>
+          <!-- overlay section end -->
+          <img [src]="gifUrl" alt="gif-img">
+        </div>
+        <div class="gif-content-outer">
+          <div class="gif-link-outer">
+            <div class="gif-link">
+              <div class="link-label">GIF link of the {{templateType}}:</div>
+              <div class="link">
+                <a [href]="gifShortUrl" [target]="'_blank'">{{gifShortUrl}}</a>
+              </div>
+            </div>
+            <div class="gif-link-cta">
+              <a class="copy-clipboard" href="javascript:void(0);" (click)="copyToClipboard(jsonBuilderHelper.getJSONBuilt().gifUrl.desktop)">
+                <i class="material-icons">content_copy</i>
+                Copy</a>
+              <a href="javascript:void(0);" (click)="generateGif({regenerate: true})">
+                <i class="material-icons">cached</i> Regenerate Gif</a>
+              <a *ngIf="downloadGifUrl" [download]="app.name+'.gif'" target="_blank" [href]="downloadGifUrl">
+                <i class="material-icons">file_download</i> Download</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-12 no-padding">
+        </div>
+      </div>
+      <!--GIF Section End-->
+
+    </div>
+    <div class="my-emailform w750 tab-pane" id="cookies-settings" role="tabpanel" *ngIf="jsonBuilderHelper.isGDPR()">
+      <div class="col-xs-12 no-padding seo-setting-outr g-setting-outr ">
+        <div class="col-xs-12 np">
+          <h3 class="seo-head">Cookies on Live {{jsonBuilderHelper.getJSONBuilt().templateType==='Numerical'?'Calculator':(jsonBuilderHelper.getJSONBuilt().templateType==='Poll'?'Poll':'Quiz')}}</h3>
+          <p class="seo-desc">Users will see an Accept Cookies notification on their {{jsonBuilderHelper.getJSONBuilt().templateType==='Numerical'?'calculator':(jsonBuilderHelper.getJSONBuilt().templateType==='Poll'?'poll':'quiz')}}.</p>
+        </div>
+        <div class="col-md-12 no-padding">
+          <div class="form-group form-subject" [class.is-focused]="isFocused ==='subject'">
+            <div class="email-select-outr">
+              <label class="g-upload-label set-label g-setting-label">Text to be shown on floating bar to users on live {{jsonBuilderHelper.getJSONBuilt().templateType==='Numerical'?'calculator':(jsonBuilderHelper.getJSONBuilt().templateType==='Poll'?'poll':'quiz')}}
+                to accept cookies</label>
+              <div class="col-xs-12 no-padding email-setting-outr">
+                <textarea id="froala-editorGDPR"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--FB & GOOGLE tracking section starts-->
+    <div class="my-emailform w750 tab-pane" id="tracking-settings" role="tabpanel">
+      <div class="col-xs-12 no-padding">
+        <h3>Tracking and Events</h3>
+        <div class="tracking-description">Customize tracking & events on your {{jsonBuilderHelper.isTempType(['Numerical'])?'calculator':(jsonBuilderHelper.isTempType(['Poll'])?'poll':'quiz')}}</div>
+      </div>
+      <div class="col-xs-12 np tracking-outer">
+        <div class="tracking-outer-top">
+          <div class="tracking-heading">Integrate facebook pixel
+            <i *ngIf="!_featureAuthService.features.analytics.facebook_pixel" class="material-icons gen-sett-lock">lock_outline</i>
+          </div>
+          <div class="switch" [class.alwaysOff]="!_featureAuthService.features.analytics.facebook_pixel">
+            <div class="onoffswitch">
+              <input type="checkbox" class="onoffswitch-checkbox" id="fb-track" (change)="toggleTracking('pixel')" [checked]="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+              <label class="onoffswitch-label" for="fb-track">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="tracking-inner" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+          <div class="form-group label-floating">
+            <label class="control-label active" for="inputFbId">Facebook Pixel (ID : 12XXXXXXXXXX90)</label>
+            <input class="form-control" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbPixel" placeholder="Enter pixel Id here" type="text">
+          </div>
+        </div>
+      </div>
+      <div class="diversion-div" *ngIf="!jsonBuilderHelper.getJSONBuilt().fbPixel_enable"></div>
+      <div class="col-xs-12 np tracking-outer">
+        <div class="tracking-outer-top">
+          <div class="tracking-heading">Integrate google analytics
+            <i *ngIf="!_featureAuthService.features.analytics.google_analytics" class="material-icons gen-sett-lock">lock_outline</i>
+          </div>
+          <div class="switch" [class.alwaysOff]="!_featureAuthService.features.analytics.google_analytics">
+            <div class="onoffswitch">
+              <input type="checkbox" class="onoffswitch-checkbox" id="g-track" (change)="toggleTracking('google')" [checked]="jsonBuilderHelper.getJSONBuilt().ga_enable">
+              <label class="onoffswitch-label" for="g-track">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="tracking-inner" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+          <div class="form-group label-floating">
+            <label class="control-label active" for="inputFbId">Google Analytics (Tracking ID : UA-8XXXXXX8-X)</label>
+            <input class="form-control" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().ga" placeholder="Enter pixel Id here" type="text">
+          </div>
+        </div>
+      </div>
+      <div class="diversion-div" *ngIf="!jsonBuilderHelper.getJSONBuilt().ga_enable"></div>
+      <div class="col-xs-12 np">
+        <div class="tracking-heading">Configure events for</div>
+        <div class="col-xs-12 no-padding">
+          <div class="event-list" *ngIf="jsonBuilderHelper.getPage('Landing').visible">
+            <div class="col-xs-12 np">
+              <div class="event-heading">Welcome Page</div>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input class="onoffswitch-checkbox" id="track-wc-screen" type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.welcome_page">
+                  <label class="onoffswitch-label" for="track-wc-screen">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div (mousedown)="setUnSavedPage('Landing')" class="event-list-inner" *ngIf="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.welcome_page">
+              <!-- View Welcome Screen -->
+              <div>
+                <div class="col-xs-12 np event-list-inner-heading">View Welcome Page</div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.fb_event" class="form-control" id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.fb_value" id="wc-currency"
+                          placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.ga_eventCategory" id="content_type"
+                          placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.ga_eventAction" id="wc-content"
+                          placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.ga_eventLabel" id="wc-currency"
+                          placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Landing').analytics_segmentation.ga_eventValue" id="wc-value"
+                          placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Click LP CTA -->
+              <div *ngIf="!jsonBuilderHelper.leadFormVisibility || (jsonBuilderHelper.leadFormVisibility  && jsonBuilderHelper.getVisibleLeadForm().page[0].type!=='Landing')">
+                <div class="col-xs-12 np event-list-inner-heading">Click Welcome Page CTA</div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.fb_event" class="form-control" id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.fb_value" id="wc-currency"
+                          placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.ga_eventCategory"
+                          id="content_type" placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.ga_eventAction"
+                          id="wc-content" placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.ga_eventLabel"
+                          id="wc-currency" placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Landing').analytics_segmentation.ga_eventValue"
+                          id="wc-value" placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Submit LP Lead Form -->
+              <div *ngIf="jsonBuilderHelper.leadFormVisibility && jsonBuilderHelper.getVisibleLeadForm().page[0].type==='Landing'">
+                <div class="col-xs-12 np">Submit Lead Form</div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_event" class="form-control"
+                          id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_value"
+                          id="wc-currency" placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventCategory"
+                          id="content_type" placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventAction"
+                          id="wc-content" placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventLabel"
+                          id="wc-currency" placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventValue"
+                          id="wc-value" placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="event-list">
+            <div class="col-xs-12 no-padding">
+              <div class="event-heading">Questions</div>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input class="onoffswitch-checkbox" id="track-questions" type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.questions_page">
+                  <label class="onoffswitch-label" for="track-questions">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div (mousedown)="setUnSavedPage('Questionnaire')" class="event-list-inner" *ngIf="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.questions_page">
+              <div class="checkbox-outer" *ngFor="let question of jsonBuilderHelper.getQuestionsList(),let i=index">
+                <div class="custom-switch">
+                  <label class="check check-mandatory form-label">
+                    <input id="check_k11_{{question._id}}" type="checkbox" [(ngModel)]="question.analytics_segmentation.enabled">
+                    <label for="check_k11_{{question._id}}"> </label>
+                    {{(question.type==='custom_html'?'Custom HTML':((question.type==='leadform_question')?'Lead Generation':question.props.title
+                    | removeTags))}}
+                  </label>
+                </div>
+                <!-- View Question -->
+                <div class="event-list-inner" *ngIf="question.analytics_segmentation.enabled">
+                  <div class="col-xs-12 np event-list-inner-heading">{{(question.type==='leadform_question')?'View Lead Form':'View Question '+(i+1)}}</div>
+                  <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                    <div class="col-xs-3 np parameter-label">
+                      <div class="col-xs-12 np">FB Pixel</div>
+                      <div class="col-xs-12 np fb-icon"></div>
+                    </div>
+                    <div class="col-xs-9 np">
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="content">Event</label>
+                          <select [(ngModel)]="question.analytics_segmentation.fb_event" class="form-control" id="content">
+                            <option value="ViewContent">ViewContent</option>
+                            <option value="Search">Search</option>
+                            <option value="AddToCart">AddToCart</option>
+                            <option value="AddToWishlist">AddToWishlist</option>
+                            <option value="InitiateCheckout">InitiateCheckout</option>
+                            <option value="AddPaymentInfo">AddPaymentInfo</option>
+                            <option value="Purchase">Purchase</option>
+                            <option value="Lead">Lead</option>
+                            <option value="CompleteRegistration">CompleteRegistration</option>
+                            <option value="trackCustom">Track Custom</option>
+                          </select>
+                          <span class="caret"></span>
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-content">Tag</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.fb_tag" id="wc-content" placeholder="Tag" type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Value</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.fb_value" id="wc-currency" placeholder="Value" type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                    <div class="col-xs-3 np parameter-label">
+                      <div class="col-xs-12 np">Google Analytics</div>
+                      <div class="col-xs-12 np google-icon"></div>
+                    </div>
+                    <div class="col-xs-9 np">
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="content_type">Event Category</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_eventCategory" id="content_type" placeholder="Event Category"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-content">Event Action</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_eventAction" id="wc-content" placeholder="Event Action"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Event Label</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_eventLabel" id="wc-currency" placeholder="Event Label"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Event Value</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_eventValue" id="wc-value" placeholder="Event Value"
+                            type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Submit Question -->
+                <div class="event-list-inner" *ngIf="question.analytics_segmentation.enabled && !jsonBuilderHelper.isTempName(['experian', 'template-seven', 'sound-cloud', 'sound-cloud-new', 'sound-cloud-v3'])">
+                  <div class="col-xs-12 np event-list-inner-heading">{{(question.type==='leadform_question')?'Submit Lead Form':'Clicked Next of Question '+(i+1)}}
+                  </div>
+                  <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                    <div class="col-xs-3 np parameter-label">
+                      <div class="col-xs-12 np">FB Pixel</div>
+                      <div class="col-xs-12 np fb-icon"></div>
+                    </div>
+                    <div class="col-xs-9 np">
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="content">Event</label>
+                          <select [(ngModel)]="question.analytics_segmentation.fb_ans_event" class="form-control" id="content">
+                            <option value="ViewContent">ViewContent</option>
+                            <option value="Search">Search</option>
+                            <option value="AddToCart">AddToCart</option>
+                            <option value="AddToWishlist">AddToWishlist</option>
+                            <option value="InitiateCheckout">InitiateCheckout</option>
+                            <option value="AddPaymentInfo">AddPaymentInfo</option>
+                            <option value="Purchase">Purchase</option>
+                            <option value="Lead">Lead</option>
+                            <option value="CompleteRegistration">CompleteRegistration</option>
+                            <option value="trackCustom">Track Custom</option>
+                          </select>
+                          <span class="caret"></span>
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-content">Tag</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.fb_ans_tag" id="wc-content" placeholder="Tag" type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Value</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.fb_ans_value" id="wc-currency" placeholder="Value"
+                            type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                    <div class="col-xs-3 np parameter-label">
+                      <div class="col-xs-12 np">Google Analytics</div>
+                      <div class="col-xs-12 np google-icon"></div>
+                    </div>
+                    <div class="col-xs-9 np">
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="content_type">Event Category</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_ans_eventCategory" id="content_type" placeholder="Event Category"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-content">Event Action</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_ans_eventAction" id="wc-content" placeholder="Event Action"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Event Label</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_ans_eventLabel" id="wc-currency" placeholder="Event Label"
+                            type="text">
+                        </div>
+                      </div>
+                      <div class="parameters-outer">
+                        <div class="form-group">
+                          <label for="wc-currency">Event Value</label>
+                          <input class="form-control" [(ngModel)]="question.analytics_segmentation.ga_ans_eventValue" id="wc-value" placeholder="Event Value"
+                            type="text">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="event-list">
+            <div class="col-xs-12 no-padding">
+              <div class="event-heading">Result Page</div>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input class="onoffswitch-checkbox" id="track-result-CTA" type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.result_page">
+                  <label class="onoffswitch-label" for="track-result-CTA">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div (mousedown)="setUnSavedPage('Result')" class="event-list-inner" *ngIf="jsonBuilderHelper.getJSONBuilt().analytics_segmentation.result_page">
+              <!-- View Result Page -->
+              <div>
+                <div class="col-xs-12 np">
+                  <div class="col-xs-12 np event-list-inner-heading">View Result Page</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.fb_event" class="form-control" id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.fb_value" id="wc-currency"
+                          placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.ga_eventCategory" id="content_type"
+                          placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.ga_eventAction" id="wc-content"
+                          placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.ga_eventLabel" id="wc-currency"
+                          placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getPage('Result').analytics_segmentation.ga_eventValue" id="wc-value"
+                          placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Click Result Page CTA -->
+              <div *ngIf="!jsonBuilderHelper.leadFormVisibility || (jsonBuilderHelper.leadFormVisibility  && (jsonBuilderHelper.getVisibleLeadForm().page[0].type!=='Result' || (jsonBuilderHelper.getVisibleLeadForm().page[0].type==='Result' && jsonBuilderHelper.getVisibleLeadForm().item[0].config.direction == 'beforeResult')))">
+                <div class="col-xs-12 np">
+                  <div class="col-xs-12 np event-list-inner-heading">Click Result Page CTA</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.fb_event" class="form-control" id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.fb_value" id="wc-currency"
+                          placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.ga_eventCategory"
+                          id="content_type" placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.ga_eventAction"
+                          id="wc-content" placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.ga_eventLabel"
+                          id="wc-currency" placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getClickButton('Result').analytics_segmentation.ga_eventValue"
+                          id="wc-value" placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Submit Lead Form -->
+              <div *ngIf="jsonBuilderHelper.leadFormVisibility && jsonBuilderHelper.getVisibleLeadForm().page[0].type==='Result'">
+                <div class="col-xs-12 np">
+                  <div class="col-xs-12 np event-list-inner-heading">Submit Lead Form</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().fbPixel_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">FB Pixel</div>
+                    <div class="col-xs-12 np fb-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content">Event</label>
+                        <select [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_event" class="form-control"
+                          id="content">
+                          <option value="ViewContent">ViewContent</option>
+                          <option value="Search">Search</option>
+                          <option value="AddToCart">AddToCart</option>
+                          <option value="AddToWishlist">AddToWishlist</option>
+                          <option value="InitiateCheckout">InitiateCheckout</option>
+                          <option value="AddPaymentInfo">AddPaymentInfo</option>
+                          <option value="Purchase">Purchase</option>
+                          <option value="Lead">Lead</option>
+                          <option value="CompleteRegistration">CompleteRegistration</option>
+                          <option value="trackCustom">Track Custom</option>
+                        </select>
+                        <span class="caret"></span>
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Tag</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_tag" id="wc-content"
+                          placeholder="Tag" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.fb_value"
+                          id="wc-currency" placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top" *ngIf="jsonBuilderHelper.getJSONBuilt().ga_enable">
+                  <div class="col-xs-3 np parameter-label">
+                    <div class="col-xs-12 np">Google Analytics</div>
+                    <div class="col-xs-12 np google-icon"></div>
+                  </div>
+                  <div class="col-xs-9 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Event Category</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventCategory"
+                          id="content_type" placeholder="Event Category" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Event Action</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventAction"
+                          id="wc-content" placeholder="Event Action" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Label</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventLabel"
+                          id="wc-currency" placeholder="Event Label" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Event Value</label>
+                        <input class="form-control" [(ngModel)]="jsonBuilderHelper.getVisibleLeadForm().item[0].analytics_segmentation.ga_eventValue"
+                          id="wc-value" placeholder="Event Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--<div class="col-xs-12 np tracking-outer">
+        <div class="tracking-outer-top">
+          <div class="tracking-heading">Integrate Google Pixel</div>
+          <div class="switch">
+            <div class="onoffswitch">
+              <input class="onoffswitch-checkbox" id="g-track" type="checkbox">
+              <label class="onoffswitch-label" for="g-track">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="tracking-inner">
+          <div class="form-group label-floating">
+            <label class="control-label active" for="inputFbId">GOOGLE PIXEL ID</label>
+            <input class="form-control" placeholder="Enter pixel Id here" type="text">
+          </div>
+          <div class="tracking-heading">Configure events for</div>
+          <div class="col-xs-12 no-padding">
+            <div class="event-list">
+              <div class="col-xs-12 np">
+                <div class="event-heading">Welcome Screen</div>
+                <div class="switch">
+                  <div class="onoffswitch">
+                    <input class="onoffswitch-checkbox" id="g-track-wc-screen" type="checkbox">
+                    <label class="onoffswitch-label" for="g-track-wc-screen">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="event-list-inner">
+                <div class="col-xs-12 np">
+                  <div class="col-xs-4 np">Events</div>
+                  <div class="col-xs-8 np">Event Parameters</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top">
+                  <div class="col-xs-4 np parameter-label">View Welcome Page</div>
+                  <div class="col-xs-8 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Content_Type</label>
+                        <input class="form-control" id="content_type" placeholder="Content_type" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Contents</label>
+                        <input class="form-control" id="wc-content" placeholder="Contents" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-currency">Currency</label>
+                        <input class="form-control" id="wc-currency" placeholder="Currency" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-value">Value</label>
+                        <input class="form-control" id="wc-value" placeholder="Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-bottom">
+                  <div class="col-xs-4 np parameter-label">Click Welcome Page Start</div>
+                  <div class="col-xs-8 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Custom Tag Value</label>
+                        <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Custom Tag Value</label>
+                        <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="event-list">
+              <div class="col-xs-12 no-padding">
+                <div class="event-heading">Questions</div>
+                <div class="switch">
+                  <div class="onoffswitch">
+                    <input class="onoffswitch-checkbox" id="g-track-questions" type="checkbox">
+                    <label class="onoffswitch-label" for="g-track-questions">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="event-list-inner">
+                <div class="checkbox-outer">
+                  <div class="custom-switch">
+                    <label class="check check-mandatory form-label">
+                      <input id="check_k11" type="checkbox">
+                      <label for="check_k11"> </label>
+                      Let's start with holidays; which company among these offers paid vacations?
+                    </label>
+                  </div>
+                  <div class="col-xs-12 np top-space10">
+                    <div class="col-xs-12 np">
+                      <div class="col-xs-4 np">Events</div>
+                      <div class="col-xs-8 np">Event Parameters</div>
+                    </div>
+                    <div class="col-xs-12 np event-list-inner-top">
+                      <div class="col-xs-4 np parameter-label">View Question 1</div>
+                      <div class="col-xs-8 np">
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="content_type">Content_type</label>
+                            <input class="form-control" id="content_type" placeholder="Content_type" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Contents</label>
+                            <input class="form-control" id="wc-content" placeholder="Contents" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Currency</label>
+                            <input class="form-control" id="wc-content" placeholder="Currency" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Value</label>
+                            <input class="form-control" id="wc-content" placeholder="Value" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 np event-list-inner-bottom">
+                      <div class="col-xs-4 np parameter-label">Click Next Q1</div>
+                      <div class="col-xs-8 np">
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="content_type">Custom Tag Value</label>
+                            <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label class="active" for="wc-content">Custom Tag Value</label>
+                            <input class="form-control" id="wc-content" placeholder="Custom Tag Value" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="checkbox-outer">
+                  <div class="custom-switch">
+                    <label class="check check-mandatory form-label">
+                      <input id="check_k11" type="checkbox">
+                      <label for="check_k11"> </label>
+                      Let's start with holidays; which company among these offers paid vacations?
+                    </label>
+                  </div>
+                  <div class="col-xs-12 np top-space10">
+                    <div class="col-xs-12 np">
+                      <div class="col-xs-4 np">Events</div>
+                      <div class="col-xs-8 np">Event Parameters</div>
+                    </div>
+                    <div class="col-xs-12 np event-list-inner-top">
+                      <div class="col-xs-4 np parameter-label">View Question 1</div>
+                      <div class="col-xs-8 np">
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="content_type">Content_type</label>
+                            <input class="form-control" id="content_type" placeholder="Content_type" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Contents</label>
+                            <input class="form-control" id="wc-content" placeholder="Contents" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Currency</label>
+                            <input class="form-control" id="wc-content" placeholder="Currency" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="wc-content">Value</label>
+                            <input class="form-control" id="wc-content" placeholder="Value" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xs-12 np event-list-inner-bottom">
+                      <div class="col-xs-4 np parameter-label">Click Next Q1</div>
+                      <div class="col-xs-8 np">
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label for="content_type">Custom Tag Value</label>
+                            <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                          </div>
+                        </div>
+                        <div class="parameters-outer">
+                          <div class="form-group">
+                            <label class="active" for="wc-content">Custom Tag Value</label>
+                            <input class="form-control" id="wc-content" placeholder="Custom Tag Value" type="text">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="event-list">
+              <div class="col-xs-12 no-padding">
+                <div class="event-heading">Lead Generation</div>
+                <div class="switch">
+                  <div class="onoffswitch">
+                    <input class="onoffswitch-checkbox" id="g-track-lead-gen" type="checkbox">
+                    <label class="onoffswitch-label" for="g-track-lead-gen">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="event-list-inner">
+                <div class="col-xs-12 np">
+                  <div class="col-xs-4 np">Events</div>
+                  <div class="col-xs-8 np">Event Parameters</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top">
+                  <div class="col-xs-4 np parameter-label">View Optin Page</div>
+                  <div class="col-xs-8 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Custom Tag Value</label>
+                        <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Custom Tag Value</label>
+                        <input class="form-control" id="wc-content" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-bottom">
+                  <div class="col-xs-4 np parameter-label">Submit Lead Form</div>
+                  <div class="col-xs-8 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Custom Tag Value</label>
+                        <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label class="active" for="wc-content">Custom Tag Value</label>
+                        <input class="form-control" id="wc-content" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="event-list">
+              <div class="col-xs-12 no-padding">
+                <div class="event-heading">Results Page and CTA</div>
+                <div class="switch">
+                  <div class="onoffswitch">
+                    <input class="onoffswitch-checkbox" id="g-track-result-CTA" type="checkbox">
+                    <label class="onoffswitch-label" for="g-track-result-CTA">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="event-list-inner mb0">
+                <div class="col-xs-12 np">
+                  <div class="col-xs-4 np">Events</div>
+                  <div class="col-xs-8 np">Event Parameters</div>
+                </div>
+                <div class="col-xs-12 np event-list-inner-top no-border">
+                  <div class="col-xs-4 np parameter-label">View Question 1</div>
+                  <div class="col-xs-8 np">
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="content_type">Custom Tag Value</label>
+                        <input class="form-control" id="content_type" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                    <div class="parameters-outer">
+                      <div class="form-group">
+                        <label for="wc-content">Custom Tag Value</label>
+                        <input class="form-control" id="wc-content" placeholder="Custom Tag Value" type="text">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>-->
+
+      <!--FB & GOOGLE tracking section end-->
+    </div>
+    <div class="my-emailform w750  tab-pane" id="seo-settings" role="tabpanel">
+      <div class="col-xs-12 no-padding seo-setting-outr g-setting-outr ">
+        <div class="col-xs-12 np">
+          <h3 class="seo-head">SEO Settings</h3>
+          <p class="seo-desc">Make sure that your target keywords are present in the SEO title and the meta description.</p>
+        </div>
+        <div class="col-md-12 no-padding">
+          <div class="form-group label-floating mr50" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().title==''" [class.is-focused]="isFocused === 'browser'">
+            <label class="control-label" for="inputName">SEO Title (Heading in search results)</label>
+            <input class="form-control" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().title" (blur)="saveAppSettings();"
+              (keyup)="updateTitleLength($event.target.value);" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().name==''"
+              maxlength="55" (focus)="isFocused ='browser'">
+            <span class="grey-pill">{{titleLength}}</span>
+          </div>
+          <div class="form-group label-static meta-label" [class.is-focused]="isFocused ==='description'">
+            <label for="si5i" class="control-label seo-static-label">Meta Description
+              <span class="mobile-hide">(Description in search results)</span>
+            </label>
+            <input type="text" (keyup)="updateMetaDescLen($event.target.value)" class="form-control" placeholder="Type the description here"
+              (blur)="saveAppSettings()" maxlength="320" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().description" (focus)="isFocused ='description'">
+            <!--<span class="grey-pill">{{metaDescLength}}</span>-->
+          </div>
+          <div class="google-preview">
+            <div class="heading-label">Google Preview</div>
+            <div class="preview-outer">
+              <div class="preview-inner">
+                <div class="heading">{{jsonBuilderHelper.getJSONBuilt().title}}</div>
+                <div class="link">{{jsonBuilderHelper.getLiveURL()}}</div>
+                <div class="description">{{jsonBuilderHelper.getJSONBuilt().description}}</div>
+              </div>
+            </div>
+          </div>
+          <div class="feat-img">
+            <div class="input-group">
+              <label class="g-upload-label seo">Facebook Preview</label>
+
+              <div class="web-page-design">
+                <div class="web-page-header">
+                  <ul class="three-dots">
+                    <li class="red"></li>
+                    <li class="yellow"></li>
+                    <li class="green"></li>
+                  </ul>
+                  <div class="url-space">
+                    <p>https://facebook.com</p>
+                  </div>
+                </div>
+                <div class="web-page-content">
+                  <div class="left-part seo">
+                    <div class="big-strip strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                  </div>
+                  <div class="center-part seo">
+                    <div class="col-xs-12 np fb-embed-outer">
+
+                      <div class="fb-embed">
+                        <div class="col-xs-12 np">
+                          <div class="circle"></div>
+                          <div class="col-xs-9 outer-lines">
+                            <div class="line line1"></div>
+                            <div class="line line2"></div>
+                          </div>
+                          <div class="three_dots">
+                            <div class="circle1"></div>
+                            <div class="circle1"></div>
+                            <div class="circle1"></div>
+                          </div>
+                        </div>
+                        <div class="col-xs-12 np ">
+                          <div class="fb-sec-left">
+                            <div class="img-outer">
+                              <!--<div class="default-fb-img hide">
+                                                                            <i class="material-icons">panorama</i>
+                                                                        </div>-->
+                              <img [src]="jsonBuilderHelper.previewURL()">
+                            </div>
+                          </div>
+                          <div class="fb-sec-right">
+                            <div class="fb-heading">{{jsonBuilderHelper.getJSONBuilt().title}}</div>
+                            <div class="fb-subheading">{{jsonBuilderHelper.getJSONBuilt().description}}</div>
+                            <div class="fb-footer">{{jsonBuilderHelper.getLiveURL()}}</div>
+                          </div>
+                        </div>
+                        <div class="col-xs-12 np fb-btns-outer">
+                          <div class="fb-btns">
+                            <span>
+                              <img src="https://cdn.filestackcontent.com/LfmcRSt6SZE6GYxyoFQ0">Like</span>
+                          </div>
+                          <div class="fb-btns">
+                            <span>
+                              <img src="https://cdn.filestackcontent.com/q6eOsYYTQSsL5TvnooCk">Comment</span>
+                          </div>
+                          <div class="fb-btns">
+                            <span>
+                              <img src="https://cdn.filestackcontent.com/JpJcZfPvS96hV011xXe7">Share</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 comment-outer">
+                        <div class="circle"></div>
+                        <div class="col-xs-10 np seo">
+                          <div class="comment-box">
+                            <div class="col-xs-7 cmnt-msg">Write a comment..</div>
+                            <div class="col-xs-5 np">
+                              <img src="https://cdn.filestackcontent.com/NpsXZfNwS32YMZ6n3Vmq">
+                              <img src="https://cdn.filestackcontent.com/FiSelRG7Sy8smDon1RuA">
+                              <img src="https://cdn.filestackcontent.com/VEIZ7VGIT2WaU5X0g6cx">
+                              <img src="https://cdn.filestackcontent.com/zVxYkDCRbGpBEhWACazz">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="right-part seo">
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="strips"></div>
+                    <div class="large-strip strips"></div>
+                    <div class="strips"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!--Preview Image for Calculator-->
+              <!--<div class="img-outer"><img [src]="jsonBuilderHelper.previewURL()"></div>-->
+              <div class="form-group label-floating fb-img-upload">
+                <label class="g-upload-label">Featured Image</label>
+                <span class="i-text ellipsis" [class.img-text]="jsonBuilderHelper.getJSONBuilt().seoImageName != ''">
+                  {{(jsonBuilderHelper.getJSONBuilt().seoImageName != '')?jsonBuilderHelper.getJSONBuilt().seoImageName:'No image uploaded'}}
+                </span>
+                <span *ngIf="jsonBuilderHelper.getJSONBuilt().seoImage" (click)="removeSeoImage()" class="fb-dete-tooltip" data-content="Remove Featured Image">
+                  <i class="material-icons">delete</i>
+                </span>
+
+                <span class="input-group-btn input-group-sm">
+                  <button type="button" class="g-upload-btn" (click)="upload('seo_image');">
+                    Upload
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+
+
+          <!--<div class="form-group label-floating label-seo config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''" [class.is-focused]="isFocused === 'ga'">
+                        <label class="label-static label-heltip" for="ga">Google Analytics (Tracking ID : UA-8XXXXXX8-X)
+                        </label>
+                        <div class="help-tip">
+                            <i class="material-icons">info_outline</i>
+                            <div class="help-checktip config-tip">You can connect your GA account with Outgrow to receive all analytics there.
+                                <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/google-analytics-integration-for-calculator-and-quiz">Read more here </a>
+                            </div>
+                            <a href=""></a>
+                        </div>
+                        <input class="form-control" id="ga" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().ga" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''"
+                        maxlength="55" (focus)="isFocused ='ga'" placeholder="Enter the text here">
+                    </div>-->
+
+          <!-- <div class="form-group label-floating label-seo config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''" [class.is-focused]="isFocused === 'ga'">
+                        <label class="label-static label-heltip" id="shopping_button" for="ga">Google Analytics (Tracking ID : UA-8XXXXXX8-X)
+                        </label>
+                        <span class="icon-info" (mouseenter)="googleAnalyticsHover()">
+                            <i class="material-icons" >info_outline</i>
+                            <div class="googleAna-infoDivwrapper">
+                                <div id="btn-close" (click)="btnClose()"><i class="material-icons">close</i></div>
+                                You can connect your GA account with Outgrow to receive all analytics there.
+                                <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/google-analytics-integration-for-calculator-and-quiz">Read more here </a>
+                            </div>
+                        </span>
+                        <input class="form-control" id="ga" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().ga" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().ga==''"
+                            maxlength="55" (focus)="isFocused ='ga'" placeholder="Enter the text here">
+                    </div> -->
+
+          <!--<div class="form-group label-floating label-fb config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''" [class.is-focused]="isFocused === 'fbPixel'">
+                        <label class="label-static label-heltip" for="fbPixel">Facebook Pixel (ID : 12XXXXXXXXXX90)</label>
+                        <div class="help-tip">
+                            <i class="material-icons">info_outline</i>
+                            <div class="help-checktip config-tip">You can add your FB Pixel to your Outgrow calculators and configure custom events like conversions and clicks.
+                                <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/facebook-pixel-integration-for-calculator-and-quiz">Read more here </a>
+                            </div>
+                        </div>
+                        <input class="form-control" id="fbPixel" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbPixel" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''"
+                        maxlength="55" (focus)="isFocused ='fbPixel'" placeholder="Enter the text here">
+                    </div>-->
+
+          <!-- <div class="form-group label-floating label-fb config-tip" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''"
+                        [class.is-focused]="isFocused === 'fbPixel'">
+                        <label class="label-static label-heltip" for="fbPixel">Facebook Pixel (ID : 12XXXXXXXXXX90)</label>
+                        <span class="icon-info" (mouseenter)="fbPixelHover()">
+                            <i class="material-icons" >info_outline</i>
+                            <div class="fbPixel-infoDivwrapper">
+                                <div id="btn-close" (click)="btnClose()"><i class="material-icons">close</i></div>
+                                You can add your FB Pixel to your Outgrow calculators and configure custom events like conversions and clicks.
+                                <a class="text-red" target="_blank" href="https://support.outgrow.co/docs/facebook-pixel-integration-for-calculator-and-quiz">Read more here </a>
+                            </div>
+                        </span>
+                        <input class="form-control" id="fbPixel" type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbPixel" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().fbPixel==''"
+                            maxlength="55" (focus)="isFocused ='fbPixel'" placeholder="Enter the text here">
+                    </div> -->
+
+          <!-- <div class="form-group feat-img-outer">
+                        <div class="input-group">
+                            <label class="g-upload-label">Featured Image</label>
+                            <ul>
+                                <li>
+                                    <input type="text" readonly="readonly" class="form-control upload-placeholder" value="{{(jsonBuilderHelper.getJSONBuilt().seoImageName != '')?jsonBuilderHelper.getJSONBuilt().seoImageName:jsonBuilderHelper.getJSONBuilt().seoImage}}" placeholder="No image uploaded">
+                                </li>
+                                <li>
+                                    <span class="input-group-addon" *ngIf="jsonBuilderHelper.getJSONBuilt().seoImage" (click)="removeSeoImage()">
+                                        <i class="material-icons">clear</i>
+                                    </span>
+                                </li>
+                            </ul>
+                            <span class="input-group-btn input-group-sm">
+                                <button type="button" class="g-upload-btn" (click)="upload('seo_image');">
+                                        Upload
+                                </button>
+                        </span>
+                        </div>
+                    </div> -->
+          <div class="col-xs-12 form-group no-padding g-setting-outr logo-branding-outer allow-searchEngine">
+            <!--<label class="g-setting-label">Mode</label>-->
+            <div class="col-xs-12 no-padding" [class.hide]="jsonBuilderHelper.isTempName(['sound-cloud-v3','experian'])">
+              <span class="form-label">{{tempType[jsonBuilderHelper.getJSONBuilt().templateType]}} explanation for SEO</span>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input type="checkbox" (change)="seoExp($event)" [checked]="jsonBuilderHelper.getJSONBuilt().seo_text.showText" class="onoffswitch-checkbox"
+                    id="SEO">
+                  <label class="onoffswitch-label" for="SEO">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+              <div class="col-xs-12 seo-footerDiv" *ngIf="jsonBuilderHelper.getJSONBuilt().seo_text.showText">
+                <span class="form-label">Add explanation to embeds also</span>
+                <div class="switch">
+                  <div class="onoffswitch">
+                    <input type="checkbox" (change)="seoExpEmbed($event)" [checked]="jsonBuilderHelper.getJSONBuilt().seo_text.inEmbed" class="onoffswitch-checkbox"
+                      id="Embed">
+                    <label class="onoffswitch-label" for="Embed">
+                      <span class="onoffswitch-inner"></span>
+                      <span class="onoffswitch-switch"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="seo-footerDiv-input">
+                  <input type="text" placeholder="Explanation text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().seo_text.text" class="it is class form-control"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 no-padding top-space-20">
+              <span class="form-label">Allow search engines to index</span>
+              <!-- <div class="switch">
+                                <label>
+                                    <input class="show-check" data-size="mini" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().indexToSearchEngine" name="multi-checkbox" type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div> -->
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().indexToSearchEngine" class="onoffswitch-checkbox" id="myonoffswitch3">
+                  <label class="onoffswitch-label" for="myonoffswitch3">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="col-xs-12 no-padding top-space-20">
+              <span class="form-label">Allow search engines to follow </span>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input type="checkbox" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().robotsFollow" class="onoffswitch-checkbox" id="myonoffswitch5">
+                  <label class="onoffswitch-label" for="myonoffswitch5">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="my-emailform w750 tab-pane" id="local-settings" role="tabpanel">
+      <div class="col-xs-12 no-padding seo-setting-outr g-setting-outr ">
+        <h3>Localization Settings</h3>
+        <div class="col-md-12 no-padding">
+          <div class="form-group numberSystem">
+            <label class="form-label">Number System</label>
+            <select (change)="chooseNumberSystem($event)" class="form-control">
+              <option value="EU" [selected]="jsonBuilderHelper.getJSONBuilt().numberSystem === 'EU'"> EU</option>
+              <option value="US" [selected]="jsonBuilderHelper.getJSONBuilt().numberSystem === 'US'"> US</option>
+            </select>
+            <span class="select-caret"></span>
+          </div>
+          <div class="form-group numberSystem">
+            <label class="form-label">Language</label>
+            <select [(ngModel)]="jsonBuilderHelper.getJSONBuilt().localeCode" class="form-control" (change)="changeLocale()">
+              <option *ngFor="let locale of locales" [ngValue]="locale.langCode">{{locale.language}}</option>
+            </select>
+            <span class="select-caret"></span>
+          </div>
+          <div class="col-xs-12 no-padding g-setting-outr logo-branding-outer" *ngIf="jsonBuilderHelper.editors('RTL')">
+            <!--<label class="g-setting-label">Mode</label>-->
+            <div class="col-xs-12 no-padding">
+              <span class="form-label">Enable right to left
+                <span class="icon-info" (mouseenter)="googleAnalyticsHover()">
+                  <i class="material-icons">info_outline</i>
+                  <div class="googleAna-infoDivwrapper">
+                    <div id="btn-close" (click)="btnClose()">
+                      <i class="material-icons">close</i>
+                    </div>
+                    For languages like Hebrew and Arabic, format the text from left to right.
+                  </div>
+                </span>
+                <!-- <span class="helptext">(Right to Left)</span> -->
+              </span>
+              <div class="switch">
+                <div class="onoffswitch">
+                  <input type="checkbox" [checked]="jsonBuilderHelper.getJSONBuilt().RTL" (change)="RTL()" class="onoffswitch-checkbox" id="myonoffswitch15">
+                  <label class="onoffswitch-label" for="myonoffswitch15">
+                    <span class="onoffswitch-inner"></span>
+                    <span class="onoffswitch-switch"></span>
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="switch" [class.alwaysOn]="editorControl.poweredby.visible && !_featureAuthService.features.custom_branding.cta_build_similar_calc" >
+                                <label>
+                                    <input class="show-check" data-size="mini" [checked]="editorControl.poweredby.visible" (change)="togglePoweredBy()" name="multi-checkbox" type="checkbox">
+                                    <span class="lever"></span>
+                                </label>
+                            </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

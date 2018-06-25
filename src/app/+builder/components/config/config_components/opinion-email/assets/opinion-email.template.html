@@ -1,0 +1,124 @@
+<div class="opinion-email-outer w750">
+
+    <h1 class="opinion-email-head">Start your {{jsonBuilderHelper.getJSONBuilt().templateType==='Numerical'?'Calculator':(jsonBuilderHelper.getJSONBuilt().templateType==='Poll'?'Poll':'Quiz')}}
+        in an Email
+        <span class="tag-beta">beta</span>
+    </h1>
+    <h4 class="opinion-email-subheading">Double your click through rate when you ask your first question in an email.</h4>
+    <div class="email-info">Preview
+        <!-- <br/>Click on the example below to see how it works. -->
+    </div>
+    <div class="opinion-email-section">
+        <div class="opinion-email-sub-section">
+            <div class="email-form">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label" for="To">To:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="To" disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="Subject">Subject:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="Subject" disabled>
+                        </div> 
+                    </div>
+                </form>
+            </div>
+            <div class="email-demo">
+                <div style="margin:0px;padding:0">
+                    <table style="float:left;width:100%;border-collapse:collapse;border:0px;">
+                        <tbody>
+                            <tr>
+                                <td style="border:none;">
+                                    <table style="background: #f2f5fc;margin:0 auto;width:100%;max-width:100%;border-collapse:collapse;border:0px;">
+                                        <tbody>
+                                            <tr>
+                                                <td style="padding: 25px;color: #62676d;border:none;">
+                                                    <table style="float:left;width:100%;border: 1px solid #d8dde3;border-radius: 5px;background: #fff;padding: 25px;margin-bottom: 15px;border-collapse: separate;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="border:none;">
+                                                                    <table style="float:left;width:100%;border-collapse:collapse;border:0px;margin-bottom: 20px;">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="color:#303030;font-size: 16px;font-family: verdana;border:none;" [innerHTML]="questionTitle"></td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table cellpadding="0" cellspacing="0" style="float:left;width:100%;border-collapse:collapse;border: 0;border-spacing: 0;">
+                                                                        <tbody>
+                                                                            <tr [innerHTML]="previewList | safeHtml"></tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                    <table style="float:left;width:100%;border-collapse:collapse;border:0px;margin-top: 10px;">
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <td style="color: #2a2a2a;font-size: 11px;text-align: left;font-family: verdana;border:none;">{{lowerMsg}}</td>
+                                                                                <td style="color: #2a2a2a;font-size: 11px;text-align: right;font-family: verdana;border:none;">{{upperMsg}}</td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <table style="float:left;width:100%;border-collapse:collapse;border:0px;text-align: center;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="color: #62696d;font-size: 11px;opacity: 0.7;font-family: verdana;border:none;">Powered by Outgrow</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="opinion-email-alert" *ngIf="!isVisible">
+        <div class="alert-msg-outer">
+            <i class="material-icons">warning</i>
+            <span><p>Some settings need to be changed for this to work:</p>
+                1. Remove lead form from your
+                <span>Welcome Screen</span> if you have one.
+                <br/>2. Make sure your first question is an
+                <span>Opinion Scale/Rating/Single Select</span> question.
+            </span>
+        </div>
+    </div>
+    <div class="opinion-email-section mt20" *ngIf="isVisible">
+        <div class="opinion-email-sub-section code-outer">
+            <div class="opinion-email-code">
+                <div class="col-xs-9 np">
+                    <h4 class="opinion-email-head col-xs-12">Grab the code</h4>
+                    <h6 class="opinion-email-subheading col-xs-12 np">Paste this code in your email solutions application.</h6>
+                </div>
+                <div class="col-xs-3 np" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                    <a class="custom-btn embed2 ripple-dark btn-hover" (click)="embedSelect()" href="javascript:void(0);">Copy</a>
+                </div>
+            </div>
+            <div class="emebed-code-part" (click)="embedSel()">
+                <pre><code class="code2">
+                    {{code}}
+                    <!-- &lt;div&gt;&lt;div class='op-interactive' id='59e05431f495fb1e9e31e9e6' data-url='//kunal.outgrow.local/59e05431f495fb1e9e31e9e6?sLead=1&amp;header=0&amp;footer=0' data-surl='https://goo.gl/f4yFmJ' data-width='100%'&gt;&lt;/div&gt;&lt;script src='//dyv6f9ner1ir9.cloudfront.net/assets/js/sloader.js'&gt;&lt;/script&gt;&lt;script&gt;initIframe('59e05431f495fb1e9e31e9e6');&lt;/script&gt;&lt;/div&gt; -->
+                </code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="outer" *ngIf="!isVisible">
+    <div class="msg-outer">
+        <div class="alert-msg-outer">
+            <i class="material-icons">warning</i>
+            <span>Please turn off your welcome page and use first question as Opinion Scale to continue.</span>
+        </div>
+    </div>
+</div> -->

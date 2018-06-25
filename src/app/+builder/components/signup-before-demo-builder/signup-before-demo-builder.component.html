@@ -1,0 +1,121 @@
+<!-- <div *ngIf="!signup" class="col-md-12 col-sm-12 col-xs-12 np grad-bg login-outer">
+  <div class="login-inner">
+      <div class="col-md-12 col-sm-12 col-xs-12 np text-center">
+          <a href="javascript:void(0)" (click)="close()" > <img class="login-logo" src="assets/images/white-logo.png" alt="Logo"> </a>
+          <div class="main-heading">
+              <h1>Start 7 Days Free Trial</h1>
+              <span>No strings attached and no credit card required.</span>
+          </div>
+      </div>
+      <div class="col-md-12 col-sm-12 col-xs-12 np">
+          <form class="form-outer">
+              <div class="form-inner">
+                  <div class="col-md-7 col-sm-7 col-xs-12 np form-left">
+                      <div class="form-left-inner">
+                          <h4>Sign In</h4>
+                          <div class="social-icons">
+                              <img class="" src="assets/images/icon-g+.png" alt="Google Plus" (click)='signUpWithAuth("google")'>
+                              <img class="" src="assets/images/icon-fb1.png" alt="Facebook" (click)='signUpWithAuth("facebook")'>
+                              <img class="" src="assets/images/icon-in1.png" alt="LinkedIn" (click)='signUpWithAuth("linkedIn")'>
+                          </div>
+                          <div class="border-overlay"><span>OR</span></div>
+                          <div >
+                              <form [formGroup]="leadForm" (ngSubmit)="saveLead(leadForm.value,saveButton)">
+                                      <div *ngIf="error" class="alert alert-danger custom-alert">
+                                          <i class="material-icons">report_problem</i>
+                                          <span id="server-error-msg">{{oauthError}}</span>
+                                      </div>
+                                      <div class="form-group" [ngClass]="addValidationClass || (leadForm.controls['email'].valid ? 'input-success-msg' : '')" id="leads" >
+                                          <input id="email" type="text"  class="form-control" name="email" placeholder="Your Work Email"
+
+                                                  formControlName="email" tabindex="1"/>                                            
+                                          <span class="input-icon-msg">
+                                              <div class="popover-block" *ngIf="(leadForm.controls.email.touched && !leadForm.controls.email.valid)">
+                                                 <span *ngIf="leadForm.controls.email.errors.required">
+                                                      Email is required.
+                                                  </span>
+                                                  <span *ngIf="leadForm.controls.email.errors.email">
+                                                      Invalid Email.
+                                                  </span>
+                                              </div>
+                                          </span> 
+                                      </div>
+                                      
+                                      <div>
+                                          <button (click)="callGA()" type="submit" #saveButton
+                                            [disabled]="!leadForm.valid" class="btn btn-red-filled btn-hover">Get Started</button>
+                                      </div>
+                                  </form>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-5 col-sm-5 col-xs-12 np form-right">
+                  </div>
+              </div>
+          </form>
+          <div class="tc-outr">
+              <span class="toc-text">Our <a class="" href="https://outgrow.co/tos/" target="_blank">T&C </a> and <a class="" target="_blank" href="https://outgrow.co/privacy-policy/">Privacy Policy</a> Applies to all Outgrow Users.</span>
+          </div>
+      </div>
+  </div>
+</div> -->
+<!-- <ng-container #container></ng-container> -->
+<!--new design-->
+
+<div class="builder-login-overlay">
+    <a href="javascript::void(0);" (click)="signupStatus('false')" class="overlay-close"><i class="material-icons">close</i></a>
+    <div class="main">
+        <div class="inner">
+            <h1>Start 7 Days Free Trial</h1>
+            <div class="login-outer">
+                <div *ngIf="signUpStatus=='lead'" class="email-login">
+                    <div class="outer">
+                        <div class="social-icons">
+                            <img class="" src="assets/images/icon-g+.png" (click)="signUpWithAuth('google')" alt="Google Plus">
+                            <img class="" src="assets/images/icon-fb1.png" (click)="signUpWithAuth('facebook')" alt="Facebook">
+                            <img class="" src="assets/images/icon-in1.png" (click)="signUpWithAuth('linkedIn')" alt="LinkedIn">
+                        </div>
+                        <div class="border-overlay">
+                            <span>OR</span>
+                        </div>
+                        <div class="form-group" [formGroup]="leadForm" [ngClass]="addValidationClass || (leadForm.controls['email'].valid ? 'input-success-msg' : '')">
+                            <input id="email" type="text" class="form-control" name="email" placeholder="Your work email" formControlName="email" tabindex="1"
+                            />
+                            <span class="input-icon-msg">
+                                <div class="popover-block" *ngIf="leadForm.controls.email.dirty  && !leadForm.controls.email.valid">
+                                    <span *ngIf="leadForm.controls.email.errors.required">
+                                        Email is required.
+                                    </span>
+                                    <span *ngIf="leadForm.controls.email.errors.checkmail">
+                                        Invalid Email.
+                                    </span>
+                                </div>
+                            </span>
+                        </div>
+                        <div class="row-outer">
+                                <button (click)="callGA();saveLead(leadForm.value,saveButton);" type="submit" #saveButton
+                                [disabled]="!leadForm.valid" class="btn btn-red-filled btn-hover">Get Started</button>
+                        </div>
+                        <div class="row-outer">
+                            <p class="already-signedUp">Already signed up?
+                                <a class="text-red" href="javascript:void(0)" (click)="openLogin();">Login</a> instead
+                            </p>
+                        </div>
+                        <div class="row-outer">
+                            <div class="tc-outr">
+                                <span class="toc-text">Our
+                                    <a href="https://outgrow.co/tos/" target="_blank">T&C </a> and
+                                    <a target="_blank" href="https://outgrow.co/privacy-policy/">Privacy Policy</a> Applies to all Outgrow Users.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <builder-signup *ngIf="signUpStatus!='lead'" [isSignup]="signUpStatus"  (signupStatus)="signupStatus($event)"></builder-signup>
+        
+            </div>
+        </div>
+    </div>
+
+</div>

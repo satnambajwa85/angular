@@ -1,0 +1,12 @@
+<config-settings *ngIf="component=='settings'" id="b-setting"></config-settings>
+<config-email *ngIf="component=='email'"  id="email-setting"></config-email>
+<config-integrations *ngIf="component=='integrations'"  id="integration-setting"></config-integrations>
+<!--<config-share-calculator *ngIf="component=='share-your-calculator'"  id="cal-setting"></config-share-calculator>-->
+<config-launch-popup *ngIf="component=='launch-popup'"  id="popup-setting"></config-launch-popup>
+<config-embedded-code *ngIf="component=='embedded-code'"  id="code-setting"></config-embedded-code>
+<!-- <config-embedded-code *ngIf="item?.parent === 'embedded-code'" [child]="item?.child" id="code-setting"></config-embedded-code> -->
+<config-customJS-code *ngIf="component == 'customJS'" id="customJS-setting"></config-customJS-code>
+<config-customCSS-code *ngIf="component == 'customCSS'" id="customCSS-setting"></config-customCSS-code>
+<!--<config-webhook *ngIf="component=='webhook'"  id="webhook-setting"></config-webhook>-->
+<config-promotion-checklist *ngIf="component=='promotion-checklist'" id="promotion-checkList"></config-promotion-checklist>
+<opinion-email *ngIf="component=='opinion-email'" id="opinion-email"></opinion-email>

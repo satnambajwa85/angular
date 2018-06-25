@@ -1,0 +1,111 @@
+<div>
+    <span class="form-label">Publish on Instant Articles
+        <i *ngIf="getFeatureAccess()" class="material-icons lock-icon bookmark-icon" style="margin-top: 5px;">lock_outline</i>
+    </span>
+    <div class="switch" (click)="checkForLiveApp()" id="instant-article-switch">
+        <div class="onoffswitch">
+            <input type="checkbox" #chk class="onoffswitch-checkbox" [(ngModel)]="_jsonbuilder.getJSONBuilt().instant_article"
+             [checked]="_jsonbuilder.getJSONBuilt().instant_article" 
+                id="myonoffswitch3">
+            <label class="onoffswitch-label" for="myonoffswitch3">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label> 
+        </div>
+    </div>
+</div>
+<!-- <div class="div-toggle">
+  <div class="form-group label-floating">
+      <label class="control-label" for="inputName">Calculator Name</label>
+      <select class="form-control">
+        <option value="0">Select page</option>
+        <option  value="1">It park</option>
+      </select>
+      <span class="select-caret"></span>
+  </div>
+
+  <div class="form-group label-floating form-url-outr is-focused">
+      <div class="test">
+          <label class="config-input-label" for="inputName">Calculator Url</label>
+          <div class="form-url-inner">
+              <ul>
+                  <li class="url-class1">
+                      <span class="config-label-url">fghgfyhh</span>
+                  </li>
+                  <li class="url-class">
+                      <input type="text" placeholder="URL" class="form-control config-input-url ellipsis" type="text">
+                  </li>
+              </ul>
+          </div>
+          <span class="copy-link-outer">
+              <a href="javascript:void(0);" class="copy-btn" (click)="copyButton();callGA('COPYLINK')">Copy to Clipboard</a>
+          </span>
+      </div>    
+  </div>
+</div> -->
+
+<div *ngIf="chk.checked">
+    <div class="col-md-12 col-sm-12 col-xs-12 np div-toggle-outer">
+        <div class="alert alert-danger custom-danger" *ngIf="errorMessage && errorMessage!='no_error'">
+            <i class="material-icons">cancel</i> {{errorMessage}}</div>
+        <div class="alert alert-success" *ngIf="errorMessage=='no_error'">
+            <i class="material-icons">check_circle</i> Article added to Instant Articles for your page {{pages[selectedPageIndex]['name']}}. Find it under your Production Articles.</div>
+
+        <div *ngIf="fbLogin else selectBox" class="btn-connectFB">
+            <button class="btn border-btn" (click)="getFbLink()">Connect To Fb</button>
+        </div>
+        <ng-template #selectBox>
+            <div class="div-toggle">
+                <!-- <div>
+                <select #selection (change)="selectionChange(selection.value)">
+                    <option [value]="-1">Select Page</option>
+                    <option *ngFor="let page of pages;let i=index" [value]="i">{{page.name}}</option>
+                </select>
+            </div> -->
+                <div class="form-group label-floating">
+                    <label class="control-label" for="inputName">Fb Page</label>
+                    <select class="form-control" #selection (change)="selectionChange(selection.value)">
+                        <option [value]="-1" [selected]="selectedPageIndex==-1">Select Page</option>
+                        <option *ngFor="let page of pages;let i=index" [value]="i" [selected]="selectedPageIndex==i">{{page.name}}</option>
+                    </select>
+                    <span class="select-caret"></span>
+                </div>
+
+                <!-- <div *ngIf="labelText">
+                <label >{{ labelText }}</label>          
+            </div> -->
+
+                <div class="form-group label-floating form-url-outr is-focused">
+                    <div class="test">
+                        <label class="config-input-label" for="inputName">Claim this URL
+                            <div class="help-tip">
+                                <i class="material-icons">info_outline</i>
+                                <div class="help-checktip config-tip">
+                                    To claim this URL go to Publishing Tools on your Page, click Configuration under the Instant Articles header and scroll down to Step 1: Set up Instant Articles. Click on Authorize your site under Step 1. In Connect your site section, enter this URL and click Claim URL CTA.
+                                </div>
+                            </div>
+                        </label>
+                        <div class="form-url-inner">
+                            <ul>
+                                <!-- <li class="url-class1">
+                                    <span class="config-label-url">{{ labelText }}</span>
+                                </li> -->
+                                <li class="url-class">
+                                    <input type="text" [readonly]="'true'" [placeholder]="'URL'" [value]="labelText" class="form-control config-input-url ellipsis" type="text">
+                                </li>
+                            </ul>
+                        </div>
+                        <span class="copy-link-outer">
+                            <a href="javascript:void(0);" class="copy-url-fb" (click)="copyButton(selection.value)">
+                                <i class="material-icons">content_copy</i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+
+                <button class="btn btn-basic  border-btn" type="button" [disabled]="selection.value == -1" (click)="postAppToIA(selection.value,$event)">
+                    Submit </button>
+            </div>
+        </ng-template>
+    </div>
+</div>

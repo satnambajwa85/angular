@@ -1,0 +1,31 @@
+<div class="analytics-content ">
+   
+  <!-- Start: overview (1) -->
+  <div *ngIf="(component=='overview' && scriptsLoaded) && !calc.liveApp" class="no-analytics-overlay">
+    <img src="assets/images/builder/no-analytics1.jpg">
+  </div>
+  <og-overview *ngIf="(component=='overview' && scriptsLoaded) && calc.liveApp" [fromGlobalAnalytics]="false" [calc]="calc"></og-overview>
+  <!-- End: overview (1) -->
+
+  <!-- Start: person (2) -->
+  <div *ngIf="(component=='user_detail' && scriptsLoaded) && !calc.liveApp" class="no-analytics-overlay">
+   <!-- <img src="assets/images/builder/no-analytics3.jpg"> -->
+   <img src="https://cdn.filestackcontent.com/ccjZNoOPQD6rj5brb2ig"/>
+  </div>
+  <og-user-details *ngIf="(component=='user_detail' && scriptsLoaded) && calc.liveApp" [fromGlobalAnalytics]="false" [calc]="calc"></og-user-details>
+  <!-- End: person (2) -->
+
+  <!-- Start: traffic (3) -->
+  <!--<div *ngIf="(component=='traffic_detail' && scriptsLoaded) && !calc.liveApp" class="no-analytics-overlay">
+    <img src="assets/images/builder/no-analytics2.jpg">
+  </div>
+  <og-traffic-details *ngIf="(component=='traffic_detail' && scriptsLoaded) && calc.liveApp" [calc]="calc"></og-traffic-details>-->
+  <!-- End: traffic (3) -->
+
+  <!-- Start: traffic (3) -->
+  <div *ngIf="(component=='funnel' && scriptsLoaded) && !calc.liveApp" class="no-analytics-overlay">
+    <img src="https://cdn.filestackcontent.com/V2rOWl5USK2MT4JXWoR2">
+  </div>
+  <og-funnel-view *ngIf="(component=='funnel' && scriptsLoaded) && calc.liveApp" [fromGlobalAnalytics]="false" [calc]="calc"></og-funnel-view>
+  <!-- End: traffic (3) -->
+</div>

@@ -1,0 +1,153 @@
+<!-- Common Component -->
+<div class="type-details">
+  <common-editor [control]="control">
+  </common-editor>
+  <div class="type-details bottom-space0">
+    <span class="form-label" [class.no-margin]="control.config.showHelp === false">Help Text</span>
+    <div class="icon-outer bottom" *ngIf="control.config.showHelp">
+      <div class="char-count-limit" *ngIf="froalaHelpText.textCount>90">{{froalaHelpText.textCount}}</div>
+      <div class="help-text">Recommended limit of 90 characters is exceeded</div>
+    </div>
+    <div class="switch">
+      <label>
+        <input type="checkbox" name="properties-checkbox" class="show-check" [checked]="control.config.showHelp" (change)="onChangeDescription(control);callGA('HELPTEXT',control)"
+          data-size="mini" data-on-color="'blue'">
+        <span class="lever"></span>
+      </label>
+    </div>
+    <!--//on/off-->
+    <div class="col-xs-12 no-padding text-group div-check help-editor-outer" *ngIf="control.config.showHelp">
+      <div class="form-text question-textarea helptext-control" *ngIf="froalaHelpText.options && !jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])"
+        [froalaEditor]="froalaHelpText.options" [(froalaModel)]="control.props.helpText">
+      </div>
+      <textarea class="form-text question-textarea helptext-control" *ngIf="jsonBuilderHelper.isTempName(['experian', 'inline-temp', 'inline-temp-new','template-five-oldresult'])"
+        [(ngModel)]="control.props.helpText"></textarea>
+    </div>
+  </div>
+</div>
+<div class="type-details pb15">
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='opscale'">
+    <span class="col-md-4 no-padding form-label">Left Label</span>
+    <div class="col-md-7 col-xs-4 no-padding horz-control">
+      <input type="text" class="form-text" [(ngModel)]="control.config.attr.style">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='opscale'">
+    <span class="col-md-4 no-padding form-label">Right Label</span>
+    <div class="col-md-7 col-xs-4 no-padding horz-control">
+      <input type="text" class="form-text" [(ngModel)]="control.postfix">
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='opscale'">
+    <span class="col-md-4 no-padding form-label">Steps</span>
+    <div class="col-md-7 col-xs-4 no-padding horz-control">
+      <div class="range-selector">
+        <input type="range" min="3" [attr.max]="sliderMax" class="form-text" [value]="control.props.maxVal" (change)="onRatingValChange($event, 'maxVal')">
+      </div>
+      <div class="op-steps">
+        <input class="form-text" min="0" type="number" max="10" [value]="control.props.maxVal" (change)="onRatingValChange($event, 'maxVal')">
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='stars'">
+    <span class="col-md-4 no-padding form-label">Steps</span>
+    <div class="col-md-4 col-xs-4 no-padding horz-control">
+      <div class="range-selector" style="width:100%;">
+        <input type="range" min="3" [attr.max]="sliderMax" class="form-text" [value]="control.props.maxVal" (change)="onRatingValChange($event, 'maxVal')">
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='opscale'">
+    <span class="col-md-4 no-padding form-label">Start Scale at 1</span>
+    <div class="col-md-4 col-xs-4 no-padding horz-control">
+      <div class="switch">
+        <label>
+          <input type="checkbox" class="form-text" [disabled]="control.config.type == 'stars'" [checked]="control.props.minVal== 1"
+            (change)="onRatingValChange($event, 'minVal')" data-size="mini" data-on-color="'blue'">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <!-- <input type="checkbox" class="form-text" [disabled]="control.config.type == 'stars'" [checked]="control.props.minVal== 1"
+        (change)="onRatingValChange($event, 'minVal')"> -->
+    </div>
+  </div>
+
+  <div class="col-xs-12 no-padding text-group horz-group" [class.hide]="control.config.type!='stars'">
+    <div class="btn-group option-icons optionicon choose-icon-outer">
+      <span class="no-padding form-label col-md-4 pull-left">Choose Icon </span>
+      <button aria-expanded="false" aria-haspopup="true" class="star-toggle btn btn-default dropdown-toggle" type="button" (click)="OpenPreviousIcon()">
+        <span class="selected-icon">
+          <i class="material-icons">{{control.props.unit}}</i>
+        </span>
+        <div class="choose iconopen open">
+          <a class="default choose-icon1" (click)="OpenChangeIcon()">
+            <span class="arrow-down">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </span>
+          </a>
+        </div>
+      </button>
+      <div class="material-icon-dropdown scrollbar">
+        <!--<div class="selected-icon">
+              <span *ngIf="!option.previousIcons.length" class="no-icon">No Previous Icon</span>
+              <label class="rd-icon ic" *ngFor="let icon of option.previousIcons; let s of index">
+                      <input type="radio" name="p{{i+1}}" id="iconp{{s}}+{{i+1}}" value="{{icon}}" (click)="changeIcon(option,$event)">
+                      <label attr.for="iconp{{s}}+{{i+1}}"><i class="material-icons">{{icon}}</i> </label>
+              </label>
+          </div>-->
+        <div class="btn-group option-icons">
+          <div class="icon-op">
+            <label class="rd-icon ic" *ngFor="let icon of jsonElementHandler.iconArray; let s of index">
+              <ng-container *ngIf="!icon.startsWith('fa-')">
+                <input type="radio" name="{{i+1}}" id="icon{{s}}+{{i+1}}" value="{{icon}}" (click)="changeIcon($event)">
+                <label attr.for="icon{{s}}+{{i+1}}">
+                  <i class="material-icons">{{icon}}</i>
+                </label>
+              </ng-container>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-xs-12 no-padding text-group horz-group ">
+    <span class="col-md-4 no-padding form-label">Convert to Stars</span>
+    <div class="col-md-4 col-xs-4 no-padding horz-control">
+      <div class="switch">
+        <label>
+          <input type="checkbox" class="form-text" [checked]="control.config.type=='stars'" (change)="onRatingValChange($event, 'type')"
+            data-size="mini" data-on-color="'blue'">
+          <span class="lever"></span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-12 no-padding text-group horz-group " [class.hide]="control.config.type!='stars'">
+    <span class="col-md-4 no-padding form-label">Default Stars</span>
+    <div class="col-md-4 col-xs-4 no-padding horz-control">
+      <input type="number" class="form-text" [value]="control.props.defaultValue" (change)="onRatingValChange($event, 'defaultStars')">
+    </div>
+  </div> -->
+</div>
+<div class="form-label type-details-head-no-collapse">SETTINGS</div>
+
+<question-redirect-url [control] ="control"></question-redirect-url>
+
+<div class="type-details" *ngIf="jsonBuilderHelper.editors('MarkAsMandate')">
+  <label class="check check-mandatory form-label">
+    <!--<input type="checkbox" value="Value1" [disabled]="isQuestionInFormula()" name="checkbox1" id="check_k" [checked]="control.config.validations.required.status"
+      (change)="onChange(control);callGA('MANDATE',control)">
+    <label for="check_k"> </label>-->
+    Mark as Mandatory
+  </label>
+  <div class="switch">
+    <label>
+      <input type="checkbox" value="Value1" [disabled]="isQuestionInFormula()" name="checkbox1" id="check_k" [checked]="control.config.validations.required.status"
+        (change)="onChange(control);callGA('MANDATE',control)">
+      <span class="lever"></span>
+    </label>
+  </div>
+  <span class="mandatory-info" *ngIf="isQuestionInFormula()">
+    <p>Since this question has been used in the formula, it is required that it be kept mandatory.</p>
+  </span>
+</div>

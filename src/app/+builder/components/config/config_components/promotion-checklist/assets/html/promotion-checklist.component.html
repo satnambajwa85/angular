@@ -1,0 +1,108 @@
+<div class="col-md-12 col-sm-12 col-xs-12 np prom-checklist w750">
+    <div class="preloader" *ngIf="loading">
+        <div class="status">&nbsp;</div>
+    </div>
+    <div class="col-md-8 col-sm-8 col-xs-12 np prom-left">
+        <div class="col-md-12 col-sm-12 col-xs-12 np">
+            <h3>Promotional Checklist</h3>
+            <p>Use this list to reach out to your target audience and get best results from the calculator/quiz.</p>
+        </div>
+      
+        
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-12 np progress-outer">
+        <div class="col-sm-12 np progress-inner">
+           
+                <div class="c100 progress-cricle" [ngClass]="reachmeterClass">
+                    <span>{{ reachmeter }}%</span>
+                    <div class="slice">
+                        <div class="bar"></div>
+                        <div class="fill"></div>
+                    </div>
+                </div>
+           
+            <div class="row progress-text">
+            <h3>Reach Meter</h3>
+            <p *ngIf="reachmeter!=0">Your reach meter score is {{ reachmeter }}/100. {{ reachmeterText }}</p>
+            <p *ngIf="reachmeter==0">Get to 100% to optimise distribution</p>
+        </div>
+        </div>
+    </div>
+
+    <!-- start: table -->
+      <!-- start: filter -->
+      <div class="col-md-12 col-sm-12 col-xs-12 np prom-filter">
+            <span>Goal:</span>
+            <label class="check-icon" *ngFor="let goal of goals">
+                <input
+                    class="filter"
+                    name="goal.name" 
+                    type="checkbox"
+                    [(ngModel)]="goal.checked"
+                    [id]="'radio' + goal.name.replace(' ', '_')" 
+                    (change)="filterBy()"
+                >
+                <label [for]="'radio' + goal.name.replace(' ', '_')"> {{ goal.name }}</label>
+            </label>
+            <!--<span *ngIf="filter.goals.length !== 0" (click)="clearFilter()" class="clearAll btn-hover">
+                <a href="javascript:void(0);">Clear Filters</a>
+            </span>-->
+        </div>
+        <!-- end: filter -->
+    <div class="col-md-12 col-sm-12 col-xs-12 np prom-table webhook-request">
+        <div class="table-responsive">
+        <table class="table ">
+            <thead>
+                <tr>
+                    <th>STATUS</th>
+                    <th>STRATEGY</th>
+                    <th>CATEGORY</th>
+                    <th>
+                        <div class="icon-sort" (click)="sortBy('score')">Impact</div>
+                    </th>
+                    <th>RELATED RESOURCES​​​​​​​</th>
+                </tr>
+            </thead>
+
+            <div class="no-items" *ngIf="!displayItems.length">
+                <div class="no-items-inner">Select at least one goal to get a list of strategies.</div>
+            </div>
+
+            <tbody class="scrollbar" *ngIf="displayItems.length">
+                <tr *ngFor="let item of displayItems">
+                    <td class="td-check">
+                        <label class="check-icon">
+                            <input type="checkbox" [id]="item.strategy._id" [checked]="item.active" (click)="updateCalcStrategies(item.strategy._id, $event)">
+                            <label [for]="item.strategy._id"></label>
+                        </label>
+                    </td>
+                    <td class="strategy_outer" data-toggle="collapse" [attr.data-target]="'.' + item.strategy._id" (click)="toggleDescription('cl'+item.strategy._id)" >
+                        <i 
+                            class="material-icons {{ 'cl'+item.strategy._id }}" 
+                            *ngIf="item.strategy.description && item.strategy.description != ' '"
+                        >add</i>
+
+                        {{ item.strategy.strategy }}
+
+                        <div class="hiddenCell" *ngIf="item.strategy.description && item.strategy.description != ' '">
+                            <div [class]="'collapse ' + item.strategy._id">
+                                {{ item.strategy.description }}
+                            </div>
+                        </div>
+                    </td>
+                    <td>{{ item.strategy.category }}</td>                     
+                    <td>{{ item.strategy.score }}</td>
+                    <td [attr.title]="item.strategy.resource">
+                        <a *ngIf="item.strategy.resource" [attr.href]="item.strategy.resource" class="col-sm-12 np ellipsis" target="_blank">
+                            <i class="material-icons">open_in_new</i> {{ item.strategy.resource }}
+                        </a>
+                        <span *ngIf="!item.strategy.resource">-</span> 
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+    <!-- end: table -->
+
+</div>

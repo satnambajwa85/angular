@@ -1,0 +1,353 @@
+<!-- Start: Modal Formula -->
+<div id="formula-modal-new" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-xlg">
+    <!-- Modal content-->
+    <div class="modal-content modal-bg">
+      <div class="modal-body">
+        <button type="button" class="close btn-close" data-dismiss="modal" aria-label="Close" (click)="jsonhide=false">
+          <i class="material-icons">clear</i>
+        </button>
+        <div class="top-formulabar">
+          <h3 class="formula-left-heading">Formula Builder -
+            <label class="formula-left-subheading">&nbsp;Result 1 </label>
+          </h3>
+          <div class="custom-btngroup">
+            <button class="fromula-btn" [class.active]="excel.active" (click)="switchType('excel')">
+              <i class="fa fa-table" aria-hidden="true"></i>Use Excel Based Table</button>
+            <button class="fromula-btn" [class.active]="!excel.active" (click)="switchType('dnd')">
+              <i class="fa fa-arrows" aria-hidden="true"></i> Use Drag and Drop</button>
+          </div>
+        </div>
+        <!-- dragndrop formula Builder -->
+        <div class="col-md-12 no-padding">
+          <div class="col-xs-12 col-sm-3 formula-right">
+            <div class="col-xs-12 no-padding">
+              <h3 class="formula-right-heading">Select Questions/Results to add them to your formula</h3>
+            </div>
+            <div class="col-xs-12 formula-question-outr">
+              <div class="formula-questions scrollbar" id="drop">
+                <a class="formula-item" *ngFor="let control of jsonBuilderHelper.getTemplateQuestionareWithEmittedLeadFormQuestion(); let i=index;"
+                  [class.hide]="control.type=='leadform_question'||control.type=='text-area'||(control.type=='calendar' && !control.isIconPresent)||
+                    (control.type=='textfield' && (control.config.type=='text' || control.config.type=='email'))" (click)="addQuestion('Q'+(i+1))"
+                  draggable="true" id="{{'Q_'+(i+1)}}">
+                  Q. {{i+1}}
+                  <span *ogIf="['inline-temp','inline-temp-new']" [innerHtml]="control.props.title+'___'+control.props.followUpText |removeTags"></span>
+                  <span *ogIf="['!inline-temp','!inline-temp-new']" [innerHtml]="control.props.title |removeTags"></span>
+                  <div class="asterik-popover" *ngIf="control.type=='slider' && control.props.unit=='%' && control.props?.postfix">
+                    <i class="material-icons">*</i>
+                    <!--<div class="asterik-popover-inner">* If the question is a percentage. Make sure to divide this variable by 100%</div>-->
+                  </div>
+                </a>
+                <a class="formula-item" *ngFor="let formula of jsonBuilderHelper.getJSONBuilt().formula; let i=index;" [class.hide]="!formula.result || i == formulaIndex"
+                  (click)="addQuestion('R'+(i+1))" draggable="true" id="{{'R_'+(i+1)}}">
+                  {{formula.name? ('R'+(i+1)+' : ' + formula.name) : ('Result '+(i+1))}}
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-6 formula-left" [class.hide]="excel.active">
+            <!-- <div class="col-xs-12 no-padding text-center">
+              <h3 class="formula-left-heading">Formula Builder -</h3>
+              <label class="formula-left-subheading">&nbsp;Result 1 </label>
+              <i class="material-icons formula-heading-editing hide">create</i>
+            </div> -->
+            <div class="formula-output" tabindex="1" id="formula" [ngStyle]="{'margin-top': '0px', borderColor:(error?'#fb5f66':'#dae2e6')}">
+              <textarea id="formula-area" placeholder="(Q1+Q2)*(Q4/Q5)" (keyup)="checkValidity()" [ngStyle]="{'width': '100%', border: 'none', resize: 'none', letterSpacing:'2px'}"
+                rows="7">
+              </textarea>
+            </div>
+            <div class="formula-helptext-outr" *ngIf="error && error!='You can only use basic operators.To use others upgrade your account.'">
+              <i class="material-icons">info_outline</i>
+              <label class="formula-helptext" [ngStyle]="{'color': '#fb5f66'}">{{error}}
+                <br> Do not add "," in the numbers used in the formula.</label>
+            </div>
+            <div class="formula-helptext-outr" [class.bounceIn-error]="flashError" *ngIf="featureAuthService.features.formula_operators.simple_operators">
+              <i class="material-icons lock-icon">lock_outline</i>
+              <label class="formula-helptext" [ngStyle]="{'color': '#fb5f66'}">You can use +,-,* and / operators. Please upgrade to unlock others.</label>
+              <span class="btn btn-basic" *ngIf="featureAuthService.features.formula_operators.simple_operators" (click)="showPremiumFormulaPopup()">upgrade</span>
+              <br *ngIf="error" />
+            </div>
+            <label class="formula-helptext">You can use "+", "-", "*", and "/" operators by typing them on your keyboard. You can also use over 100 other
+              mathematical functions like log, if-then etc.
+              <label>
+                <a href="http://support.outgrow.co/v1.0/docs/formula" target="_blank" [ngStyle]="{color:'#fb5f66'}">Click here</a> to learn more.
+              </label>
+            </label>
+            <br/>
+            <!--<label class="formula-helptext">
+              <a href="http://mathjs.org/docs/reference/functions.html" target="_blank" [ngStyle]="{color:'#fb5f66'}">Click here</a> to learn more.
+            </label>-->
+            <div class="col-xs-12 no-padding formula-resulttable">
+              <div class="col-xs-12 no-padding">
+                <label>Sample Result
+                  <div class="help-tip formula-helptip">
+                    <i class="material-icons">info_outline</i>
+                    <div class="help-checktip"> Based on a random selection of user responses</div>
+                  </div>
+                </label>
+                <a href="javascript:void(0);" (click)="refreshClick()"> Refresh Combination</a>
+              </div>
+              <div class="formula-tabledata col-xs-12 scrollbar">
+                <div class="for-horzscroll">
+                  <table>
+                    <tbody>
+                      <tr id="random-ques-nums"></tr>
+                      <tr id="random-ques-titles"></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-xs-12 formula-tabledata-result">
+                <span>Result:</span>
+                <span>{{finalRandomValue}}</span>
+              </div>
+            </div>
+          </div>
+          <!-- excel formula Builder -->
+          <div class="col-xs-12 col-sm-6 formula-left" [class.hide]="excel && !excel.active">
+            <div class="content-outer">
+              <div class="upper-cont-for">
+                <div class="input-file-container">
+                  <!-- <label class="file-label">
+                      <i class="material-icons">cloud_upload</i>Data Table:</label> -->
+                  <div class="upload-btn-area">
+                    <div class="upload-btn">
+                      <input accept=".xls, .xlsx" (change)='uploadXls($event)' id="upload_file-formulapopup" type="file">
+                      <label class="input-file-trigger" for="upload_file-formulapopup">Upload Excel</label>
+                    </div>
+                    <button class="upload-btn json-btn" (click)="jsonhide=true">JSON</button>
+                  </div>
+                </div>
+                <div class="right-info-fo">
+                  <div class="right-info-block">
+                    <input type="text" placeholder="C3" [(ngModel)]="excel.fieldName" #fieldName (keyup)="getFieldVal(fieldName.value);updateExcelOptions()"
+                    />
+                    <span *ngIf="excelError">{{excelError}}</span>
+                  </div>
+                  <h1>Cell for Result #</h1>
+                </div>
+              </div>
+              <div class="jason-feed" *ngIf="jsonhide">
+                <i class="material-icons icon-div-close" (click)="hideJson()">close</i>
+                <div class="col-sm-12 np">
+                  <label class="jason-title col-sm-2 np">JSON Feed URL</label>
+                  <div class="form-group jason-input col-sm-10 np">
+                    <input required="" type="text" [(ngModel)]="excel.JsonFeed.jsonUrl" (focus)="formulaIcons=true;formulajsonConnected=false;excel.JsonFeed.autoUpdate=false;excel.JsonFeed.JsonFeedstatus='Disconnected';formulajsonError=false"
+                      placeholder="Enter your JSON feed URL here">
+                    <div class="actions-icon" *ngIf="formulaIcons && excel.JsonFeed.jsonUrl!='' && urlValidation(excel.JsonFeed.jsonUrl)">
+                      <i class="material-icons icon-check" (click)="fetchJson()">check</i>
+                      <i class="material-icons icon-close" (click)="excel.JsonFeed.jsonUrl=''">close</i>
+                    </div>
+                    <span class="jason-connecting" *ngIf="formulaLoader">
+                      <i class="fa fa-spinner" aria-hidden="true"></i> Connecting
+                    </span>
+                    <div class="jason-reset" *ngIf="formulajsonError">
+                      <a href="javascript:void(0);" (click)="resetjsonfeed()">
+                        <i class="fa fa-repeat" aria-hidden="true"></i> Reset</a>
+                    </div>
+
+                    <div class="jason-error" *ngIf="formulajsonError">
+                      <span>
+                        <i class="material-icons">error_outline</i> Failed to connect</span>
+                    </div>
+                    <div class="jason-switch" *ngIf="formulajsonConnected">
+                      <div class="switch">
+                        <label>
+                          <span>JSON: {{excel.JsonFeed.JsonFeedstatus}}</span>
+                          <input class="show-check" type="checkbox" [checked]="excel.JsonFeed.JsonFeedstatus=='Connected'" (change)="statuschange($event.target)">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <div class="switch" *ngIf="formulajsonConnected">
+                        <label>
+                          <span>Auto Update
+                            <div class="help-tip editor-helptip autoUpdate-tip">
+                              <i class="material-icons">info_outline</i>
+                              <div class="help-checktip"> In case the JSON is getting Auto updated and a formula has been added to the table area, the
+                                formula will get removed after the update.</div>
+                            </div>
+                          </span>
+                          <input class="show-check" type="checkbox" [(ngModel)]="excel.JsonFeed.autoUpdate" [checked]="excel.JsonFeed.autoUpdate">
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <!-- <div class="" *ngIf="formulajsonConnected">
+                          <label>
+                              <span>Duration</span>
+                              <select>
+                                <option></option>
+                              </select>
+                          </label>
+                      </div>  -->
+                    </div>
+                    <small>
+                      Data should be in proper JSON Format, with sheets as the outer dimension.
+                      <a href="http://myjson.com/11irtz" target="_blank" class="text-red"> View sample feed. </a>
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="save-warning"><span class="save-info">*</span>Please click on 'Apply Excel Formula' for excel changes to be saved.</div>
+              <div class="excel-outer">
+                <div id="og-formula-builder-excel"></div>
+              </div>
+              <!-- <input type="file" id="upload_file-graphpopup-1" (change)='uploadXls($event)' accept=".xls"> -->
+            </div>
+          </div>
+          <div class="col-xs-12 col-sm-3 formula-right-new">
+            <div class="col-xs-12 no-padding">
+              <h3 class="formula-right-heading text-center">Formula Settings</h3>
+            </div>
+            <div class="col-xs-12 no-padding formula-new-units">
+              <div class="formula-footer-unit">
+                <label>Unit of Variable:</label>
+                <div class="formula-footer-range-slider">
+                  <div class="switch">
+                    <label>
+                      <input type="checkbox" (change)="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.prefix=!jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.prefix;
+                                jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.postfix=!jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.postfix;
+                                (excel['active'])?updateExcelOptions():updateFormulaUIComponents()" [checked]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.prefix">
+                      <span class="lever"></span>
+                    </label>
+
+                  </div>
+                </div>
+                <div class="formula-footer-rangetext hide" *ngIf="jsonBuilderHelper.getJSONBuilt()?.formula[formulaIndex]?.units && !jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.postfix">
+                  <h3>No. unit of variable is set</h3>
+                </div>
+                <div class="col-xs-12 no-padding">
+                  <div class="formula-footer-unitinput" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.prefix">
+                    <span>Prefix</span>
+                    <input type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.preValue" (keyup)="stripNumbers()"
+                      (change)="(excel['active'])?updateExcelOptions():updateFormulaUIComponents()" placeholder="$" />
+                  </div>
+                  <div class="formula-footer-unitinput" *ngIf="jsonBuilderHelper.getJSONBuilt()?.formula[formulaIndex]?.units?.postfix">
+                    <span>Suffix</span>
+                    <input type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].units.postValue" (keyup)="stripNumbers()"
+                      (change)="(excel['active'])?updateExcelOptions():updateFormulaUIComponents()" placeholder="%" />
+                  </div>
+                </div>
+              </div>
+              <div class="formula-footer-range">
+                <div class="col-xs-12 no-padding">
+                  <label>Show Range:
+                    <div class="range-tip">
+                      <i class="material-icons">help</i>
+                      <div class="range-checktip">If you want to show your result as a range rather than a fixed number, you can select upper and lower
+                        limits as percentages.</div>
+                    </div>
+                  </label>
+                  <div class="formula-footer-range-slider">
+                    <div class="switch">
+                      <label>
+                        <input type="checkbox" (change)="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.status=!jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.status;
+                                jsonBuilderHelper.getSelectedControl().config.showHelp = false;
+                                (excel['active'])?updateExcelOptions():updateFormulaUIComponents()" [checked]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.status">
+                        <span class="lever"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div class="formula-footer-rangetext hide" *ngIf="!jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.status">
+                  <h3>Showing Value in Fixed Range</h3>
+                </div>
+                <div class="formula-footer-rangeinput" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.status">
+                  <div class="col-xs-12 show-range-new">
+                    <label>Lower Bound
+                      <div class="range-tip">
+                        <i class="material-icons">help</i>
+                        <div class="range-checktip" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.lower.type == 'Percentage'">
+                          The Lower Bound will be the result calculated from the formula above minus this percentage.
+                        </div>
+                        <div class="range-checktip" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.lower.type == 'Number'">
+                          The Lower Bound will be the result calculated from the formula above minus this absolute value.
+                        </div>
+                      </div>
+                    </label>
+                    <input type="number" id="valueLabel1" (keyup)="(excel['active'])?updateExcelOptions():updateFormulaUIComponents()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.lower.value"
+                      placeholder="Value" class="rangeinput-main" />
+                    <span>%</span>
+                  </div>
+                  <div class="col-xs-12 show-range-new">
+                    <label>Upper Bound
+                      <div class="range-tip">
+                        <i class="material-icons">help</i>
+                        <div class="range-checktip" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.lower.type == 'Percentage'">
+                          The upper bound will be the result calculated from the formula above plus this percentage.
+                        </div>
+                        <div class="range-checktip" *ngIf="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.lower.type == 'Number'">
+                          The upper bound will be the result calculated from the formula above plus this absolute value.
+                        </div>
+                      </div>
+                    </label>
+                    <input type="number" id="valueLabel2" (keyup)="(excel['active'])?updateExcelOptions():updateFormulaUIComponents()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].range.higher.value"
+                      placeholder="Value" class="rangeinput-main" />
+                    <span>%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="formula-footer-decimal">
+                <label>Decimals:</label>
+                <div class="formula-footer-decimalinput">
+                  <select (change)="onChangeDecimalPlaces($event.target.value)">
+                    <option [selected]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].decimal==0" value="0">No Decimal</option>
+                    <option [selected]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].decimal==1" value="1">.0</option>
+                    <option [selected]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].decimal==2" value="2">.00</option>
+                    <option [selected]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].decimal==3" value="3">.000</option>
+                    <option [selected]="jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].decimal==4" value="4">.0000</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <!-- <button (click)="switchType()">Switch type</button> -->
+        <ng-container *ngIf="excel && !excel.active">
+          <div class="formula-footer-left exp-result" [class.hide]="!isExpectedResult">
+            <label>Expected Result Between: </label>
+            <ul id="final-result-range">
+              <li>0</li>
+            </ul>
+            <div class="asterik-helptext">
+              * If the response to a question is a percentage, please ensure to divide the variable by 100%
+            </div>
+          </div>
+          <!-- <div class="asterik-helptext">
+            * If the response to a question is a percentage, please ensure to divide the variable by 100%
+          </div>
+          -->
+        </ng-container>
+        <ng-container *ngIf="excel && excel.active && jsonBuilderHelper.getJSONBuilt().formula[formulaIndex].excel && excel.fieldName">
+          <div class="formula-footer-left exp-result" [class.hide]="!isExpectedResult">
+            <label>Sample Result: </label>
+            <ul id="final-result-range-xls">
+              <li>0</li>
+            </ul>
+            <div class="asterik-helptext">
+              *Based on the random values of the variables used in the excel table
+            </div>
+          </div>
+          <!-- <div class="asterik-helptext">
+            * If the response to a question is a percentage, please ensure to divide the variable by 100%
+          </div>
+          -->
+        </ng-container>
+        <div class="col-xs-3 no-padding formula-footer-right">
+          <ng-container *ngIf="excel && !excel.active">
+            <a href="javascript:void(0);" [class.hide]="error" class="formula-item formula-final" (click)="applyFormula($event)" data-dismiss="modal"
+              data-formula="">Apply Formula</a>
+            <a href="javascript:void(0);" *ngIf="error" class="disable-formula">Apply Formula</a>
+          </ng-container>
+          <ng-container *ngIf="excel && excel.active">
+            <a href="javascript:void(0);" *ngIf="!excelError" class="formula-item formula-final" (click)="saveExcel()" data-dismiss="modal"
+              data-formula="">Apply Excel Formula</a>
+            <a href="javascript:void(0);" *ngIf="excelError" class="disable-formula">Apply Excel Formula</a>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End: Modal Formula -->

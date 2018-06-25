@@ -1,0 +1,149 @@
+
+<div class="col-xs-12 col-sm-12  new-js-outr custom-js" >
+    <div class="custom-js-left">
+        <div class="col-xs-12 np text-center">
+            <!-- <h3 class="col-sm-12 np jsheading">Scripts on Calculator</h3>  -->
+            <div class="col-xs-12 np ">
+                <a href="javascript:void(0);" (click)="addNewScript()" class="add-icon btn-hover">
+                    <i class="material-icons">add_circle</i> Add Script</a>
+            </div>
+            <ul class="custom-js-links">
+                <li *ngFor="let s of scripts;let i=index">
+                    <a href="javascript:void(0);" [class.active]="i==selectedItem" (click)="selectScript(i)">
+                        <p class="ellipsis">{{s?.name}}</p>
+                        <!--<i *ngIf="scripts.length!=1" class="material-icons" (click)="removeScript(i)">delete</i>-->
+                        <i *ngIf="scripts.length!=1" class="fa fa-trash-o" aria-hidden="true" (click)="removeScript(i)"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <form [formGroup]="scriptForm">
+        <div class="custom-js-right">
+            <div class="w750">
+            <div class="custom-js-name">
+                <h3>External Scripts</h3>
+                <div id="customJsError" class="col-md-12 col-sm-12 col-xs-12 np" style="display: none;">
+                       
+                    <!-- <p class="oaerror success">
+                        <i class="material-icons">check_circle</i> Adding your Script to your calculator/quiz.</p> -->
+                </div>
+                <div>
+                    <div class=" col-md-12 col-sm-12 col-xs-12 np" *ngIf="scripts[selectedItem]?.status == 'DISAPPROVED'">
+                        <div class="error-notice">
+                            <div class="oaerror danger">
+                                <i class="material-icons">cancel</i> Your custom script has been disapproved.
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" col-md-12 col-sm-12 col-xs-12 np" *ngIf="scripts[selectedItem]?.status == 'APPROVED'">
+                        <div class="error-notice">
+                            <div class="oaerror success">
+                                <i class="material-icons">check_circle</i> Your custom script has been approved. Run your calculator to see your script
+                                in action.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="custom-js-nameoutr">
+                        <!-- <div class="form-group label-floating scriptName">
+                            <label class="control-label" for="inputName">Script Name</label>
+                            <input (focus)="addfocus()" class="form-control" [(ngModel)]="scripts[selectedItem].name" 
+                                formControlName="name" type="text" (blur)="autoSave(scriptForm.value)" 
+                                placeholder="Script on Calculator">
+                        </div> -->
+                        <div class="form-group label-floating scriptName">
+                                <label class="control-label" for="inputName">Script Name</label>
+                                <input (focus)="addfocus()" class="form-control" [(ngModel)]="scripts[selectedItem].name" 
+                                    formControlName="name" type="text" 
+                                    placeholder="Script on Calculator">
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" *ngIf="(scriptForm.controls.name.touched && !scriptForm.controls.name.valid)">
+                        <p *ngIf="scriptForm.controls.name.errors.required">
+                            <span class="mat-icon">
+                                <i class="material-icons">report_problem</i>
+                            </span>Script Name is required.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 info-text-outer">
+                <div class=" col-md-6 col-xs-12 col-sm-12 no-padding info-text">
+                    Enter your custom code here:
+                </div>
+                <!-- <label class="check check-mandatory form-label">
+                    <input type="checkbox" value="Value1" formControlName='softwrap' (change)="softWrap()">
+                    <label for="check_k"> </label> Soft Wrap
+                </label> -->
+                <!-- <div *ngIf="changed"> -->
+                <!-- <div class=" col-md-6 col-xs-12 col-sm-12 no-padding text-right"> -->
+                <!-- <span class="status-color">Status :</span> <span>{{ status }}</span> -->
+                <!-- </div> -->
+                <!-- </div> -->
+                <div class="pull-right btns-right">
+                    <div>
+                        <button type="submit"  class="btn btn-basic border-btn" (click)="saveJSscript(scriptForm.value,saveLabel)" [disabled]="!scriptForm.valid">
+                            <label #saveLabel>
+                                    Submit Code
+                            </label>
+                        </button>
+                    </div>
+                    <!--// <label> -->
+                    <!-- <span *ngIf="(!scripts[selectedItem]?.value || scripts[selectedItem]._id==0);else elsePart">Submit Code</span>
+                                        <ng-template #elsePart><span>Resubmit Code</span></ng-template> -->
+                    <!-- </label> -->
+                    <!-- </button>
+                                <button type="button"  class="btn btn-basic  border-btn"  (click)="retainPreviousText()">Cancel</button>     
+                    </div>
+                    <ng-template #change>
+                        <button type="button" class="btn btn-basic  border-btn"  (click)="changed='true'">Change</button>                
+                    </ng-template> -->
+                    <!-- <button type="button" *ngIf="!changed" class="btn btn-basic border-btn" [disabled]="!codeReader.valid || requested" (click)="saveJSscript(codeReader.value);">
+                        <label [hidden]='requested'>
+                            <span [hidden]="!!_jsonBuilderService.getJSONBuilt().custom_script['value']">Submit Code</span>
+                            <span [hidden]="!(!!_jsonBuilderService.getJSONBuilt().custom_script['value'])">Resubmit Code</span>
+                        </label>
+                        <label [hidden]='!requested'>
+                            <span>Please Wait...</span>
+                        </label>
+                    </button>
+                    <button type="button" *ngIf="changed" class="btn btn-basic  border-btn" [disabled]="!codeReader.valid" (click)="changed=false;readable=false">Change</button>
+                </div>
+                <div style="clear:both"></div>
+                <ul>
+                    <li *ngFor = "let error of errorList" style='color:red'>Line No.{{ error.line+' '}}: {{ ' '+error.reason }}</li>
+                </ul>
+            </div>
+        </form>
+        <!--<div class="col-sm-12 np ">
+            <h3 class="col-sm-10 np jsheading">Custom JS</h3>
+            <p class="email-subheading-new">You can submit your custom JS code which you would like to appear on your calaculator and more text.</p>
+        </div>-->
+                </div>
+            </div>
+            <div class="col-xs-12 no-padding">
+                <!-- <textarea style="width:100%" id="CustomJsEditor" rows="25" formControlName="value"
+                    (blur)="autoSave(scriptForm.value)" [(ngModel)]="scripts[selectedItem].value">
+                </textarea> -->
+                <textarea style="width:100%" id="CustomJsEditor" rows="25" formControlName="value"
+                     [(ngModel)]="scripts[selectedItem].value">
+                </textarea>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+<div class="col-sm-2 general-helppanel hide">
+    <div class="col-xs-12 no-padding text-center">
+        <label class="g-helpicon">
+            <i class="material-icons">lightbulb_outline</i>
+        </label>
+    </div>
+    <!--<h5>CustomJs Tips</h5>-->
+    <p>It takes us up to 24 hours to review your script. Once it is approved, the script will be automatically applied to your
+        calculator or quiz, and we'll notify you via email. </p>
+</div>

@@ -1,0 +1,276 @@
+<div class="native-int-box links-outer" *ngIf="!returnFeatureAccess()" (click)="premiumPopup('integrations')">
+  <div class="logo-sec ml10">
+    <img class="img-responsive" src="assets/images/mark.png" />
+  </div>
+  <div class="integration-name">
+    Marketo
+  </div>
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div class="i-outer-red">
+          <a href="javascript:void(0)">
+            <i class="material-icons small-icon">lock_outline</i>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="native-int-box" [class.links-outer]="isConfigured" *ngIf="returnFeatureAccess()">
+  <div *ngIf="isConfigured && !config.active" class="red-bar"></div>
+  <div *ngIf="isConfigured && config.active" class="green-bar"></div>
+  <div class="logo-sec">
+    <img class="img-responsive" src="assets/images/mark.png" />
+  </div>
+  <div class="integration-name">
+    Marketo
+  </div>
+  <button class="btn configure-btn" *ngIf="!isConfigured" (click)="openConnectModal()">Configure</button>
+  <div class="links-inner">
+    <ul>
+      <li>
+        <div *ngIf="isConfigured && !config.active" class="i-outer-red">
+          <i class="material-icons">error</i>
+        </div>
+        <div *ngIf="isConfigured && config.active" class="i-outer-green">
+          <i class="material-icons">check_circle</i>
+        </div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <img class="img-responsive" src="assets/images/config-icon-active.png" />
+        </a>
+        <div class="help-checktip config-tip">Test</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured">
+        <a href="javascript:void(0)" (click)="getAccounts()">
+          <img class="img-responsive" src="assets/images/config-icon.png" />
+        </a>
+        <div class="help-checktip config-tip">Reconfigure</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="syncTask()">
+          <i class="material-icons">restore</i>
+        </a>
+        <div class="help-checktip config-tip">Task History</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && config.active">
+        <a href="javascript:void(0)" (click)="updateIntegrationStatus(false)">
+          <i class="material-icons ">do_not_disturb_alt</i>
+        </a>
+        <div class="help-checktip config-tip">Deactivate</div>
+      </li>
+      <li class="help-tip" *ngIf="isConfigured && !config.active">
+        <a href="javascript:void(0)" (click)="activate(true)">
+          <i class="material-icons">playlist_add_check</i>
+        </a>
+        <div class="help-checktip config-tip">Activate</div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div id="marketo-new" class="modal fade integration-modal" role="dialog">
+  <div class="modal-dialog ">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-close" (click)="close()" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons modal-close">close</i>
+        </button>
+        <img src="assets/images/marketo.png">
+        <h4>Send Outgrow lead data to Marketo</h4>
+      </div>
+      <div class="modal-body">
+        <!-- MultiStep Form -->
+        <form [formGroup]="form">
+          <!-- progressbar -->
+          <ul class="progressbar">
+            <li [class.fourOption]="GDPR" class="active" [class.threeOption]="!GDPR" [class.icon]="isConnected">Configure
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li [class.fourOption]="GDPR" [class.threeOption]="!GDPR" [class.active]="isConnected" [class.icon]="isMapped">Map Fields
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li [class.fourOption]="GDPR" [class.threeOption]="!GDPR" [class.active]="isMapped" [class.icon]="isDoubleOptin">Test Connection
+              <i class="material-icons">check_circle</i>
+            </li>
+            <li class="fourOption" *ngIf="GDPR" [class.active]="isDoubleOptin">Double Optin
+              <i class="material-icons">check_circle</i>
+            </li>
+          </ul>
+          <fieldset *ngIf="!isAccountSelected && !isConnected && !isMapped">
+            <div class="error-main" *ngIf="isError">
+              <i class="material-icons">error</i> {{errorMsg}}
+            </div>
+            <h5 class="align-left">Choose Marketo account you want to use for this integration</h5>
+            <h6>Select a Marketo Connection</h6>
+            <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+              <i class="material-icons loader-plan">autorenew</i>
+            </div>
+            <div class="radio-o" [class.active]="account.access_token==activeAccount" *ngFor="let account of accounts; let i = index">
+              <input type="radio" [id]="account.name" (click)="setAccount(account.access_token,'edit')" name="radio-group" [checked]="account.status">
+              <label [for]="account.name">{{account.name}}</label>
+              <a *ngIf="accounts.length!=1 && account.access_token!==activeAccount" href="javascript:void(0);" class="after-test-link" (click)="setAccount(account.access_token,'delete')">Delete</a>
+              <a href="javascript:void(0);" *ngIf="account.access_token!==activeAccount" class="after-test-link" (click)="testAccount(account)">Test</a>
+              <div [id]="account.client_id" class="after-test hide">
+                <i class="material-icons">check</i> Success</div>
+
+            </div>
+            <a href="javascript:void(0);" (click)="openNewConnectModal()" class="single-link align-left mt5">Add another Marketo connection</a>
+            <input type="button" name="submit" class="submit action-button button btn" (click)="showList()" value="Proceed" />
+          </fieldset>
+
+          <fieldset *ngIf=" isAccountSelected && !isConnected">
+            <div class="error-main" *ngIf="isError">
+              <i class="material-icons">check_circle</i> {{errorMsg}}
+            </div>
+            <h5 class="align-left">Connect to your Marketo Account</h5>
+            <h6>Use this data to develop customer personas, score leads, and run smart campaigns. To connect Outgrow to Marketo,
+              you will require your Marketo Client Id, Client Secret and End Point. You can find more information
+              <a class="text-red" href="http://developers.marketo.com/rest-api/custom-services/#custom_services" target="_blank">here</a>.
+            </h6>
+            <div class="form-group">
+              <input class="form-control" type="text" placeholder="Enter Marketo account name" name="MarketoAccount" formControlName="accountName"
+                [(ngModel)]="integrations.account_name">
+              <label class="control-label" for="input">Select Account Name</label>
+              <i class="bar"></i>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" type="text" name="clientID" placeholder="Enter Marketo client id" formControlName="client_id"
+                [(ngModel)]="integrations.client_id">
+              <label class="control-label" for="input">Marketo Client id</label>
+              <i class="bar"></i>
+              <span>Help me find my
+                <a href="http://developers.marketo.com/wp-content/uploads/2016/06/doc-rest-api-get-token.png" target="_blank"> Marketo client id</a>
+              </span>
+              <p class="error" *ngIf="form.controls.client_id.touched && !form.controls.client_id.valid">
+                <span *ngIf="form.controls.client_id.errors.required">
+                  <i class="material-icons">report_problem</i> Client Id is required.
+                </span>
+              </p>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" type="text" name="clientsecret" placeholder="Enter Marketo client secret" formControlName="client_secret"
+                [(ngModel)]="integrations.client_secret">
+              <label class="control-label" for="input">Client Secret</label>
+              <i class="bar"></i>
+              <span>Help me find my
+                <a href="http://developers.marketo.com/wp-content/uploads/2016/06/doc-rest-api-get-token.png" target="_blank"> Marketo client secret</a>
+              </span>
+              <p class="error" *ngIf="form.controls.client_secret.touched && !form.controls.client_secret.valid">
+                <span *ngIf="form.controls.client_secret.errors.required">
+                  <i class="material-icons">report_problem</i> Client secret is required.
+                </span>
+              </p>
+            </div>
+
+            <div class="form-group">
+              <input class="form-control" type="text" name="ideantity" placeholder="Enter Marketo end point" formControlName="ideantity"
+                [(ngModel)]="integrations.ideantity" (focus)="addIsfocusedidenatity()" (blur)="removeIsfocusedideantity()">
+              <label class="control-label" for="input">End points</label>
+              <i class="bar"></i>
+              <span>You can find the End Point in the web services menu in the REST API section. Your Marketo Endpoint will be
+                something like this - https://500-ABC-165.mktorest.com.​​​​​​​</span>
+              <p class="error" *ngIf="form.controls.ideantity.touched && !form.controls.ideantity.valid">
+                <span *ngIf="form.controls.ideantity.errors.required">
+                  <i class="material-icons">report_problem</i> End points is required.
+                </span>
+              </p>
+            </div>
+            <button type="submit" [disabled]="!form.valid" class="action-button button btn btn-connect-marketo" (click)="connect()">Authenticate with Marketo</button>
+          </fieldset>
+          <fieldset *ngIf="isConnected && !isMapped">
+            <div class="error-main" *ngIf="isMapError">
+              <i class="material-icons">check_circle</i> {{mapError}}
+            </div>
+            <div class="error-main" *ngIf="isLeadGenError">
+              <i class="material-icons">check_circle</i> {{mapError}}
+            </div>
+            <h5 class="align-left">Choose Marketo fields where you want to send Outgrow {{calcType}} data </h5>
+            <div class="table-outer">
+              <div class="row-outer header align-left" *ngIf="!isLoading && selectedlistId!='' && !isMapError">
+                <div class="col-outer-half">Outgrow Field</div>
+                <div class="col-outer-half">Marketo Field</div>
+              </div>
+              <div class="col-md-12 col-sm-12 col-xs-12 text-center" *ngIf="isLoading">
+                <i class="material-icons loader-plan">autorenew</i>
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calcfields of calcAllFileds">
+                  <div class="col-outer-half">{{calcfields.calc_name}}</div>
+                  <div class="col-outer-half">
+                    <select (change)="selectedMapFields(calcfields.calc_key,$event)" [disabled]="isLeadGenError">
+                      <option value="0">Not mapped</option>
+                      <option *ngFor="let crmfields of crmAllFileds" [selected]="crmfields.calc_key == calcfields.calc_key" [value]="crmfields.crm_key">{{crmfields.crm_name}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a (click)="test()" class="action-button button btn btn-test" href="javascript:void(0);" type="button">TEST CONNECTION</a>
+          </fieldset>
+          <fieldset *ngIf="isMapped && !isDoubleOptin">
+            <div class="success">
+              <i class="material-icons">check_circle</i> MAPPING SUCCESSFUL.
+            </div>
+            <h6>Following test record will be pushed to Marketo to test the connection</h6>
+            <div class="table-outer">
+              <div class="row-outer header align-left">
+                <div class="col-outer-half">Marketo Field</div>
+                <div class="col-outer-half">Marketo Field value</div>
+
+              </div>
+              <div class="table-outer-in scrollbar">
+                <div class="row-outer align-left" *ngFor="let calc of viewMappedData">
+                  <div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.key}}</div>
+                  <div class="col-outer-half" *ngIf="calc.key!='list_id'">{{calc.value}}</div>
+                </div>
+              </div>
+            </div>
+            <input type="button" class="action-button-previous btn button-light-back" (click)="back()" value="Back" />
+            <input type="button" *ngIf="GDPR" name="submit" class="submit action-button button btn" (click)="doubeOptin()" value="Next"
+            />
+            <input type="button" *ngIf="!GDPR" name="submit" class="submit action-button button btn" (click)="close()" value="Finish"
+            />
+          </fieldset>
+
+          <fieldset id="doubleOptin" class="hide" *ngIf="GDPR">
+            <h5 class="align-left">Users receive an email and click a link to confirm their subscription, which is then added to your Marketo account
+              or chosen list.</h5>
+            <h6>Send users of this {{calcType}} an email to confirm subscription to a list </h6>
+            <div class="email-body-text">Email body</div>
+            <div class="email-outer">
+              <textarea id="froala-editorIntegration"></textarea>
+            </div>
+            <div class="buttons-outer">
+              <a class="small-btn red-btn" href="javascript:void(0)" (click)="sendTestMail('save')">
+                <span class="saveEmail">Save</span>
+                <i class="material-icons">save</i>
+              </a>
+              <a class="small-btn" href="javascript:void(0)" (click)="setEmailBody(true)">
+                <i class="material-icons">autorenew</i> Reset</a>
+              <a class="small-btn" href="javascript:void(0)" (click)="sendTestMail('test')">
+                <i class="material-icons">send</i> Send Test Email</a>
+            </div>
+            <input type="button" name="submit" *ngIf="!config.doubleOptin" class="submit action-button button btn" value="SET DOUBLE OPTIN"
+              (click)="setDoubleoptin(true)" />
+            <input type="button" name="submit" *ngIf="config.doubleOptin" class="submit action-button button btn" value="FINISH" (click)="close()"
+            />
+            <input type="button" name="submit" *ngIf="config.doubleOptin" class="action-button-previous btn gray-btn" value="REMOVE DOUBLE OPTIN"
+              (click)="setDoubleoptin(false)" />
+            <input type="button" *ngIf="!config.doubleOptin" class="action-button-previous btn button-light-skip-small" (click)="close()"
+              value="SKIP" />
+
+          </fieldset>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>

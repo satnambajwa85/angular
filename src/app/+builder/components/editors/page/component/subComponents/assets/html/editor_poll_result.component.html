@@ -1,0 +1,976 @@
+<div class="col-xs-12 no-padding result-area-tab">
+  <!-- ** For numerical calculators **  -->
+  <section class="result-scroll main-result-parent ">
+    <div class="type-details leadform-bulbtooltip no-border bottom-space0">
+      <!--<i class="material-icons">lightbulb_outline</i>-->
+      <p>The poll result is the number of people who gave the same response as yours (in percentage). In case of multiple poll questions, it is the average of the poll result of each question. </p>
+    </div>
+    <div *ngFor="let control of resultSection.items,let i=index">
+      <div class="type-details-tab" *ngIf="resultSection && jsonBuilderHandler.getSelectedControl() == control">
+
+        <div class="type-details-components">
+          <div class="type-details top-space0" *ngIf="!control.config.showHelp">
+            <div class="type-details no-border bottom-space0">
+              <span class="form-label hide">Toggle Result:</span>
+              <!-- add_section wysiwyg component  -->
+              <add_section [control]="control" *ngIf="jsonBuilderHandler.getSelectedControl() == control"></add_section>
+              <!-- add_section wysiwyg component  End -->
+            </div>
+          </div>
+
+          <!-- conditional Messaging switch-->
+          <div class="type-details no-border">
+            <div class="col-md-12 no-padding">
+
+              <div class="switch" [class.alwaysOff]="!_featureAuthService.features.conditional_messaging.active">
+                <label (click)="conditionalToggleClick(i)">
+                  <input type="checkbox" [checked]="control.config.showHelp" [disabled]="jsonBuilderHandler.getJSONBuilt().formula[i].result.toString().trim()==''"
+                    (change)="conditionalChanged(i,control)">
+                  <span class="lever"></span>
+                </label>
+              </div>
+              <span class="form-label no-margin lead-label">
+                <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.conditional_messaging.active">lock_outline</i>
+                Conditional Messaging</span>
+              <div class="help-tip editor-helptip">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">Showcase a different text response depending on the range of the result obtained. Ex: if result is between
+                  0-50, show "You need to learn more". Otherwise, show "You got this!"</div>
+              </div>
+              <!--<hr class="radio-last-hr col-xs-12 no-padding mrbtm0">-->
+            </div>
+            <ng-container *ngIf="isNew">
+            <div class="type-details-sub" *ngIf="i==0 && control.config.showHelp">
+              <div class="switch" [class.alwaysOff]="!_featureAuthService.features.variable_cta.active">
+                <label>
+                  <input type="checkbox" [checked]="control.optionImageVisible" (change)="toggleConditionalCta(control)">
+                  <span class="lever"></span>
+                </label>
+              </div>
+              <span class="form-label no-margin lead-label">Conditional Call to Action</span>
+              <div class="help-tip editor-helptip">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">Showcase a different call to action depending on the range of the result obtained. Ex: if result is between
+                  0-50, show “Buy My Book". Otherwise, show "Sign Up as a Mentor!"</div>
+              </div>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isNew">
+              <div class="type-details-sub" *ngIf="i==0 && control.config.showHelp && !(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+                <div class="switch" [class.alwaysOff]="!_featureAuthService.features.variable_cta.active">
+                  <label>
+                    <input type="checkbox" [checked]="control.optionImageVisible" (change)="toggleConditionalCta(control)">
+                    <span class="lever"></span>
+                  </label>
+                </div>
+                <span class="form-label no-margin lead-label">Conditional Call to Action</span>
+                <div class="help-tip editor-helptip">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">Showcase a different call to action depending on the range of the result obtained. Ex: if result is between
+                    0-50, show “Buy My Book". Otherwise, show "Sign Up as a Mentor!"</div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div *ngIf="control.config.showHelp">
+            <div class="type-details no-border top-space0" *ngFor="let option of control.options.slice(conditionalService.front,conditionalService.rear);let optionIndex=index">
+              <span class="form-label hide">Toggle Result:</span>
+              <!-- add_section wysiwyg component  -->
+              <conditional-result-editor [optionImageVisible]="control.optionImageVisible" [control]="control" [optionIndex]="optionIndex+conditionalService.front"
+                [controlIndex]="i" *ngIf="jsonBuilderHandler.getSelectedControl().isIconPresent && jsonBuilderHandler.getSelectedControl() == control"></conditional-result-editor>
+              <!-- add_section wysiwyg component  End -->
+            </div>
+            <div *ngIf="conditionalService.front != 0" class="type-details-sub text-center">
+                <span (click)="conditionalService.loadPreviousConditions()" class="btn btn-basic2">
+                  View previous 10 conditions
+                </span>
+              </div>
+            <div *ngIf="conditionalService.rear != control.options.length" class="type-details-sub text-center">
+              <span (click)="conditionalService.loadMoreConditions()" class="btn btn-basic2">
+                View next 10 conditions
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- FOr numeric calc end -->
+</div>
+<!-- Settings for Numerical -->
+<div class="details-area-tab hide">
+  <div class="type-details-tab">
+    <!-- <div class="type-details">
+        <span class="form-label lead-label" [class.no-margin]="!jsonBuilderHandler.getJSONBuilt().formula[0].units.postfix">Show Answer Key: </span>
+        <div class="help-tip editor-helptip">
+          <i class="material-icons">info_outline</i>
+          <div class="help-checktip">Toggle to enable your users to view the answers at the end of the quiz.</div>
+        </div>
+        <div class="switch">
+          <label>
+            <input type="checkbox" (change)="toggleGradedTab();" name="multi-checkbox"
+                   class="show-check"
+                   [checked]="jsonBuilderHandler.getJSONBuilt().formula[0].units.postfix"
+                   data-size="mini" data-on-color="'blue'">
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div> -->
+
+    <div class="type-details hide" *ngIf="editorControl.result_header.order">
+      <span class="form-label">Heading</span>
+      <div class="char-count-limit" *ngIf="editorControl.result_header.props.title.length>62">{{editorControl.result_header.props.title.length}}</div>
+      <div [froalaEditor]="froalaHeader.options" *ngIf="froalaHeader.options" [(froalaModel)]="editorControl.result_header.props.title"></div>
+    </div>
+    <div class="type-details top-space0 no-content poll-dev" *ngIf="jsonBuilderHandler.editors('visualEditor')">
+      <visuals-editor [isEnabled]="(!getResultOutput(0).imageVisible||!getResultOutput(0).config.showHelp)" [controlIndex]="0"
+        [control]="getResultOutput(0)"></visuals-editor>
+    </div>
+    <ng-container *ngIf="isNew">
+      <div class="type-details-head" *ngIf="!resultSection.items[0]?.optionImageVisible" (click)="_editorService.scrollToTop();">
+        <i class="material-icons"></i>
+        <span class="type-details-heading">CALL TO ACTION</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="!isNew">
+      <div class="type-details-head" *ngIf="!resultSection.items[0]?.optionImageVisible && !isLeadInResult()" (click)="_editorService.scrollToTop();">
+        <i class="material-icons"></i>
+        <span class="type-details-heading">CALL TO ACTION</span>
+      </div>
+    </ng-container>
+    <div class="type-details-components" *ngIf="!resultSection.items[0]?.optionImageVisible && !isLeadInResult()">
+      <div class="type-details share {{isNew?'NEW_CTA':'OLD_CTA'}}" *ngIf="!_editorService.isEmpty(editorControl.cta_shares) && !(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+        <span class="form-label">Heading</span>
+        <input class="detail-text" placeholder="Heading" (keyup)="updateHeading();" [(ngModel)]="editorControl.click_button.props.unit">
+
+        <label class="radio-check" [class.active]="editorControl.click_button.visible" [class.inactive]="!editorControl.click_button.visible">
+          <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible)"
+            [checked]="editorControl.click_button.visible==true">
+          <label for="primary0" class="label-radio"> </label> -->
+          <div class="switch">
+            <label>
+                  <input class="show-check"  type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible)"
+                  [checked]="editorControl.click_button.visible==true">
+                  <span class="lever"></span>
+              </label>
+          </div>
+          <span>
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+            REDIRECT USERS TO URL</span>
+
+        </label>
+        <div class="radio-section ful-length" *ngIf="editorControl.click_button.visible" [class.hide]="!_featureAuthService.features.cta.redirect_url">
+          <!-- <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i> -->
+          <!--<span class="form-label">
+                Text
+              </span>-->
+          <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-bottom:8px;">
+            <div #froalaCtaText2 [froalaEditor]="froalaCtaRedirectUrl.options" *ngIf="froalaCtaRedirectUrl.options" [(froalaModel)]="editorControl.click_button.props.title"></div>
+          </div>
+          <div class="col-md-12 col-xs-12 no-padding full-check-value top-space0">
+            <label class="check-value">
+              <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+            </label>
+            <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+              placeholder="http://" (blur)="_editorService.validateUrl(validUrl)" (change)="_editorService.onNavigateURLChange($event)"
+              [(ngModel)]="jsonBuilderHandler.getJSONBuilt().navigate_Url" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck()"
+            />
+          </div>
+
+          <div class="type-details no-border bottom-space0" style="padding-top: 8px;">
+            <!-- <div class="switch">
+                <label>
+                  <input
+                    type="checkbox"
+                    [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                    (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                  >
+                  <span class="lever"></span>
+                </label>
+              </div>
+              <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+            <div class="custom-switch">
+              <label class="check check-mandatory form-label">
+
+                <input id="check_k91" type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab" (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab">
+                <label for="check_k91"> </label> Open url in new tab
+              </label>
+            </div>
+          </div>
+          <div class="col-md-12 col-xs-12 no-padding full-check-value top-space10" *ngIf="isLeadInResult()">
+            <label class="check-value">Message</label>
+            <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+            />
+          </div>
+          <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+            <div class="custom-switch open-in-app">
+              <label class="check check-mandatory form-label">
+
+                <input id="check_k11likes" type="checkbox" [checked]="editorControl.click_button.props.followUpText==='true'" (change)="setPrimaryAction($event,'click_button')">
+                <label for="check_k111"> </label> Set As Primary Action
+              </label>
+            </div>
+          </div> -->
+        </div>
+        <label class="radio-check share" [class.active]="editorControl.cta_likes.visible" [class.inactive]="!editorControl.cta_likes.visible">
+          <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="editorControl.cta_likes.visible==true"
+            (click)="_editorService.toggleCta('cta_likes',isCtaAccessible);" id="primary1">
+          <label for="primary1" class="label-radio"> </label> -->
+          <div class="switch">
+            <label>
+                  <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="editorControl.cta_likes.visible==true"
+                  (click)="_editorService.toggleCta('cta_likes',isCtaAccessible);" id="primary1">
+                  <span class="lever"></span>
+              </label>
+          </div>
+          <span>
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+            SUBSCRIBE TO SOCIAL FEEDS</span>
+          <div class="radio-section ful-length" *ngIf="editorControl.cta_likes.visible">
+            <label class="ch-icon ic" [class.active]="editorControl.cta_likes.options[0].selected">
+              <input type="radio" name="icon-select" id="r-ic1" (click)="optionToggle('cta_likes','facebook')">
+              <label for="r-ic1">
+                <i class="fa fa-facebook"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" [class.active]="editorControl.cta_likes.options[1].selected">
+              <input type="radio" name="icon-select" (click)="optionToggle('cta_likes','twitter')" id="r-ic2">
+              <label for="r-ic2">
+                <i class="fa fa-twitter"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" *ngIf="editorControl.cta_likes.options[2]" [class.active]="editorControl.cta_likes.options[2].selected">
+              <input type="radio" name="icon-select" (click)="optionToggle('cta_likes','vKontakte')" id="r-ic3">
+              <label for="r-ic3">
+                <i class="fa fa-vk"></i>
+              </label>
+            </label>
+            <!--<hr class="radio-last-hr" [class.hide]="!(editorControl.cta_likes.options[0].selected || editorControl.cta_likes.options[1].selected || (editorControl.cta_likes.options[2] && editorControl.cta_likes.options[2].selected))">-->
+            <!--<section>
+               <div class="form-label">Heading</div>
+               <input type="text" class="detail-text" placeholder="Like/Follow us on" [(ngModel)]="editorControl.cta_likes.options[0].title"/>
+             </section>-->
+            <section [class.hide]="!editorControl.cta_likes.options[0].selected">
+              <div class="form-label">Facebook Page URL</div>
+              <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" [(ngModel)]="editorControl.cta_likes.options[0].label"
+              />
+            </section>
+            <section [class.hide]="!editorControl.cta_likes.options[1].selected">
+              <div class="form-label top-space10">Twitter Handle</div>
+              <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                <label class="check-value">@</label>
+                <input type="text" class="form-text value-text" placeholder="outgrowco" [(ngModel)]="editorControl.cta_likes.options[1].label"
+                />
+              </div>
+            </section>
+            <section *ngIf="editorControl.cta_likes.options[2]" [class.hide]="!editorControl.cta_likes.options[2].selected">
+              <div class="form-label top-space10">VKontakte Profile</div>
+              <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                <label class="check-value">https://vk.com/id</label>
+                <input type="text" class="detail-text" placeholder="460614642" [(ngModel)]="editorControl.cta_likes.options[2].label" />
+              </div>
+            </section>
+            <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+            <div class="custom-switch open-in-app">
+              <label class="check check-mandatory form-label">
+
+                <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_likes.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_likes')">
+                <label for="check_k111"> </label> Set As Primary Action
+              </label>
+            </div>
+          </div> -->
+          <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && editorControl.cta_likes.visible" >
+            <div class="custom-switch open-in-app">
+              <label class="check check-mandatory form-label">
+                <input id="show-check-like" [checked]="editorControl.cta_likes.showButton" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                <label for="show-check-like"> </label> Show before result
+              </label>
+            </div>
+          </div>
+          </div>
+        </label>
+        <label class="radio-check share" [class.active]="editorControl.cta_shares.visible" [class.inactive]="!editorControl.cta_shares.visible">
+          <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="_editorService.toggleCta('cta_shares',isCtaAccessible);"
+            [checked]="editorControl.cta_shares.visible==true" id="primary2">
+          <label for="primary2" class="label-radio"> </label> -->
+          <div class="switch">
+            <label>
+                  <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="_editorService.toggleCta('cta_shares',isCtaAccessible);"
+                  [checked]="editorControl.cta_shares.visible==true" id="primary2"/>
+                  <span class="lever mb0"></span>
+              </label>
+          </div>
+          <span class="mb0">
+            <i class="material-icons lock-icon bookmark-icon mb0 top-space10" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+            SHARE ON SOCIAL MEDIA</span>
+          <div class="col-xs-12 no-padding share radio-section ful-length mb0 top-space10" [class.hide]="!editorControl.cta_shares.visible">
+            <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[0].selected">
+              <input type="radio" name="icon-select" id="share-ic1" (click)="optionToggle('cta_shares','facebook')">
+              <label for="share-ic1">
+                <i class="fa fa-facebook"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[1].selected">
+              <input type="radio" name="icon-select" id="share-ic2" (click)="optionToggle('cta_shares','twitter')">
+              <label for="share-ic2">
+                <i class="fa fa-twitter"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[2].selected">
+              <input type="radio" name="icon-select" id="share-ic3" (click)="optionToggle('cta_shares','linkedin')">
+              <label for="share-ic3">
+                <i class="fa fa-linkedin"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[3]" [class.active]="editorControl.cta_shares.options[3].selected">
+              <input type="radio" name="icon-select" id="share-ic4" (click)="optionToggle('cta_shares','vKontakte')">
+              <label for="share-ic4">
+                <i class="fa fa-vk"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[4]" [class.active]="editorControl.cta_shares.options[4].selected">
+              <input type="radio" name="icon-select" id="share-ic5" (click)="optionToggle('cta_shares','whatsapp')">
+              <label for="share-ic5">
+                <i class="fa fa-whatsapp"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[5]" [class.active]="editorControl.cta_shares.options[5].selected">
+              <input type="radio" name="icon-select" id="share-ic6" (click)="optionToggle('cta_shares','mail')">
+              <label for="share-ic6">
+                <i class="fa fa-envelope"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[6]" [class.active]="editorControl.cta_shares.options[6].selected">
+              <input type="radio" name="icon-select" id="share-ic7" (click)="optionToggle('cta_shares','messenger')">
+              <label for="share-ic7">
+                <i class="fa fa-comments-o"></i>
+              </label>
+            </label>
+            <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+            <div class="custom-switch open-in-app">
+              <label class="check check-mandatory form-label">
+
+                <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_shares.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_shares')">
+                <label for="check_k111"> </label> Set As Primary Action
+              </label>
+            </div>
+          </div> -->
+          
+          </div>
+        </label>
+        <section [class.hide]=" !editorControl.cta_shares.visible" class="outside-section ful-length">
+          <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="(editorControl.cta_shares.options[0].selected||editorControl.cta_shares.options[1].selected||editorControl.cta_shares.options[2].selected || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[4] && editorControl.cta_shares.options[4].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected)||(editorControl.cta_shares.options[6] && editorControl.cta_shares.options[6].selected))">
+            <label class="check-value">SHARE URL
+              <div class="help-tip editor-helptip pull-right upload-helptip">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+              </div>
+            </label>
+            <input [(ngModel)]="editorControl.cta_shares.options[0].description" class="form-text value-text" (change)="editorControl.cta_shares.options[0].description=_editorService.onURLChange($event)"
+              placeholder="http://www.outgrow.co">
+          </div>
+          <div *ngIf="(editorControl.cta_shares.options[2].selected || editorControl.cta_shares.options[0].selected || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected))">
+            <div class="form-label top-space0">Share Widget Title
+              <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+              </div>
+            </div>
+            <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+              <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+              <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+            </div>
+            <!--<div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>-->
+            <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" [(froalaModel)]="editorControl.cta_shares.options[0].label"></div>
+          </div>
+          <div *ngIf="(editorControl.cta_shares.options[1].selected || editorControl.cta_shares.options[2].selected || editorControl.cta_shares.options[0].selected  || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected))">
+            <div class="form-label" style="margin-top: 10px;">Share Widget Description
+              <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under Configure.</div>
+              </div>
+            </div>
+            <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+              <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+              <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+            </div>
+            <!--<div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>-->
+            <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" [(froalaModel)]="editorControl.cta_shares.options[0].icon"></div>
+
+          </div>
+          <div class="type-details" style="padding-top:10px;padding-bottom:12px;" *ngIf="editorControl.cta_shares.options[0].selected  || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)">
+            <div class="form-label">Social Share Image
+              <div class="help-tip editor-helptip share-tooltip">
+                <i class="material-icons">info_outline</i>
+                <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+              </div>
+            </div>
+            <div class="switch hide">
+              <label>
+                <input class="show-check" type="checkbox">
+                <span class="lever"></span>
+              </label>
+            </div>
+            <div class="col-xs-12 no-padding">
+              <div class="input-group">
+                <input class="file-input" placeholder="No file" readonly="" type="text" value="{{jsonBuilderHandler.getJSONBuilt().seoImage}}"
+                  readonly>
+                <label class="input-group-btn">
+                  <span class="btn btn-basic2" (click)="_editorService.uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                    UPLOAD
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && editorControl.cta_shares.visible" >
+            <div class="custom-switch open-in-app">
+              <label class="check check-mandatory form-label">
+                <input id="show-check-share" [checked]="editorControl.cta_shares.showButton" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                <label for="show-check-share"> </label> Show before result
+              </label>
+            </div>
+          </div>
+        </section>
+        <div *ngIf="(editorControl.cta_shares.visible && editorControl.cta_shares.showButton) || (editorControl.cta_likes.visible && editorControl.cta_likes.showButton)">
+          <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+              <div>
+                <span class="form-label">HEADING</span>
+                <textarea class="form-text question-textarea" [(ngModel)]="editorControl.cta_likes.props.title"></textarea>
+              </div>
+            </div>
+            
+            <div class="type-details" >
+              <span class="form-label">Help Text</span>
+              <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                <textarea class="form-text question-textarea" [(ngModel)]="editorControl.cta_likes.props.helpText"></textarea>
+              </div>
+            </div>
+      </div>
+      </div>
+    </div>
+    <div class="type-details" *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult' && isNew && !resultSection.items[0]?.optionImageVisible)">
+      <ng-container *ngIf="isNew">
+        <div class="type-details share {{isNew?'NEW_CTA':'OLD_CTA'}}" style="padding-bottom:3px;padding-top:0px; ">
+          <span class="form-label">Heading</span>
+          <input class="detail-text" placeholder="Heading" (keyup)="updateHeading();" [(ngModel)]="editorControl.click_button.props.unit">
+
+          <label class="radio-check hide" [class.active]="editorControl.click_button.visible" [class.inactive]="!editorControl.click_button.visible">
+            <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible)"
+              [checked]="editorControl.click_button.visible==true">
+            <label for="primary0" class="label-radio"> </label> -->
+            <div class="switch">
+              <label>
+                    <input class="show-check"  type="{{isNew?'checkbox':'radio'}}" value="Value1 " name="checkbox1" id="primary0" (click)="_editorService.toggleCta('cta_button',isCtaAccessible)"
+                    [checked]="editorControl.click_button.visible==true">
+                    <span class="lever"></span>
+                </label>
+            </div>
+            <span>
+              <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+              REDIRECT USERS TO URL</span>
+
+          </label>
+          <div class="radio-section ful-length hide" *ngIf="editorControl.click_button.visible" [class.hide]="!_featureAuthService.features.cta.redirect_url">
+            <!-- <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i> -->
+            <!--<span class="form-label">
+                        Text
+                      </span>-->
+            <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-bottom:8px;">
+              <div #froalaCtaText2 [froalaEditor]="froalaCtaRedirectUrl.options" *ngIf="froalaCtaRedirectUrl.options" [(froalaModel)]="editorControl.click_button.props.title"></div>
+            </div>
+            <div class="col-md-12 col-xs-12 no-padding full-check-value top-space0">
+              <label class="check-value">
+                <i class="material-icons lock-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+              </label>
+              <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+                placeholder="http://" (blur)="_editorService.validateUrl(validUrl)" (change)="_editorService.onNavigateURLChange($event)"
+                [(ngModel)]="jsonBuilderHandler.getJSONBuilt().navigate_Url" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck()"
+              />
+            </div>
+
+            <div class="type-details no-border bottom-space0" style="padding-top: 8px;">
+              <!-- <div class="switch">
+                        <label>
+                          <input
+                            type="checkbox"
+                            [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                            (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab"
+                          >
+                          <span class="lever"></span>
+                        </label>
+                      </div>
+                      <span class="form-label no-margin lead-label">Open url in new tab</span> -->
+              <div class="custom-switch">
+                <label class="check check-mandatory form-label">
+
+                  <input id="check_k91" type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab" (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab">
+                  <label for="check_k91"> </label> Open url in new tab
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-xs-12 no-padding full-check-value top-space10" *ngIf="isLeadInResult()">
+              <label class="check-value">Message</label>
+              <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+              />
+            </div>
+            <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+        
+                        <input id="check_k11likes" type="checkbox" [checked]="editorControl.click_button.props.followUpText==='true'" (change)="setPrimaryAction($event,'click_button')">
+                        <label for="check_k111"> </label> Set As Primary Action
+                      </label>
+                    </div>
+                  </div> -->
+          </div>
+          <label class="radio-check share" [class.active]="editorControl.cta_likes.visible" [class.inactive]="!editorControl.cta_likes.visible">
+            <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="editorControl.cta_likes.visible==true"
+              (click)="_editorService.toggleCta('cta_likes',isCtaAccessible);" id="primary1">
+            <label for="primary1" class="label-radio"> </label> -->
+            <div class="switch">
+              <label>
+                    <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" [checked]="editorControl.cta_likes.visible==true"
+                    (click)="_editorService.toggleCta('cta_likes',isCtaAccessible);" id="primary1">
+                    <span class="lever"></span>
+                </label>
+            </div>
+            <span>
+              <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+              SUBSCRIBE TO SOCIAL FEEDS</span>
+            <div class="radio-section ful-length" *ngIf="editorControl.cta_likes.visible">
+              <label class="ch-icon ic" [class.active]="editorControl.cta_likes.options[0].selected">
+                <input type="radio" name="icon-select" id="r-ic1" (click)="optionToggle('cta_likes','facebook')">
+                <label for="r-ic1">
+                  <i class="fa fa-facebook"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" [class.active]="editorControl.cta_likes.options[1].selected">
+                <input type="radio" name="icon-select" (click)="optionToggle('cta_likes','twitter')" id="r-ic2">
+                <label for="r-ic2">
+                  <i class="fa fa-twitter"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" *ngIf="editorControl.cta_likes.options[2]" [class.active]="editorControl.cta_likes.options[2].selected">
+                <input type="radio" name="icon-select" (click)="optionToggle('cta_likes','vKontakte')" id="r-ic3">
+                <label for="r-ic3">
+                  <i class="fa fa-vk"></i>
+                </label>
+              </label>
+              <!--<hr class="radio-last-hr" [class.hide]="!(editorControl.cta_likes.options[0].selected || editorControl.cta_likes.options[1].selected || (editorControl.cta_likes.options[2] && editorControl.cta_likes.options[2].selected))">-->
+              <!--<section>
+                       <div class="form-label">Heading</div>
+                       <input type="text" class="detail-text" placeholder="Like/Follow us on" [(ngModel)]="editorControl.cta_likes.options[0].title"/>
+                     </section>-->
+              <section [class.hide]="!editorControl.cta_likes.options[0].selected">
+                <div class="form-label">Facebook Page URL</div>
+                <input type="text" class="detail-text" placeholder="https://www.facebook.com/outgrowco" [(ngModel)]="editorControl.cta_likes.options[0].label"
+                />
+              </section>
+              <section [class.hide]="!editorControl.cta_likes.options[1].selected">
+                <div class="form-label top-space10">Twitter Handle</div>
+                <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                  <label class="check-value">@</label>
+                  <input type="text" class="form-text value-text" placeholder="outgrowco" [(ngModel)]="editorControl.cta_likes.options[1].label"
+                  />
+                </div>
+              </section>
+              <section *ngIf="editorControl.cta_likes.options[2]" [class.hide]="!editorControl.cta_likes.options[2].selected">
+                <div class="form-label top-space10">VKontakte Profile</div>
+                <div class="col-md-12 col-xs-12 no-padding full-check-value">
+                  <label class="check-value">https://vk.com/id</label>
+                  <input type="text" class="detail-text" placeholder="460614642" [(ngModel)]="editorControl.cta_likes.options[2].label" />
+                </div>
+              </section>
+              <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+        
+                        <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_likes.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_likes')">
+                        <label for="check_k111"> </label> Set As Primary Action
+                      </label>
+                    </div>
+                  </div> -->
+                  <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && editorControl.cta_likes.visible" >
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+                        <input id="show-check-like" [checked]="editorControl.cta_likes.showButton" (change)="toggleSharePopup($event, 'cta_likes')" type="checkbox">
+                        <label for="show-check-like"> </label> Show before result
+                      </label>
+                    </div>
+                  </div>
+            </div>
+          </label>
+          <label class="radio-check share mb0" [class.active]="editorControl.cta_shares.visible" [class.inactive]="!editorControl.cta_shares.visible">
+            <!-- <input type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="_editorService.toggleCta('cta_shares',isCtaAccessible);"
+              [checked]="editorControl.cta_shares.visible==true" id="primary2">
+            <label for="primary2" class="label-radio"> </label> -->
+            <div class="switch">
+              <label>
+                    <input class="show-check" type="{{isNew?'checkbox':'radio'}}" value="Value1" name="checkbox1" (click)="_editorService.toggleCta('cta_shares',isCtaAccessible);"
+                    [checked]="editorControl.cta_shares.visible==true" id="primary2"/>
+                    <span class="lever mb0"></span>
+                </label>
+            </div>
+            <span class="mb0">
+              <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+              SHARE ON SOCIAL MEDIA</span>
+            <div class="col-xs-12 no-padding share radio-section ful-length mb0 top-space10" [class.hide]="!editorControl.cta_shares.visible">
+              <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[0].selected">
+                <input type="radio" name="icon-select" id="share-ic1" (click)="optionToggle('cta_shares','facebook')">
+                <label for="share-ic1">
+                  <i class="fa fa-facebook"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[1].selected">
+                <input type="radio" name="icon-select" id="share-ic2" (click)="optionToggle('cta_shares','twitter')">
+                <label for="share-ic2">
+                  <i class="fa fa-twitter"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" [class.active]="editorControl.cta_shares.options[2].selected">
+                <input type="radio" name="icon-select" id="share-ic3" (click)="optionToggle('cta_shares','linkedin')">
+                <label for="share-ic3">
+                  <i class="fa fa-linkedin"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[3]" [class.active]="editorControl.cta_shares.options[3].selected">
+                <input type="radio" name="icon-select" id="share-ic4" (click)="optionToggle('cta_shares','vKontakte')">
+                <label for="share-ic4">
+                  <i class="fa fa-vk"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[4]" [class.active]="editorControl.cta_shares.options[4].selected">
+                <input type="radio" name="icon-select" id="share-ic5" (click)="optionToggle('cta_shares','whatsapp')">
+                <label for="share-ic5">
+                  <i class="fa fa-whatsapp"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[5]" [class.active]="editorControl.cta_shares.options[5].selected">
+                <input type="radio" name="icon-select" id="share-ic6" (click)="optionToggle('cta_shares','mail')">
+                <label for="share-ic6">
+                  <i class="fa fa-envelope"></i>
+                </label>
+              </label>
+              <label class="ch-icon ic" *ngIf="editorControl.cta_shares.options[6]" [class.active]="editorControl.cta_shares.options[6].selected">
+                <input type="radio" name="icon-select" id="share-ic7" (click)="optionToggle('cta_shares','messenger')">
+                <label for="share-ic7">
+                  <i class="fa fa-comments-o"></i>
+                </label>
+              </label>
+              <!-- <div class="type-details no-border bottom-space0" *ngIf="isNew" style="padding-top:8px;">
+                    <div class="custom-switch open-in-app">
+                      <label class="check check-mandatory form-label">
+        
+                        <input id="check_k11likes" type="checkbox" [checked]="editorControl.cta_shares.props.followUpText==='true'" (change)="setPrimaryAction($event,'cta_shares')">
+                        <label for="check_k111"> </label> Set As Primary Action
+                      </label>
+                    </div>
+                  </div> -->
+                  
+            </div>
+          </label>
+          <section [class.hide]=" !editorControl.cta_shares.visible" class="outside-section ful-length">
+            <div class="col-md-12 col-xs-12 no-padding full-check-value" *ngIf="(editorControl.cta_shares.options[0].selected||editorControl.cta_shares.options[1].selected||editorControl.cta_shares.options[2].selected || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[4] && editorControl.cta_shares.options[4].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected)||(editorControl.cta_shares.options[6] && editorControl.cta_shares.options[6].selected))">
+              <label class="check-value">SHARE URL
+                <div class="help-tip editor-helptip pull-right upload-helptip">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">If you're embedding the calculator on another page please add the link for that page.</div>
+                </div>
+              </label>
+              <input [(ngModel)]="editorControl.cta_shares.options[0].description" class="form-text value-text" (change)="editorControl.cta_shares.options[0].description=_editorService.onURLChange($event)"
+                placeholder="http://www.outgrow.co">
+            </div>
+            <div *ngIf="(editorControl.cta_shares.options[2].selected || editorControl.cta_shares.options[0].selected || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected))">
+              <div class="form-label top-space0">Share Widget Title
+                <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">This will be reflected only for Linkedin. Facebook will use the SEO Description under Configure.</div>
+                </div>
+              </div>
+              <div class="icon-outer" *ngIf="froalaCtaSocialTitle.textCount>160">
+                <div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>
+                <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+              </div>
+              <!--<div [class.char-count-red]="froalaCtaSocialTitle.textCount>160" class="char-count">{{froalaCtaSocialTitle.textCount}}</div>-->
+              <div #froalaCtaSocialTitleDOM [froalaEditor]="froalaCtaSocialTitle.options" *ngIf="froalaCtaSocialTitle.options" [(froalaModel)]="editorControl.cta_shares.options[0].label"></div>
+            </div>
+            <div *ngIf="(editorControl.cta_shares.options[1].selected || editorControl.cta_shares.options[2].selected || editorControl.cta_shares.options[0].selected  || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)||(editorControl.cta_shares.options[5] && editorControl.cta_shares.options[5].selected))">
+              <div class="form-label" style="margin-top: 10px;">Share Widget Description
+                <div class="help-tip editor-helptip pull-right upload-helptip hide">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">This will be reflected only for Twitter and Linkedin. Facebook will use the SEO Description under Configure.</div>
+                </div>
+              </div>
+              <div class="icon-outer" *ngIf="froalaCtaSocialDesc.textCount>160">
+                <div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>
+                <div class="help-text">Recommended limit of 160 characters is exceeded</div>
+              </div>
+              <!--<div [class.char-count-red]="froalaCtaSocialDesc.textCount>160" class="char-count">{{froalaCtaSocialDesc.textCount}}</div>-->
+              <div #froalaCtaSocialDescDOM [froalaEditor]="froalaCtaSocialDesc.options" *ngIf="froalaCtaSocialDesc.options" [(froalaModel)]="editorControl.cta_shares.options[0].icon"></div>
+
+            </div>
+            <div class="type-details" style="padding-top:10px;padding-bottom:12px;" *ngIf="editorControl.cta_shares.options[0].selected  || (editorControl.cta_shares.options[3] && editorControl.cta_shares.options[3].selected)">
+              <div class="form-label">Social Share Image
+                <div class="help-tip editor-helptip share-tooltip">
+                  <i class="material-icons">info_outline</i>
+                  <div class="help-checktip">If you do not upload an image, a screenshot of the welcome screen will be used as the default image.</div>
+                </div>
+              </div>
+              <div class="switch hide">
+                <label>
+                  <input class="show-check" type="checkbox">
+                  <span class="lever"></span>
+                </label>
+              </div>
+              <div class="col-xs-12 no-padding">
+                <div class="input-group">
+                  <input class="file-input" placeholder="No file" readonly="" type="text" value="{{jsonBuilderHandler.getJSONBuilt().seoImage}}"
+                    readonly>
+                  <label class="input-group-btn">
+                    <span class="btn btn-basic2" (click)="_editorService.uploadSeoImage()" data-fp-apikey="ANQWcFDQRUiGfBqjfgINQz">
+                      UPLOAD
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="type-details no-border bottom-space0" *ngIf="isSharePopupAllowed() && editorControl.cta_shares.visible" >
+              <div class="custom-switch open-in-app">
+                <label class="check check-mandatory form-label">
+                  <input id="show-check-share" [checked]="editorControl.cta_shares.showButton" (change)="toggleSharePopup($event, 'cta_shares')" type="checkbox">
+                  <label for="show-check-share"> </label> Show before result
+                </label>
+              </div>
+            </div>
+          </section>
+          <div *ngIf="(editorControl.cta_shares.visible && editorControl.cta_shares.showButton) || (editorControl.cta_likes.visible && editorControl.cta_likes.showButton)">
+            <div class="type-details" style="padding-bottom:15px; padding-top:9px;">
+                <div>
+                  <span class="form-label">HEADING</span>
+                  <textarea class="form-text question-textarea" [(ngModel)]="editorControl.cta_likes.props.title"></textarea>
+                </div>
+              </div>
+              
+              <div class="type-details" >
+                <span class="form-label">Help Text</span>
+                <div class="col-xs-12 no-padding text-group div-check help-editor-outer">
+                  <textarea class="form-text question-textarea" [(ngModel)]="editorControl.cta_likes.props.helpText"></textarea>
+                </div>
+              </div>
+        </div>
+        </div>
+      </ng-container>
+      <!-- <ng-container *ngIf="!isNew">
+        <label class="radio-check active hide">
+          <input type="radio" value="Value1 " name="checkbox1_url" id="primary2_url" [checked]="true">
+          <label for="primary2" class="label-radio"> </label>
+          <span>
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.redirect_url">lock_outline</i>
+            REDIRECT USERS TO URL</span>
+          <div class="radio-section">
+            <span class="form-label">
+              Button Text:</span>
+            <div #froalaCtaText1 [froalaEditor]="froalaCtaRedirectUrl.options" *ngIf="froalaCtaRedirectUrl.options" [(froalaModel)]="editorControl.click_button.props.title"></div>
+            <div class="col-md-12 col-xs-12 no-padding full-check-value top-space0">
+              <label class="check-value">
+                <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+              </label>
+              <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text && !isCtaAccessible"
+                (click)="_editorService.ctaCheck(isCtaAccessible);_editorService.ctaFeatureCheck()" placeholder="http://" (blur)="_editorService.validateUrl(validUrl)"
+                (change)="_editorService.onNavigateURLChange($event)" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().navigate_Url"
+              />
+            </div>
+            <div class="type-details no-border bottom-space0">
+              <div class="custom-switch">
+                <label class="check check-mandatory form-label">
+
+                  <input id="check_k101" type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().open_in_tab" (change)="jsonBuilderHandler.getJSONBuilt().open_in_tab = !jsonBuilderHandler.getJSONBuilt().open_in_tab">
+                  <label for="check_k101"> </label> Open url in new tab
+                </label>
+              </div>
+            </div>
+            <div class="col-md-12 col-xs-12 no-padding full-check-value top-space10" *ngIf="isLeadInResult()">
+              <label class="check-value">Message</label>
+              <input type="text" class="form-text value-text" placeholder="Message" [(ngModel)]="jsonBuilderHandler.getJSONBuilt().message"
+              />
+            </div>
+
+          </div>
+        </label>
+        <label class="radio-check share inactive">
+          <input type="radio" value="Value1" name="checkbox1_url" id="primary1_url" disabled>
+          <label for="primary1" class="label-radio" (click)="showMessage()"> </label>
+          <span (click)="showMessage()">
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.like_follow">lock_outline</i>
+            SUBSCRIBE TO SOCIAL FEEDS</span>
+          <div class="radio-section inactive">
+            <label class="ch-icon ic">
+              <input type="radio" name="icon-select" id="r-ic1" disabled>
+              <label for="r-ic1">
+                <i class="fa fa-facebook"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="radio" name="icon-select" id="r-ic2" disabled>
+              <label for="r-ic2">
+                <i class="fa fa-twitter"></i>
+              </label>
+            </label>
+          </div>
+        </label>
+        <label class="radio-check inactive">
+          <input type="radio" value="Value1" name="checkbox1_url" id="primary3_url" disabled />
+          <label for="primary1" class="label-radio" (click)="showMessage()"> </label>
+          <span (click)="showMessage()">
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.cta.shares">lock_outline</i>
+            SHARE ON SOCIAL MEDIA</span>
+          <div class="col-xs-12 no-padding share radio-section">
+            <label class="ch-icon ic">
+              <input type="radio" name="icon-select" id="share-ic1" disabled>
+              <label for="share-ic1">
+                <i class="fa fa-facebook"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="radio" name="icon-select" id="share-ic2" disabled>
+              <label for="share-ic2">
+                <i class="fa fa-twitter"></i>
+              </label>
+            </label>
+            <label class="ch-icon ic">
+              <input type="radio" name="icon-select" id="share-ic3" disabled>
+              <label for="share-ic3">
+                <i class="fa fa-linkedin"></i>
+              </label>
+            </label>
+          </div>
+        </label>
+      </ng-container> -->
+    </div>
+    <div class="type-details" *ngIf="_editorService.isEmpty(editorControl.cta_shares) && !(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')">
+      <div *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult') || editorControl.click_button.visible">
+        <div class="col-md-12 col-xs-12 no-padding full-check-value" style="margin-bottom: 10px;">
+          <label class="check-value">TEXT</label>
+          <input class="form-text value-text" *ngIf="(editorControl.leadform.visible && editorControl.leadform.config.direction == 'withResult')"
+            [(ngModel)]="editorControl.leadform.props.title" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible)">
+          <input class="form-text value-text" *ngIf="editorControl.click_button.visible" [(ngModel)]="editorControl.click_button.props.title"
+            [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible)">
+        </div>
+        <div class="col-md-12 col-xs-12 no-padding full-check-value">
+          <label class="check-value">URL</label>
+          <input type="text" class="form-text value-text" placeholder="http://" (blur)="_editorService.validateUrl(validUrl)" (change)="_editorService.onNavigateURLChange($event)"
+            [(ngModel)]="jsonBuilderHandler.getJSONBuilt().navigate_Url" [readonly]="!isCtaAccessible" (click)="_editorService.ctaCheck(isCtaAccessible)"
+          />
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="type-details-tab">
+    <div class="type-details-head" (click)="_editorService.scrollToTop();">
+      <i class="material-icons"></i>
+      <span class="type-details-heading">FOOTER SETTINGS</span>
+    </div>
+    <div class="type-details-components">
+      <div class="type-details share" *ngIf="editorControl.share_links.visible">
+        <span class="form-label"> Social Sharing Buttons:</span>
+        <div class="col-xs-12 no-padding">
+          <label class="ch-icon ic">
+            <input type="checkbox" (click)="_editorService.toggleSocialIcon('facebook')" name="icon-select" id="ic1" [checked]="_editorService.isSocialChecked('facebook')">
+            <label for="ic1">
+              <i class="fa fa-facebook"></i>
+            </label>
+          </label>
+          <label class="ch-icon ic">
+            <input type="checkbox" (click)="_editorService.toggleSocialIcon('twitter')" name="icon-select" id="ic2" [checked]="_editorService.isSocialChecked('twitter')">
+            <label for="ic2">
+              <i class="fa fa-twitter"></i>
+            </label>
+          </label>
+          <label class="ch-icon ic">
+            <input type="checkbox" (click)="_editorService.toggleSocialIcon('linkedin')" name="icon-select" id="ic3" [checked]="_editorService.isSocialChecked('linkedin')">
+            <label for="ic3">
+              <i class="fa fa-linkedin"></i>
+            </label>
+          </label>
+          <label class="ch-icon ic hide">
+            <input type="checkbox" (click)="_editorService.toggleSocialIcon('pinterest')" name="icon-select" id="ic4" [checked]="_editorService.isSocialChecked('pinterest')">
+            <label for="ic4">
+              <i class="fa fa-pinterest-p"></i>
+            </label>
+          </label>
+          <label class="ch-icon ic">
+            <input type="checkbox" (click)="_editorService.toggleSocialIcon('email')" name="icon-select" id="ic5" [checked]="_editorService.isSocialChecked('email')">
+            <label for="ic5">Email</label>
+          </label>
+        </div>
+      </div>
+      <div class="type-details no-border" *ngIf="editorControl.result_disclaimer.order">
+        <span class="form-label" [class.no-margin]="editorControl.result_disclaimer.visible === false">
+          <i class="material-icons lock-icon bookmark-icon" *ngIf="!isDisclaimers">lock_outline</i>
+          Add Text or Disclaimer</span>
+        <div class="switch" [class.alwaysOn]="!isDisclaimers && editorControl.result_disclaimer.visible">
+          <label>
+            <input type="checkbox" (click)="_editorService.toggleDisclaimer(isDisclaimers);callGA('DISCLAIMER')" [checked]="editorControl.result_disclaimer.visible">
+            <span class="lever"></span>
+          </label>
+        </div>
+        <div class="type-details hide" *ngIf="editorControl.result_disclaimer.visible">
+          <label class="check form-label" style="margin-bottom:5px;">
+            <input type="checkbox" value="Value1" name="check_dis_1" id="check_dis_1" [checked]="editorControl.result_disclaimer.disclaimer_pages.landing"
+              (change)="editorControl.result_disclaimer.disclaimer_pages.landing = !editorControl.result_disclaimer.disclaimer_pages.landing">
+            <label for="check_dis_1"> </label> Welcome Screen
+          </label>
+          <label class="check form-label" style="margin-bottom:5px;">
+            <input type="checkbox" value="Value1" name="check_dis_2" id="check_dis_2" [checked]="editorControl.result_disclaimer.disclaimer_pages.question"
+              (change)="editorControl.result_disclaimer.disclaimer_pages.question = !editorControl.result_disclaimer.disclaimer_pages.question">
+            <label for="check_dis_2"> </label> Questionnaire
+          </label>
+          <label class="check form-label" style="margin-bottom:5px;">
+            <input type="checkbox" value="Value1" [disabled]="!isDisclaimers && editorControl.result_disclaimer.visible" name="check_dis_3"
+              id="check_dis_3" [checked]="editorControl.result_disclaimer.disclaimer_pages.result" (change)="editorControl.result_disclaimer.disclaimer_pages.result = !editorControl.result_disclaimer.disclaimer_pages.result">
+            <label for="check_dis_3"> </label> Result Page
+          </label>
+        </div>
+        <div class="col-xs-12 no-padding div-check" *ngIf="editorControl.result_disclaimer.visible">
+          <div (click)="_editorService.disclaimerClick(isDisclaimers)" [(froalaModel)]="editorControl.result_disclaimer.props.title"
+            *ngIf="froalaDisclaimer.options" #froalaDisclaimerDOM [froalaEditor]="froalaDisclaimer.options"></div>
+        </div>
+      </div>
+      <div class="type-details top-space0 no-border bottom-space0">
+        <span class="form-label lead-label" style="margin-bottom:0px;">Show number of voters</span>
+        <div class="switch">
+          <label>
+            <input type="checkbox" [checked]="jsonBuilderHandler.getJSONBuilt().formula[0].units.postfix" (change)="toggleShowVoters()">
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+      <div class="type-details no-border bottom-space0">
+        <span class="form-label lead-label no-margin">Show Summary </span>
+        <div class="help-tip editor-helptip">
+          <i class="material-icons">info_outline</i>
+          <div class="help-checktip">Toggle to enable your users to view the summary at the end of poll.</div>
+        </div>
+        <div class="switch">
+          <label>
+            <input type="checkbox" (change)="togglePollTab();" name="multi-checkbox" class="show-check" [checked]="jsonBuilderHandler.getJSONBuilt().formula[0].units.prefix"
+              data-size="mini" data-on-color="'blue'">
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+      <div class="type-details" *ngIf="editorControl.result_redo && jsonBuilderHandler.editors('redo')">
+        <span class="form-label lead-label">Review Poll</span>
+        <div class="switch">
+          <label>
+            <input type="checkbox" (change)="editorControl.result_redo.visible=!editorControl.result_redo.visible" [checked]="editorControl.result_redo.visible">
+            <span class="lever"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Settings for Numerical End-->

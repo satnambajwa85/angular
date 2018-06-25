@@ -1,0 +1,217 @@
+<!-- <div class="col-xs-12 text-center email-tabs gen-seo-tabs">
+    <ul class="nav nav-tabs nav-justified" role="tablist">
+        <li role="presentation" [ngClass]="{active: (selectedItem=='embedpage')}">
+            <a href="#gen-settings" role="tab" data-toggle="tab" (click)="setItem('embedpage')">Embed on a Web Page<i class="material-icons">keyboard_arrow_right</i></a>
+        </li>
+        <li role="presentation" [ngClass]="{active: (selectedItem=='promotion')}">
+            <a href="#seo-settings" id="promotionlist" role="tab" data-toggle="tab" (click)="setItem('promotion')">Promotion Checklist<i class="material-icons">keyboard_arrow_right</i></a>
+        </li>
+        <li role="presentation" [ngClass]="{active: (selectedItem=='opinionEmail')}">
+            <a href="#local-settings" role="tab" data-toggle="tab" (click)="setItem('opinionEmail')">Launch in a Email<i class="material-icons">keyboard_arrow_right</i></a>
+        </li>
+    </ul>
+</div>
+<config-promotion-checklist *ngIf="selectedItem == 'promotion'" id="promotion-checkList"></config-promotion-checklist>
+<opinion-email *ngIf="selectedItem == 'opinionEmail'" id="opinion-email"></opinion-email> -->
+<div class="config-template-tabs new-email-outr embedd-parent">
+    <div class="new-webpage-design-wrapper">
+        <div class="new-webpage-outer-part">
+            <ul class="custom-tab-part nav nav-tabs" role="tablist">
+                <li class="tab active">
+                    <a href="#in_page" data-toggle="tab" role="tab" class="ripple-dark">In Page</a>
+                </li>
+                <li class="tab">
+                    <a href="#full_page" data-toggle="tab" role="tab" class="ripple-dark">Full Page</a>
+                </li>
+                <li class="tab">
+                    <a href="#popup" data-toggle="tab" role="tab" class="ripple-dark">Popup</a>
+                </li>
+            </ul>
+            <div class="tab-content tab-content-part">
+                <div id="in_page" class=" tab-pane active" role="tabpanel">
+                    <div class="web-page-design">
+                        <div class="web-page-header">
+                            <ul class="three-dots">
+                                <li class="red"></li>
+                                <li class="yellow"></li>
+                                <li class="green"></li>
+                            </ul>
+                            <div class="url-space">
+                                <p>http://yourwebsite.com</p>
+                            </div>
+                        </div>
+                        <div class="web-page-content">
+                            <div class="left-part">
+                                <div class="big-strip strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                            </div>
+                            <div class="center-part">
+                                <!-- <figure>
+                                    <img src="https://cdn.filestackcontent.com/BwgPMFFeSl2ZLY232Ihs" alt="https://cdn.filestackcontent.com/BwgPMFFeSl2ZLY232Ihs"
+                                    />
+                                </figure> -->
+                                <iframe id="inPageIframe" style="width:100%; height:100%;" [src]="(iFrameUrl) | safeUrl "></iframe>
+                            </div>
+                            <div class="right-part">
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="strips"></div>
+                                <div class="large-strip strips"></div>
+                                <div class="strips"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-row">
+                        <div class="web-page-sub-section-left">
+                            <div class="web-page-sub-section">
+                                <h4>Settings</h4>
+                                <div class="web-page-sub-section-content">
+                                    <div class="seamless logo-branding-outer" *ngIf="!jsonBuilderHelper.isTempName(['template-eight']) && headerVisible()">
+                                        <label>Show Header
+                                            <span class="webpage-info" [attr.data-content]="headerHelpText">
+                                                <i class="material-icons support_icon dropdown-link">help</i>
+                                            </span>
+                                        </label>
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input (change)="setEmbedLinks()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedHeader" class="onoffswitch-checkbox"
+                                                    id="myonoffswitch11" type="checkbox" />
+                                                <label class="onoffswitch-label" for="myonoffswitch11">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="seamless logo-branding-outer" *ngIf="!jsonBuilderHelper.isTempName(['template-eight']) && footerVisible()">
+                                        <label>Show Footer
+                                            <span class="webpage-info" [attr.data-content]="footerHelpText">
+                                                <i class="material-icons support_icon dropdown-link">help</i>
+                                            </span>
+                                        </label>
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input (change)="setEmbedLinks()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedFooter" class="onoffswitch-checkbox"
+                                                    id="myonoffswitch12" type="checkbox" />
+                                                <label class="onoffswitch-label" for="myonoffswitch12">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="seamless logo-branding-outer">
+                                        <label>Facebook Comments
+                                            <span class="webpage-info" [attr.data-content]="fbHelpText">
+                                                <i class="material-icons support_icon dropdown-link">help</i>
+                                            </span>
+                                        </label>
+                                        <div class="switch">
+                                            <div class="onoffswitch">
+                                                <input (change)="setFBCommentsURL()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbComments" class="onoffswitch-checkbox"
+                                                    id="myonoffswitch13" type="checkbox" />
+                                                <label class="onoffswitch-label" for="myonoffswitch13">
+                                                    <span class="onoffswitch-inner"></span>
+                                                    <span class="onoffswitch-switch"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="input-sec hide" *ngIf="jsonBuilderHelper.getJSONBuilt().fbComments">
+                                            <label>Facebook Post/Comments URL</label>
+                                            <input type="text" (keyup)="setFBCommentsURL()" (focusout)="setFBCommentsURL()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().fbCommentsUrl"
+                                                placeholder="https://www.facebook.com/OutgrowCo/posts/1732789986763030" class="custom-input"
+                                            />
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="web-page-sub-section-right">
+                            <div class="web-page-sub-section">
+                                <h4>GEt Code</h4>
+                                <!-- <div *ngIf="jsonBuilderHelper.isClipboardSupported">
+                                <a href="javascript:void(0);" (click)="embedSelect('code2')" class="custom-btn embed2 code2_copy ripple-dark">Copy</a>
+                                </div> -->
+                                <div class="emebed-code-part" (click)="embedSel('code2_copy')">
+                                    <pre>
+                                        <code class="code2">{{fullPageCode}}{{jsonBuilderHelper.getJSONBuilt().fbComments?fbCommentsCode:''}}</code>
+                                    </pre>
+                                </div>
+                                <div class="sub-section-footer" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                                    <a href="javascript:void(0);" (click)="embedSelect('code2')" class="custom-btn embed2 code2_copy ripple-dark btn-hover">Copy</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="full_page" class=" tab-pane" role="tabpanel">
+                    <div class="web-page-design">
+                        <div class="web-page-header">
+                            <ul class="three-dots">
+                                <li class="red"></li>
+                                <li class="yellow"></li>
+                                <li class="green"></li>
+                            </ul>
+                            <div class="url-space">
+                                <p>http://yourwebsite.com</p>
+                            </div>
+                        </div>
+                        <div class="web-page-content no-padding">
+
+                            <div class="center-part full-part">
+                                <!-- <figure>
+                                    <img src="https://cdn.filestackcontent.com/wDTNFPW9RGCePtrrd7oS" alt="https://cdn.filestackcontent.com/wDTNFPW9RGCePtrrd7oS"
+                                    />
+                                </figure> -->
+                                <iframe id="fullIframe" style="width:100%; height:100%;" [src]="(iFrameUrl) | safeUrl "></iframe>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="web-page-sub-section-full">
+                        <div class="web-page-sub-section">
+                            <h4>GEt Code</h4>
+                            <!-- <div *ngIf="jsonBuilderHelper.isClipboardSupported">
+                                <a href="javascript:void(0);" (click)="embedSelect('code1')" class="custom-btn embed2 code1_copy ripple-dark">Copy</a>
+                            </div> -->
+                            <div class="emebed-code-part" (click)="embedSel('code1_copy')">
+                                <pre>
+                                        <code class="code1">{{smallPageCode}}{{jsonBuilderHelper.getJSONBuilt().fbComments?'':''}}</code>
+                                    </pre>
+                            </div>
+                            <div class="sub-section-footer" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                                <a href="javascript:void(0);" (click)="embedSelect('code1')" class="custom-btn embed2 code1_copy ripple-dark btn-hover">Copy</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="popup" class="tab-pane" role="tabpanel">
+                    <config-launch-popup></config-launch-popup>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

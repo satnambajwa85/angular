@@ -1,0 +1,74 @@
+<div class="col-xs-10 col-sm-12 customVar-outer">
+    <div class="row">
+        <div class="col-md-12" id="webhook-heading">
+            <div class="col-md-12 col-sm-12 col-xs-12 np">
+                <h3>Custom Variables</h3>
+                <p>You can send custom data points (like campaign name etc) along with user responses to the marketing tools
+                    that you integrate with.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group customVar">
+                <div class="hidden-var-box new-thead">
+                    <div class="col-sm-4 hidden-var-inner label-border">
+                        <div class="" >
+                            <label class="control-label" for="inputName">Key</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-8 hidden-var-inner label-border">
+                        <div class="" >
+                            <label class="control-label" for="inputName">Value</label>
+                        </div>
+                    </div>
+                    <div *ngFor="let hidVal of hiddenValueArr, let i=index" class="hidden-var-boxoutput new-tbody">
+                        <div class="form-group label-floating" [class.input-edit]="editingIndex == i">
+                            <div class="col-sm-4 hidden-var-inner">
+                                <label *ngIf="editingIndex != i" class="">{{hidVal.key}}</label>
+                                <input *ngIf="editingIndex == i" class="form-control" type="text" [(ngModel)]="changedVal.key">
+                            </div>
+                            <div class="col-sm-7 hidden-var-inner">
+                                <label *ngIf="editingIndex != i" class="">{{hidVal.value}}</label>
+                                <input *ngIf="editingIndex == i" class="form-control" type="text" [(ngModel)]="changedVal.value">
+                            </div>
+                            <div class="col-sm-1 hidden-var-inner icon-wrap">
+                                <a href="javascript:void(0);" *ngIf="editingIndex == i" title="Save" (click)="editValue($event,i)"><i class="material-icons icon-save">done</i> </a>
+                                <a href="javascript:void(0);" *ngIf="editingIndex != i" title="Edit" (click)="saveOld($event,i)" class="icon-edit"><i class="material-icons">mode_edit</i></a>
+                                <a href="javascript:void(0);" title="Delete" (click)="deleteValue(i)" class="icon-dlt"><i class="material-icons">close</i></a>
+                            </div>
+                            <p *ngIf="hidValEditErrShow && editingIndex == i" class="editor-alert-danger hide-value"><i class="material-icons">report_problem</i>{{hidValErrMsg}}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 np box-input-outer" *ngIf="(addingNew && hiddenValueArr.length<10) || hiddenValueArr.length==0">
+                        <div class="col-sm-4 hidden-var-inner box-input">
+                            <div class="form-group label-floating" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().name==''" [class.is-focused]="isFocused==='name'">
+                                <input class="form-control" type="text" [(ngModel)]="hiddenVal.key" placeholder="Enter key">
+                            </div>
+                        </div>
+                        <div class="col-sm-4 hidden-var-inner box-input">
+                            <div class="form-group label-floating" [class.is-empty]="jsonBuilderHelper.getJSONBuilt().name==''" [class.is-focused]="isFocused==='name'">
+                                <input class="form-control" type="text" [(ngModel)]="hiddenVal.value" placeholder="Enter value">
+                            </div>
+                        </div>
+                        <div class="col-sm-1 hidden-var-inner">
+                            <a href="javascript:void(0);" title="Save" (click)="addValue()">
+                                <i class="material-icons icon-save">done</i>
+                            </a>
+                        </div>
+                        <div class="col-sm-1 hidden-var-inner" *ngIf="hiddenValueArr.length<10 && addingNew">
+                            <a href="javascript:void(0);" title="Cancel" (click)="hideInputFields()">
+                                <i class="material-icons icon-close">close</i>
+                            </a>
+                        </div>
+                        <p *ngIf="hidValErrShow" class="editor-alert-danger hide-value"><i class="material-icons">report_problem</i>{{hidValErrMsg}}</p>
+                    </div>
+                    <a class="add-row" href="javascript:void(0);" title="Add" *ngIf="(!addingNew && hiddenValueArr.length<10) && hiddenValueArr.length!=0" (click)="addingNew = !addingNew">
+                        <i class="material-icons icon-add">add_circle_outline</i> 
+                        <span>Add</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

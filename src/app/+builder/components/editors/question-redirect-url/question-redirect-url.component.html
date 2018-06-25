@@ -1,0 +1,33 @@
+<div class="type-details no-line bottom-space0" *ngIf="jsonBuilderHelper.isItLastQuestion(control)">
+  <i class="material-icons"></i>
+  <span class="form-label mb0">Allow URL Redirect on Submit</span>
+  <div class="switch">
+    <label>
+      <!-- <input class="show-check" type="checkbox" (click)="toggleCTA($event); _editorService.scrollToTop();" [checked]="editorControl.click_button.visible || editorControl.cta_shares.visible || editorControl.cta_likes.visible"> -->
+      <input class="show-check" type="checkbox" (click)="jsonBuilderHelper.redirectStausChnage()" [checked]="jsonBuilderHelper.getJSONBuilt().question_redirect_status"
+      />
+      <span class="lever"></span>
+    </label>
+  </div>
+  <div class="col-xs-12 np" *ngIf="jsonBuilderHelper.getJSONBuilt().question_redirect_status">
+      <div class="col-xs-12 np share">
+        <div class="col-md-12 col-xs-12 no-padding full-check-value mt5" style="margin-bottom: 8px;">
+          <label class="check-value">
+            <i class="material-icons lock-icon bookmark-icon" *ngIf="!_featureAuthService.features.custom_branding.edit_cta_text">lock_outline</i>URL
+          </label>
+          <input type="text" class="form-text value-text" [readonly]="!_featureAuthService.features.custom_branding.edit_cta_text"
+            placeholder="http://" (focusout)="jsonBuilderHelper.checkUrl(jsonBuilderHelper.getJSONBuilt().question_redirect_url)"
+            [(ngModel)]="jsonBuilderHelper.getJSONBuilt().question_redirect_url" (click)="_editorService.ctaCheck(isCtaAccessible); _editorService.ctaFeatureCheck()"
+          />
+        </div>
+        <div>
+          <div class="custom-switch">
+            <label class="check check-mandatory form-label">
+              <input id="check_k11" type="checkbox" [checked]="jsonBuilderHelper.getJSONBuilt().question_redirect_new_tab" (change)="jsonBuilderHelper.setUrlTab()">
+              <label for="check_k11"> </label> Open url in new tab
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

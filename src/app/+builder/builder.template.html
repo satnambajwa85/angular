@@ -1,0 +1,930 @@
+<!-- JUGAAD -->
+<signup-before-demo-builder *ngIf="demoBuilder" (isSignupDone)="isSignupDone($event)"></signup-before-demo-builder>
+<ng-container *ngIf="allowUse && !demoBuilder">
+  <input style="left:-9999999px;width:0px" id="wysiwyg-blur-button" />
+
+  <div class="preloader john" [class.hide]="jsonBuilderHelper.getJSONBuilt() && !turningOffFeature && !startloader">
+    <div class="status">&nbsp;</div>
+  </div>
+  <!--congratulations on publishing animation-->
+  <div class="pyro" *ngIf="showCongoMessage">
+
+    
+    <div class="before hide"></div>
+    <div class="after hide"></div>
+  </div>
+  <div *ngIf="jsonBuilderHelper.getJSONBuilt()">
+    <!-- Editor header start-->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <!-- <div class="hello-bar-outer"></div> -->
+      <div class="hello-bar-demo" *ngIf="_builderService.isDemo && !online">
+        <div class="col-md-12 np">
+          <a href="javascript:void(0);" class="back-text-p" (click)="goBack()">
+            <img src="https://cdn.filestackcontent.com/kz3qDzUjQt3CaXDelJQd" class="back-link">
+            <div class="back-text">Back</div>
+          </a>
+          <span>Boost your marketing with highly converting
+            <b>calculators</b> and viral
+            <b>quizzes</b>.</span>
+          <a class="st-btn" [routerLink]="['/signup']">
+            Start Free Trial &nbsp;
+            <i class="material-icons">trending_flat</i>
+          </a>
+        </div>
+      </div>
+      <!-- <div class="hello-bar-demo" *ngIf="!online">
+      <div class="col-md-12 np">
+          <span>Looks Like you lost <b> Internet Connection </b>. Please <b>reload</b> this page when connectivity resume.</span>
+      </div>
+  </div> -->
+
+      <!--Old static hellobars-->
+      <!--<div class="hello-bar-outer" *ngIf="subscription_status != 'in_trial' && (planId && planId?.indexOf('jv') === -1 && planId?.split('_')[1] == 'm') ">-->
+      <!--<div class="col-md-12 np">-->
+      <!--<span>Switch to an annual plan & save upto &nbsp;-->
+      <!--<label *ngIf="planId.split('_')[0] === 'business'">$1440</label>-->
+      <!--<label *ngIf="planId.split('_')[0] === 'essentials'">$240</label>-->
+      <!--<label *ngIf="planId.split('_')[0] === 'freelancer'">$240</label>&nbsp; per year.-->
+      <!--<a href="javascript:void(0);" (click)="callPopup(planId)" class="appupgrade get-p-code">-->
+      <!--Switch Plan-->
+      <!--</a>-->
+      <!--</span>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--<div class="hello-bar-outer" *ngIf="subscription_status =='in_trial'">-->
+      <!--<div class="col-md-12 np">-->
+      <!--<span>-->
+      <!--Get&nbsp;-->
+      <!--<b>20% off</b>&nbsp;on all plans if you upgrade before your trial expires on&nbsp;-->
+      <!--<b>{{countdownPromoService?.subscription?.trial_end}}</b>.-->
+      <!--<span *ngIf="!(countdownPromoService.countDownPromo?.cdDays > 0)">&nbsp;Deal expires in </span>-->
+      <!--&lt;!&ndash; <span *ngIf="countdownPromoService.countDownPromo?.cdDays > 0"> &nbsp; <b>{{countdownPromoService.countDownPromo?.cdDays}}</b>&nbsp;days </span> &ndash;&gt;-->
+      <!--<div class="timer-outer-w" *ngIf="!(countdownPromoService.countDownPromo?.cdDays > 0)">-->
+      <!--<span *ngIf="countdownPromoService.countDownPromo?.cdHour > 0">&nbsp;-->
+      <!--<b>{{countdownPromoService.countDownPromo?.cdHour}}</b>&nbsp;hrs </span>-->
+      <!--<span *ngIf="countdownPromoService.countDownPromo?.cdMinute > 0">&nbsp;-->
+      <!--<b>{{countdownPromoService.countDownPromo?.cdMinute}}</b>&nbsp;mins</span>-->
+      <!--<span *ngIf="countdownPromoService.countDownPromo?.cdSecond > 0">&nbsp;-->
+      <!--<b>{{countdownPromoService.countDownPromo?.cdSecond}}</b>&nbsp;secs</span>-->
+
+      <!--</div>-->
+
+
+      <!--&lt;!&ndash;<span *ngIf="showPromoCodeBuilder"> &nbsp;Promo Code: UPGRADE20%</span>&ndash;&gt;-->
+      <!--<a href="javascript:void(0);" (click)="callPopup('essentials_m')" class="appupgrade get-p-code">-->
+      <!--Upgrade Now-->
+      <!--</a>-->
+
+      <!--&lt;!&ndash;<a *ngIf="!showPromoCodeBuilder" href="javascript:void(0);"&ndash;&gt;-->
+      <!--&lt;!&ndash;(click)="showPromoCodeBuilder=!showPromoCodeBuilder" class="appupgrade get-p-code">&ndash;&gt;-->
+      <!--&lt;!&ndash;Get Promo Code&ndash;&gt;-->
+      <!--&lt;!&ndash;</a>&ndash;&gt;-->
+      <!--</span>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--<div class="cookies-header" *ngIf="helloBar.flag && planId === 'business_m'">-->
+      <!--<div class="col-md-12 np">-->
+      <!--<i class="material-icons">settings</i>-->
+      <!--<span [innerHTML]="helloBar.message"></span>-->
+      <!--<a href="javascript:void(0);" class="appupgrade" (click)="ccpopop()"> Upgrade to essentials</a>-->
+      <!--<a href="javascript:void(0);" class="appupgrade" (click)="routeSetting()"> View Plan Details</a>-->
+      <!--</div>-->
+      <!--</div>-->
+      <!--Old static hellobars-->
+
+
+
+      <div class="cookies-header" *ngIf="subDomainService?.currentCompany?.parent_company === null && hellobarMessage">
+        <div class="col-md-12 np">
+          <span>{{hellobarMessage.message}}&nbsp;
+            <ng-container *ngIf="hellobarMessage.ticker == 'on_trial_end'">
+              <b>{{countdownPromoService?.subscription?.trial_end}}</b>.
+              <span *ngIf="!(countdownPromoService.countDownPromo?.cdDays > 0)">&nbsp; Deal expires in </span>
+              <div class="timer-outer-w" *ngIf="!(countdownPromoService.countDownPromo?.cdDays > 0)">
+                <span *ngIf="countdownPromoService.countDownPromo?.cdHour > 0">&nbsp;
+                  <b>{{countdownPromoService.countDownPromo?.cdHour}}</b>&nbsp;hrs </span>
+                <span *ngIf="countdownPromoService.countDownPromo?.cdMinute > 0">&nbsp;
+                  <b>{{countdownPromoService.countDownPromo?.cdMinute}}</b>&nbsp;mins</span>
+                <span *ngIf="countdownPromoService.countDownPromo?.cdSecond > 0">&nbsp;
+                  <b>{{countdownPromoService.countDownPromo?.cdSecond}}</b>&nbsp;secs</span>
+              </div>
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.ticker == 'ticker'">
+              {{hellobarMessage.ticker_date}}
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.ticker == 'cancellation_date'">
+              <strong>{{currentSubscription?.current_term_end}}</strong>
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.cta.ctaLink == 'pricing'">
+              <a [routerLink]="['/settings/membership']" (click)="hellobarCTAclicked(hellobarMessage.id)" class="appupgrade get-p-code"
+                *ngIf="hellobarMessage.cta.ctaText">
+                {{hellobarMessage.cta.ctaText}}
+              </a>
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.cta.ctaLink == 'intercom'">
+              <a href="javascript:void(0)" (click)="hellobarCTAclicked(hellobarMessage.id)" class="appupgrade get-p-code intercom_trigger"
+                *ngIf="hellobarMessage.cta.ctaText">
+                {{hellobarMessage.cta.ctaText}}
+              </a>
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.cta.ctaLink == 'upgrade'">
+              <a href="javascript:void(0)" (click)="callPopups(hellobarMessage.cta.plan);hellobarCTAclicked(hellobarMessage.id)" class="appupgrade get-p-code"
+                *ngIf="hellobarMessage.cta.ctaText">
+                {{hellobarMessage.cta.ctaText}}
+              </a>
+            </ng-container>
+            <ng-container *ngIf="hellobarMessage.cta.ctaLink == 'remove_cancellation'">
+              <a href="javascript:void(0)" (click)="removeCancellation(currentSubscription.id);hellobarCTAclicked(hellobarMessage.id)"
+                class="appupgrade get-p-code" *ngIf="hellobarMessage.cta.ctaText">
+                {{hellobarMessage.cta.ctaText}}
+              </a>
+            </ng-container>
+          </span>
+        </div>
+      </div>
+
+      <div class="tests">
+        <div class="mobile-top-menu">
+          <div class="topbar-left">
+            <div class="editor-navheader" [class.header-added]="helloBar.flag">
+              <!-- <a href="" [routerLink]="['/dashboard']" class="navbar-brand " (click)="callGA('LOGO')" [class.comp-builder-logo]="logoCompany.includes(subDomainService?.subDomain?.sub_domain) || smartchoicestool == subDomainService?.subDomain?.sub_domain"> -->
+              <a href="" [routerLink]="['/dashboard']" class="navbar-brand " (click)="callGA('LOGO')" [class.company-logoOuter1]="subDomainService.builderLogo">
+                <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+                <!-- <svg *ngIf="!logoCompany.includes(subDomainService?.subDomain?.sub_domain) && smartchoicestool != subDomainService?.subDomain?.sub_domain" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" -->
+                <svg *ngIf="!subDomainService.builderLogo" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px" y="0px" viewBox="0 0 340 333" enable-background="new 0 0 340 333" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;    height: 110px;top: -70px;position: absolute;left: -5px;">
+                  <path class="path" fill="#FFFFFF" stroke="#FB6066" stroke-width="9" stroke-miterlimit="10" d="M151.153,235.063C128.156,238.427 111.107,258.151 111.107,281.393C111.107,307.236 132.087,328.216 157.93,328.216C183.772,328.216 204.752,307.236 204.752,281.393C204.752,272.191 202.041,263.193 196.957,255.523L176.874,275.698L151.724,275.698L136.55,290.872"
+                  />
+                </svg>
+                <img *ngIf="subDomainService.company_custom_features && subDomainService.builderLogo" [src]="subDomainService.builderLogo"
+                />
+                <!--<img src="assets/images/headerLogo.png" *ngIf="!logoCompany.includes(subDomainService?.subDomain?.sub_domain) && smartchoicestool != subDomainService?.subDomain?.sub_domain" />-->
+                <!-- <img src="https://s3.amazonaws.com/outgrow-assets/small-c-logo-.png" *ngIf="logoCompany.includes(subDomainService?.subDomain?.sub_domain)"/>
+                <img src="https://s3.amazonaws.com/outgrow-assets/small-c-logo-new.png" *ngIf="smartchoicestool == subDomainService?.subDomain?.sub_domain"/> -->
+              </a>
+
+              <!-- <a href="https://outgrow.co/" class="logo-text" style="margin-top: 11px;" *ngIf="logoCompany.includes(subDomainService?.subDomain?.sub_domain)  || smartchoicestool == subDomainService?.subDomain?.sub_domain">Powered by Outgrow</a> -->
+              <!-- <a href="https://outgrow.co/" class="logo-text" style="margin-top: 11px;" *ngIf="subDomainService.builderLogo">powered by outgrow</a> -->
+              <a href="" [routerLink]="['/dashboard']" class="mobile-navbar-brand" (click)="callGA('LOGO')">
+                <img src="assets/images/mobileLogo.png" *ngIf="!logoCompany.includes(subDomainService?.subDomain?.sub_domain) && smartchoicestool != subDomainService?.subDomain?.sub_domain"
+                />
+                <img src="https://s3.amazonaws.com/outgrow-assets/mobileLog-cf.png" *ngIf="logoCompany.includes(subDomainService?.subDomain?.sub_domain)"
+                />
+                <img src="https://s3.amazonaws.com/outgrow-assets/mobileLogo-sc.png" *ngIf="smartchoicestool == subDomainService?.subDomain?.sub_domain"
+                />
+              </a>
+              <!-- <a href="javascript:void(0)" *ngIf="subDomainService.company_custom_features && subDomainService.company_custom_features['extras']['company_logo']['active'] && subDomainService.company_custom_features['extras']['company_logo']['builderLogo']" 
+                class="a-close" type="button" (click)="removeLogo()"><i class="material-icons">close</i></a> -->
+            </div>
+            <input type="text" class="ed-projectname ellipsis " contenteditable="true" id="fname" (blur)="appNameblured();onCalcNameChanged();"
+              (focus)="appNameFocused()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().name" placeholder="{{companyName}}'s Calculator"
+            />
+          </div>
+          <div class="input-next-div" [class.build-process]="selectedSec=='build'" [class.builder-parent-demo]="_builderService.isDemo"
+            [class.builder-parent]="hellobarMessage" [class.process-margin]="selectedSec=='config' && (selectedConfigComponent=='email' || selectedConfigComponent=='embedded-code' || selectedConfigComponent=='integrations')">
+            <ul>
+              <li *ngIf="jsonBuilderHelper.isTempType(['Ecom'])">
+                <a href="javascript:void(0)" (click)="onSelect('product_list')" [class.active]="selectedSec=='product_list'">
+                  <i class="material-icons ">settings</i> Products</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" (click)="onSelect('build')" [class.active]="selectedSec=='build'">
+                  <i class="material-icons ">dashboard</i> Build</a>
+              </li>
+              <!--<li>
+                <i class="material-icons">keyboard_arrow_right</i>
+              </li>-->
+              <li>
+                <a href="javascript:void(0)" (click)="onSelect('config')" [class.active]="selectedSec=='config'">
+                  <i class="material-icons ">settings</i> Configure</a>
+              </li>
+              <!--<li>
+                <i class="material-icons">keyboard_arrow_right</i>
+              </li>-->
+              <li *ngIf="isAnalyticsAvailable">
+                <a (click)="onSelect('analytics')" [class.active]="selectedSec=='analytics'">
+                  <i class="material-icons ">equalizer</i>Analyze</a>
+              </li>
+              <li *ngIf="!isAnalyticsAvailable">
+                <a *ngIf="!jsonBuilderHelper.getJSONBuilt().liveApp" (click)="checkAnalytics()" [class.active]="selectedSec=='analytics'">
+                  <i class="material-icons">equalizer</i>Analyze</a>
+                <a *ngIf="jsonBuilderHelper.getJSONBuilt().liveApp" (click)="checkAnalytics()" [class.active]="selectedSec=='analytics'">
+                  <i class="material-icons">equalizer</i>Analyze</a>
+              </li>
+            </ul>
+          </div>
+          <!--<p *ngIf="!unique">This calculator Name is already taken</p>-->
+        </div>
+        <div class="mobile-menu-icon" (click)="mobileMenuClicked()">
+          <i class="material-icons">menu</i>
+        </div>
+        <div class="navbar-rightside-outer">
+          <div class="navbar-rightside">
+            <!-- <div class="drag-parent">
+  <a href="javascript:void();" class="drag" (click)="drag()"><i class="material-icons">open_with</i></a>
+  </div> -->
+            <!--<div class="zoom-parent" [hidden]="selectedSec!='build'">
+  <a href="javascript:void();" class="zoom" (click)="zoom('in')"><i class="material-icons">add</i></a>
+  <a href="javascript:void();" class="zoom" (click)="zoom('reset')"><i class="material-icons">zoom_out</i></a>
+  <a href="javascript:void();" class="zoom" (click)="zoom('out')"><i class="material-icons">remove</i></a>
+  </div>-->
+            <!--<div class="btn-group">
+            <button type="button" (click)="previewOnBuilder()" class="btn btn-basic btn-menu help-tip">
+                <span class="elem"><i class="material-icons">smartphone</i></span>
+            </button>
+            <div class="help-checktip">Mobile view</div>
+        </div>-->
+            <div class="small-btns" *ngIf="selectedSec !='product_list'"  >
+              <div class="btn-group">
+                <div class="save_icon hide">
+                  <span class="saving">all changes are saved</span>
+                  <button type="button" class="btn btn-basic btn-menu help-tip green-bg">
+                    <!--<span class="elem save-circle">
+                        <i class="material-icons green-color">check</i>
+                        </span>-->
+                    <div class="icon icon--order-success svg">
+                      <svg width="25" height="25" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                          <g stroke="#2ebf27" id="svg_1" stroke-width="2" fill="none">
+                            <circle stroke="null" id="svg_2" stroke-dasharray="220px, 220px" r="11.3125" cy="12.437499" cx="12.4375"></circle>
+                            <path stroke="null" id="svg_3" stroke-dasharray="50px, 50px" d="m6.19785,14.083626l3.733125,3.501437l8.858222,-9.713824"></path>
+                          </g>
+                        </g>
+                      </svg>
+                    </div>
+                    <!--<div class="help-checktip">{{_builderService.saveStatus}}</div>-->
+                  </button>
+
+                </div>
+                <!-- <div class="help-checktip">(since {{activeSince}})</div> -->
+              </div>
+              <!-- reedo undo button -->
+              <!--<div class="btn-group" [ngClass]="{'disable': undo_stack.length<2}">
+              <div class="help-tip sidebar-helptip">
+                <a class="btn btn-basic btn-menu cpy_link" href="javascript:void(0);" type="button" (click)="undoFunction();">
+                  <i class="material-icons">redo</i>
+                </a>
+                <div class="help-checktip">Undo</div>
+              </div>
+            </div>
+
+            <div class="btn-group" [ngClass]="{'disable': redo_stack.length<1}">
+              <div class="help-tip sidebar-helptip">
+                <a class="btn btn-basic btn-menu cpy_link" href="javascript:void(0);" type="button" (click)="redoFunction();">
+                  <i class="material-icons">undo</i>
+                </a>
+                <div class="help-checktip">Redo</div>
+              </div>
+            </div>-->
+              <div class="btn-group">
+                <div class="help-tip sidebar-helptip">
+                  <a class="btn btn-basic btn-menu cpy_link live-url2" href="javascript:void(0);" type="button" (click)="copyButton();">
+                    <i class="material-icons">library_books</i>
+                  </a>
+                  <div class="help-checktip cpy-helptip" *ngIf="jsonBuilderHelper.isClipboardSupported">Copy live {{getLockText()}}'s URL to Clipboard</div>
+                  <div class="help-checktip cpy-helptip" *ngIf="!jsonBuilderHelper.isClipboardSupported">{{getLiveUrl()}}</div>
+                </div>
+              </div>
+            </div>
+            <!--<div class="large-btns">
+              <div class="help-tip sidebar-helptip">
+                <a type="button" href="javascript:void(0);" class="btn btn-basic btn-menu cpy_link" (click)="onPreview();callGA('PREVIEW')">
+                  
+                  <i class="material-icons">visibility</i>
+                </a>
+                <div class="help-checktip" *ngIf="jsonBuilderHelper.isClipboardSupported">Preview {{getLockText()}}</div>
+              </div>
+            </div>-->
+            <div class="large-btns" *ngIf="selectedSec !='product_list'" >
+              <div class="help-tip sidebar-helptip">
+                <a type="button" href="javascript:void(0);" class="btn btn-basic btn-menu cpy_link" (click)="onPreview();callGA('PREVIEW')">
+                  <!--PREVIEW-->
+                  <i class="material-icons">visibility</i>
+                </a>
+                <div class="help-checktip" *ngIf="jsonBuilderHelper.isClipboardSupported">Preview {{getLockText()}}</div>
+              </div>
+
+              <div class="dropdown preview-dropdown">
+                <button type="button" *ngIf="!beingPublished" class="btn btn-basic my-custom-dropdown" (click)="showDropdown = !showDropdown">
+                  {{(jsonBuilderHelper.getJSONBuilt().mode == 'PUBLIC')?((!jsonBuilderHelper.getJSONBuilt().changed && jsonBuilderHelper.getJSONBuilt().liveApp)?'LIVE':'PUBLISH'):'GO
+                  LIVE'}}
+                  <span class="caret1">
+                    <i class="material-icons">keyboard_arrow_down</i>
+                  </span>
+                </button>
+                <button type="button" *ngIf="beingPublished" class="btn btn-basic loading pd10" (click)="showDropdown = !showDropdown">
+                </button>
+                <div class="dropdown-menu cust-builder-dropdown">
+                  <!-- <div class="custom-builder-dropdown-head">
+                    <h6>Choose publish destination</h6>
+                </div> -->
+                  <div class="custom-builder-dropdown-body">
+                    <ul>
+                      <li class="selected-default">
+                        <input type="checkbox" name="my-check" id="my-check" checked="checked" />
+                        <label for="my-check">
+                          <span>{{publishUrl + jsonBuilderHelper.getJSONBuilt().url}}</span>
+                        </label>
+                        <p>
+                          <a href="javascript:void(0)" *ngIf="!jsonBuilderHelper.getJSONBuilt().liveApp">Not Published</a>
+                        </p>
+                      </li>
+                      <!-- <li [class.selected-default]="isCNameAccess && subDomainService.currentCompany?.cname?.url"> -->
+                      <li>
+                        <div [class.selected-default]="isCNameAccess && subDomainService.currentCompany?.cname?.url">
+                          <input type="checkbox" name="my-check" id="my-check1" [disabled]="!isCNameAccess || !subDomainService.currentCompany?.cname?.url"
+                            [checked]="isCNameAccess && subDomainService.currentCompany?.cname?.url" (click)="checkCnameAccess()"
+                          />
+                          <label for="my-check1" (click)="checkCnameAccess()">
+                            <i class="material-icons lock-icon" *ngIf="!isCNameAccess">lock_outline</i>
+                            Custom Domain
+                          </label>
+                        </div>
+                        <p class="cust-url" *ngIf="isCNameAccess && subDomainService.currentCompany?.cname?.url">
+                          <span>{{subDomainService.currentCompany?.cname?.url}}</span>
+                        </p>
+                        <p *ngIf="isCNameAccess">
+                          <a href="javascript:void(0)" (click)="redirectToCname('/settings/custom-domain')">Click Here</a>
+                          to {{!subDomainService.currentCompany?.cname?.url? 'add a': 'edit'}} custom domain
+                        </p>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="custom-builder-dropdown-footer">
+                    <!-- <button class="btn btn-basic loading" >Publish to Selected Domain</button> -->
+                    <button class="btn btn-basic loading" *ngIf="beingPublished" disabled>Publishing</button>
+                    <button id="live-btn" type="button" class="btn btn-basic" *ngIf="!beingPublished" (click)="onPublish($event);callGA('GOLIVE')"
+                      [disabled]="(!jsonBuilderHelper.getJSONBuilt().changed && jsonBuilderHelper.getJSONBuilt().liveApp) || _builderService.isDemo">
+                      {{(jsonBuilderHelper.getJSONBuilt().mode == 'PUBLIC')?((!jsonBuilderHelper.getJSONBuilt().changed && jsonBuilderHelper.getJSONBuilt().liveApp)?'LIVE':'Publish
+                      to Selected Domain'):'GO LIVE'}}
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="vertical-line" *ngIf="selectedSec !='product_list'" ></div>
+
+            <div class="btn-group navbar-leftside">
+              <div class="col-xs-12 no-padding navbar-inner">
+                <div class="btn-group help-options new-drop new-help-luk" (mouseenter)='addOpen()' (mouseleave)='removeOpen()'>
+                  <a target="_blank" class="support_outer learn-circle">
+                    <!--<i class="material-icons support_icon dropdown-link">import_contacts</i>-->
+                    <span class="help-img">&nbsp;</span>
+                    <!--<i class="material-icons dropdown-link">keyboard_arrow_down</i>-->
+                  </a>
+                  <div class="dd-outer">
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a class="hvr-sweep-to-right" href="http://support.outgrow.co" target="_blank">
+                        <i class="material-icons dropdown-icons">headset_mic</i>
+                        <span class="dropdown-text">Support</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="hvr-sweep-to-right" href="javascript:void(0);" (click)="videoModal()">
+                        <i class="material-icons dropdown-icons">videocam</i>
+                        <span class="dropdown-text">Help Videos</span>
+                      </a>
+                    </li>
+                  </ul>
+                  </div>
+                </div>
+                <!-- Start: header name-dropdown -->
+                <sd-toolbar [page]="'builder'" (notify)="helloBarNotify($event)"></sd-toolbar>
+                <!-- End: header name-dropdown -->
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div [class.header-added]="helloBar.flag">
+      <!-- Editor header end-->
+      <div class="process-bar" [class.propertiesHidden]="propertiesHidden" [class.processBarHide]="selectedSec!=='build'" [class.build-process]="selectedSec=='build'"
+        [class.builder-parent-demo]="_builderService.isDemo" [class.builder-parent]="hellobarMessage" [class.process-margin]="selectedSec=='config' && (selectedConfigComponent=='email' || selectedConfigComponent=='embedded-code' || selectedConfigComponent=='integrations')">
+        <ul>
+          <li [ngClass]="{'disable': _redoUndoService.undo_stack.length<2}">
+            <div class="help-tip sidebar-helptip pull-left">
+              <a href="javascript:void(0);" type="button" (click)="_redoUndoService.undoFunction();">
+                <i class="material-icons ">undo</i>
+              </a>
+              <div class="help-checktip-small ">Undo</div>
+            </div>
+          </li>
+          <li [ngClass]="{'disable': _redoUndoService.redo_stack.length<1}">
+            <div class="help-tip sidebar-helptip pull-left">
+              <a href="javascript:void(0)" type="button" (click)="_redoUndoService.redoFunction();">
+                <i class="material-icons ">redo</i>
+              </a>
+              <div class="help-checktip-small ">Redo</div>
+            </div>
+          </li>
+          <li>
+            <div class="help-tip sidebar-helptip pull-left">
+              <a class=" btn-menu-mw help-tip" [class.active]="!isMobileView" type="button" (click)="previewOnWeb()">
+                <i class="material-icons">desktop_windows</i>
+              </a>
+              <div class="help-checktip-small ">Web view</div>
+            </div>
+          </li>
+          <li>
+            <div class="help-tip sidebar-helptip pull-left">
+              <a class="btn-menu-mw help-tip" [class.active]="isMobileView" type="button" (click)="previewOnMobile()">
+                <i class="material-icons">smartphone</i>
+              </a>
+              <div class="help-checktip-small ">Mobile view</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <!-- Editor Left sidebar start -->{{selectedSec}} product_list
+      <div class="editor-sidebar sidebar" *ngIf="jsonBuilderHelper.getJSONBuilt()" [class.ecom-hide-left]="selectedSec=='product_list'"
+        [class.builder-parent-demo]="_builderService.isDemo" [class.builder-parent]="hellobarMessage" [class.build-bg]="selectedSec=='build'">
+
+        <component-manager *ngIf="jsonBuilderHelper.getJSONBuilt()" [hidden]="selectedSec!='build'"></component-manager>
+        <component-manager-config (selection)="selectedConfigComponent = $event" [hidden]="selectedSec!='config'" [selected]="selectedConfigComponent"></component-manager-config>
+        <calc-analytics-manager *ngIf="selectedSec=='analytics'" [hidden]="selectedSec!='analytics'" [selectedAnalyticComponent]="selectedAnalyticComponent"
+          (selection)="selectedAnalyticComponent = $event"></calc-analytics-manager>
+        <div class="mobile-menucross-icon" (click)="mobileMenuCrossClicked()">
+          <i class="material-icons">close</i>
+        </div>
+      </div>
+      <!-- Editor Left sidebar end -->
+      <!-- Editor Right Template section strat -->
+      <div class="editor-template-tabs" [class.ecom-overflow]="ecomOverFlow" [class.ecom-outer]="selectedSec=='product_list'" [class.builder-parent-demo]="_builderService.isDemo"
+        [class.builder-parent1]="hellobarMessage" [class.minH]="selectedSec!='build' && selectedSec!='product_list'">
+        <div id="build">
+
+          <!--Ecom products section  -->
+          <ecom *ngIf="selectedSec=='product_list'" (EcomProductSelectMultiple)="ecomOverFlow = $event" (OpenBuilder)="onSelect($event)" >
+          </ecom>
+          <!-- End: ecom products section  -->
+
+          <!-- config section  -->
+          <div class="template-section scrollbar og-loader" [class.builder-parent-demo]="_builderService.isDemo" [class.builder-parent]="hellobarMessage"
+            [hidden]="selectedSec!='build'" (dblclick)="toggleProperties()">
+            <div class="quote-banner" *ngIf="showBanner">
+              <span class="cross" (click)="showBanner = false">
+                <i class="material-icons">add_circle</i>
+              </span>
+
+              <div class="left-part">
+                <h5>Too busy to create an interactive content piece yourself?</h5>
+                <h3>Let us create a professional one for you.</h3>
+              </div>
+              <div class="right-part">
+                <button (click)="openIntercom()" class="quote-btn btn">Get a Quote</button>
+                <p>Prices start at $250</p>
+              </div>
+
+            </div>
+            <Temp-dev class="template-container" [class.template-seven]="jsonBuilderHelper.getJSONBuilt().template === 'template-seven'"
+              [class.mobile]="isMobileView" [class.template-container-hellobar]="subscription_status=='in_trial'  || subscription_status!='in_trial' && planId.split('_')[1] == 'm'"
+              id="builder-template-container"></Temp-dev>
+          </div>
+          <!--End: builder section -->
+
+          <!-- config section  -->
+          <config *ngIf="selectedSec=='config'" [component]="selectedConfigComponent">
+          </config>
+          <!-- End: config section  -->
+
+          <!-- Analytics section  -->
+          <div class="pt-30" [class.builder-parent]="hellobarMessage" [hidden]="selectedSec!='analytics'">
+            <calc-analytics *ngIf="selectedSec=='analytics'" [component]="selectedAnalyticComponent" [calc]="jsonBuilderHelper.getJSONBuilt()">
+            </calc-analytics>
+          </div>
+          <!-- End: Analytics section  -->
+        </div>
+      </div>
+      <!-- Editor Right Template section end  -->
+      <!--Right Sidebar layout start -->
+
+      <div id="sidebar" class="sidebar-offcanvas affix" [class.builder-parent-demo]="_builderService.isDemo" [class.builder-parent]="hellobarMessage"
+        *ngIf="jsonBuilderHelper.getSelectedPage()" [hidden]="selectedSec!='build'">
+        <!-- <div class="properties-window" *ngIf="(jsonBuilderHelper.getSelectedControl() || jsonBuilderHelper.getSelectedPage()) && jsonBuilderHelper.getSelectedPage().visible ">
+<i class="material-icons">tab</i>
+<span class="properties-tag">PROPERTIES</span>
+</div> -->
+        <div class="sidebar-offcanvas-right" *ngIf="jsonBuilderHelper.getSelectedPage()" [hidden]="selectedSec!='build'">
+
+          <!--<div class="preview-btn-outer" id="builder-preview-btn-outer" [class.preview-btn-outer-hellobar]="subscription_status=='in_trial'  || subscription_status!='in_trial' && planId.split('_')[1] == 'm'">
+            <div class="help-tip sidebar-helptip pull-left">
+              <a class=" btn-menu-mw help-tip" [class.active]="!isMobileView" type="button" (click)="previewOnWeb()">
+                <i class="material-icons">desktop_windows</i>
+              </a>
+              <div class="help-checktip-small ">Web view</div>
+            </div>
+            <div class="border-bar"></div>
+            <div class="help-tip sidebar-helptip pull-left">
+              <a class="btn-menu-mw help-tip" [class.active]="isMobileView" type="button" (click)="previewOnMobile()">
+                <i class="material-icons">smartphone</i>
+              </a>
+              <div class="help-checktip-small ">Mobile view</div>
+            </div>
+
+          </div>-->
+          <ul>
+            <li (click)="openProperties()">
+              <div class="help-tip sidebar-helptip">
+                <a [class.active]="jsonBuilderHelper.getSelectedControl()?.type !== 'leadform' && jsonBuilderHelper.getSelectedModel() !=='Global_Settings' && (jsonBuilderHelper.getSelectedModel() === 'Control' || jsonBuilderHelper.getSelectedModel() === 'Outcome_Settings' || jsonBuilderHelper.getSelectedModel() === 'Page' || (jsonBuilderHelper.componentManager('section') && jsonBuilderHelper.getSelectedModel() === 'Section' && jsonBuilderHelper.getSelectedSection().type !=='LeadForm' && jsonBuilderHelper.getSelectedSection().type !=='LeadFormQ' && jsonBuilderHelper.getSelectedSection().type !=='Content Area'))"
+                  (click)="selectPage()" href="javascript:void(0)">
+                  <i class="material-icons">dashboard</i>
+                </a>
+                <div class="help-checktip">Edit Page Properties</div>
+              </div>
+            </li>
+            <li (click)="openProperties()">
+              <div class="help-tip sidebar-helptip" [ngClass]="{'disable': ['experian'].indexOf(this.jsonBuilderHelper.getJSONBuilt().template) >= 0 && !this.jsonBuilderHelper.getJSONBuilt().pages[0].visible}">
+                <a [class.active]="(jsonBuilderHelper.getSelectedModel() === 'Section' && (jsonBuilderHelper.getSelectedSection()?.type === 'LeadFormQ' || jsonBuilderHelper.getSelectedSection()?.type === 'Content Area' || jsonBuilderHelper.getSelectedSection()?.type === 'LeadForm')) || (jsonBuilderHelper.getSelectedModel() === 'Control' && jsonBuilderHelper.getSelectedControl().type === 'leadform')"
+                  href="javascript:void(0)" (click)="openLeadEditor($event)">
+                  <i class="material-icons "> person_add</i>
+                </a>
+                <div class="help-checktip">Lead Generation</div>
+              </div>
+            </li>
+            <li (click)="openProperties()">
+              <div class="help-tip sidebar-helptip">
+                <a [class.active]="jsonBuilderHelper.getSelectedModel() && jsonBuilderHelper.getSelectedModel() ==='Global_Settings'" (click)="openGlobalSettings()"
+                  href="javascript:void(0)">
+                  <i class="material-icons">edit</i>
+                </a>
+                <div class="help-checktip">Display Settings</div>
+              </div>
+            </li>
+            <li class="prop-arrow" (click)="toggleProperties()">
+              <i class="material-icons"></i>
+            </li>
+          </ul>
+        </div>
+        <!--editors -->
+        <editor *ngIf="(jsonBuilderHelper.getSelectedControl() || jsonBuilderHelper.getSelectedPage()) && selectedSec=='build'">
+        </editor>
+        <!--editors -->
+        <!--&& !((jsonBuilderHelper.getSelectedPage().type == 'Questionnaire') && (jsonBuilderHelper.getSelectedModel() == 'Page'))-->
+      </div>
+    </div>
+    <div class="mobile-prop-cross-icon" (click)="mobilePropCrossClicked()" [hidden]="selectedSec!='build'">
+      <i class="material-icons">close</i>
+    </div>
+    <div class="properties-modal-backdrop" [hidden]="selectedSec!='build'"></div>
+    <div class="sidebar-modal-backdrop"></div>
+    <!--Right Sidebar layout end -->
+    <!-- Modal -->
+    <div class="modal fade upload-bg" role="dialog" [class.TModel]="jsonBuilderHelper.getJSONBuilt().template === 'template-six'">
+      <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-12 text-center">
+              <button (click)="upload('bg',false);callGA('REPLACEBG')" data-toggle="modal" data-target=".upload-bg" type="button" class="btn btn-default modal-upload-btn">
+                <i class="material-icons">add_a_photo</i>
+                UPLOAD NEW
+              </button>
+            </div>
+            <br>
+            <div class="modal-title">or</div>
+            <br>
+            <h4 class="modal-title"> Select from our selection below.</h4>
+            <div class="col-md-12 gallery-content-center">
+              <div class="image-outer" *ngFor="let imgShow of imgContainer">
+                <a [class.hide]="!imgShow.visible" href="javascript:void(0);" (click)="applyImage(imgShow);jsonBuilderHelper.getSelectedPage().bgImage = imgShow.url; this.jsonBuilderHelper.getSelectedPage().bgColor = '';"
+                  data-toggle="modal" data-target=".upload-bg">
+                  <div class="info">
+                    <div class="info-sub">
+                      <i class="material-icons">done_all</i>
+                      <span>Use Image</span>
+                    </div>
+                  </div>
+                  <img [attr.src]="imgShow.visible?imgShow.thumbnail:''" />
+                </a>
+              </div>
+            </div>
+            <div class="col-md-12 text-center">
+              <button type="button" class="load-btn" *ngIf="isLoadMoreButton()" (click)="showNextImages();">LOAD MORE
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <formula-pop *ngIf="jsonBuilderHelper.getJSONBuilt().templateType=='Numerical'"></formula-pop>
+    <og-video-modal [templateType]="jsonBuilderHelper.getJSONBuilt().templateType"></og-video-modal>
+    <!-- <og-card-plan-modal></og-card-plan-modal> -->
+    <og-payment-modal (notify)="openModal($event)"></og-payment-modal>
+    <graph-pop *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded']) && componentService.graph.graphPop"></graph-pop>
+    <table-pop *ngIf="jsonBuilderHelper.isTempType(['Numerical','Graded']) && componentService.tableExcel.tablePop"></table-pop>
+    <!-- Logic Jump popup-->
+    <logic-jump *ngIf="jsonBuilderHelper.editors('logicJump') || jsonBuilderHelper.editors('sectionalLogicJump')"></logic-jump>
+  </div>
+
+  <!-- upgrade modal new -->
+  <!-- Modal -->
+  <div class="modal fade" id="publish-upgrade" [class.mac-compatible]="subscription_status != 'in_trial'" role="dialog" data-backdrop="static"
+    data-keyboard="false">
+    <div class="modal-dialog">
+      <canvas id="canvas" *ngIf="subscription_status === 'in_trial'"></canvas>
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-body">
+          <button type="button" class="close" (click)="closeCongoMessage()" data-dismiss="modal">
+            <i class="material-icons">close</i>
+          </button>
+          <div class="left-sec">
+            <div class="text-center live-modal">
+              <span class="icon-play-next">
+                <!--<i class="material-icons">check_circle</i>-->
+                <div class="icon icon--order-success svg">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="45px" height="45px">
+                    <g fill="none" stroke="#2ebf27" stroke-width="2">
+                      <circle cx="22" cy="22" r="21" style="stroke-dasharray:220px, 220px; stroke-dashoffset: 480px;"></circle>
+                      <path d="M10.417,24.778 l6.93,5.909 l 16.444 -16.393" style="stroke-dasharray:50px, 50px; stroke-dashoffset: 0px;"></path>
+                    </g>
+                  </svg>
+                </div>
+              </span>
+              <!--<div class="live-head">Congrats on Publishing</div>-->
+              <div class="live-head">Your {{publishPopUpText()}} Is Now LIVE</div>
+              <div class="custom-tabs-outer">
+                <ul class="nav nav-tabs">
+                  <li class="active">
+                    <a data-toggle="tab" href="#website" class="web-icon" (click)="popUpHeading='e';">
+                      <div class="tab-icons">&nbsp;</div>Your Website</a>
+                  </li>
+                  <!-- <li>
+                    <a data-toggle="tab" href="#articles" class="article-icon">
+                      <div class="tab-icons">&nbsp;</div>Instant Articles</a>
+                  </li> -->
+                  <li>
+                    <a data-toggle="tab" href="#amp" class="amp-icon hide">
+                      <div class="tab-icons">&nbsp;</div>Google AMP</a>
+                  </li>
+                  <li>
+                    <a data-toggle="tab" href="#share" class="share-icon" (click)="popUpHeading='s';">
+                      <div class="tab-icons">&nbsp;</div>Share</a>
+                  </li>
+                </ul>
+                <div class="tab-content custom-tab-content">
+                  <div class="head-top">
+                    <h3>{{popUpHeading=='s'? 'Share this public URL!' : 'Embed this code!'}}</h3>
+                    <div class="help-tip">
+                      <a class="help-link" *ngIf="popUpHeading !=='s'" href="https://support.outgrow.co/docs/embedding-basics" target="_blank">
+                        <span>?</span>
+                      </a>
+                      <div class="help-checktip live-link-help">Help</div>
+                    </div>
+                  </div>
+                  <div id="website" class="tab-pane fade in active">
+                    <div class="embed-code-outer" *ngIf="jsonBuilderHelper &&jsonBuilderHelper.getJSONBuilt()">
+                      {{fullPageCode}}{{jsonBuilderHelper.getJSONBuilt().fbComments?fbCommentsCode:''}}
+                    </div>
+                  </div>
+                  <div id="articles" class="tab-pane fade">
+                    <div class="embed-code-outer">
+                      It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+                      The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed
+                      to using 'Content here, content here', making it look like readable English.
+                    </div>
+                  </div>
+                  <div id="amp" class="tab-pane fade">
+                    <div class="embed-code-outer">
+                      It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout
+                    </div>
+                  </div>
+                  <div id="share" class="tab-pane fade">
+                    <div class="embed-code-outer">
+                      <div class="live-url url-style">{{srcUrl}}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="">
+                <div class="live-subhead link-style hide">
+                  <div class="col-sm-9 cpy-txt">
+                    <span class="share-head">
+                      Share this URL :
+                    </span>
+                  </div>
+                  <div class="col-sm-3 cpy-btn preview_copy" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                    <a href="javascript:void(0)" class="live-url live-url1" (click)="previwCopy()">Copy Link</a>
+                  </div>
+                </div>
+                <div class="live-subhead selected-link hide">
+                  <div class="live-url url-style">{{srcUrl}}</div>
+                </div>
+                <div class="promo-tip hide">
+                  <div class="red-bar">
+                    <i class="material-icons">lightbulb_outline</i>
+                  </div>
+                  <span>
+                    TIP: Use our promotional checklist to maximize traffic to your Calculator/Quiz.
+                    <a href="javascript:void(0);" id="promo-link" class="text-red" data-dismiss="modal">Go to Promotion Checklist</a>
+                  </span>
+                </div>
+                <!--<div class="col-xs-12 np text-center cpy-btn">
+                  <a class="btn-done" (click)="closeCongoMessage()" data-dismiss="modal">Done</a>
+                </div>-->
+                <div class="col-sm-3 preview_copy copy-btn-new" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                  <div class="col-xs-9 np help-outer">
+                    <div *ngIf="popUpHeading != 's'">Need more options?
+                    <a href="javascript:void(0);" (click)="redirectToConfig()">Click here</a>
+                    </div>
+                  </div>
+                  <div class="copy-new col-xs-3 np" [class.share-space]="popUpHeading == 's'" >
+                    <a href="javascript:void(0)" class="live-url live-url1" (click)="copyUrl()">Copy</a>
+                  </div>
+                </div>
+                <div class="promo-link">
+                  <a href="javascript:void(0);" id="promo-link" class="text-red" data-dismiss="modal">Go to Promotion Checklist</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right-sec" *ngIf="this.subscription_status === 'in_trial'">
+            <div class="right-sec-inner">
+              <div class="icon-block hide">
+                <!--<i class="material-icons rotate-45">monetization_on</i>-->
+                <img src="https://cdn.filestackcontent.com/x5HM9PumQGO4duZvDRd7" alt="clock">
+              </div>
+              <div class="referal-heading">REFER FRIENDS
+                <br>AND GET $45 CREDIT!</div>
+            </div>
+            <div class="referal-img"></div>
+            <div class="dis-text">
+              <h1 class="hide">Get 20% OFF </h1>
+              <span>
+                <!--On All Annual Plans Upgrade Before-->
+                Give Your Friends One Free Month Of Essentials Plan (Priced At $115/Month)*. You Get $45 Credit When They Use Your Link At
+                Outgrow
+              </span>
+              <h1 class="hide">{{countdownPromoService?.subscription?.trial_end}}</h1>
+            </div>
+            <div class="btn-outer">
+              <a href="javascript:void(0)" class="btn-up" (click)="viewReferal()">View Referal Code</a>
+              <p class="promo-code hide">
+                <span>Promo Code:</span>UPGRADE20%</p>
+              <!-- <a href="javascript:void(0)" class="btn-up" *ngIf="!showPromoCode" (click)="showPromoCode = !showPromoCode">Get Promo Code</a> -->
+            </div>
+            <div class="p-code hide" *ngIf="showPromoCode">
+              <div class="top-border"></div>
+              <div class="p-text">
+                <i class="material-icons">local_activity</i>
+                <div class="code-outer"> Promo Code: UPGRADE20%
+                  <span>Only
+                    <span>{{noOfPromoCodes}}</span> promo
+                    <span *ngIf="noOfPromoCodes === 1"> code </span>
+                    <span *ngIf="noOfPromoCodes > 1"> codes </span>left for the week</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--upgrade modal ends-->
+
+
+  <div *ngIf="intro_overlay && !jsonBuilderHelper.isTempType(['Ecom'])" (click)="introoverlay()"
+    [ngClass]="{
+      'intro-overlay': !jsonBuilderHelper.isTempType(['Ecom']),
+      'builder-parent': hellobarMessage
+      }">
+    <div [ngClass]="{
+              'left-button-outer': jsonBuilderHelper.getJSONBuilt()?.template.split('-',3).join('-') === 'one-page-card',
+              'left-button-outer-t2': jsonBuilderHelper.getJSONBuilt()?.template.split('-',2).join('-') === 'sound-cloud' ,
+              'left-button-outer-t3': jsonBuilderHelper.getJSONBuilt()?.template.split('-',2).join('-') === 'inline-temp',
+              'left-button-outer-t4': jsonBuilderHelper.getJSONBuilt()?.template === 'experian',
+              'left-button-outer-t5': jsonBuilderHelper.getJSONBuilt()?.template.split('-',2).join('-') === 'template-five',
+              'left-button-outer-t6': jsonBuilderHelper.getJSONBuilt()?.template === 'template-six',
+              'left-button-outer-t7': jsonBuilderHelper.getJSONBuilt()?.template === 'template-seven',
+              'left-button-outer-t8': jsonBuilderHelper.getJSONBuilt()?.template === 'template-eight'
+        }">
+      <div class="add-btn">
+        <span>+</span> ADD</div>
+      <img src="assets/images/left-arrow.png" />
+      <div class="intro-text-left">Add Questions Here</div>
+    </div>
+    <div class="right-button-outer">
+      <ul class="icon-box">
+        <li class="active">
+          <i class="material-icons ">dashboard</i>
+        </li>
+        <li>
+          <i class="material-icons "> person_add</i>
+        </li>
+        <li>
+          <i class="material-icons ">edit</i>
+        </li>
+      </ul>
+      <img src="assets/images/right-arrow.png" />
+      <ul class="text-box">
+        <li class="active"> Edit Page Here</li>
+        <li> Manage Lead Generation</li>
+        <li> Edit Layout Settings</li>
+      </ul>
+    </div>
+    <div class="top-outer">
+      <div class="red-button">Go Live</div>
+      <img src="assets/images/top-arrow.png" />
+      <div class="top-text">Click Here to Publish</div>
+    </div>
+    <div class="top-outer-help">
+      <div>
+        <i class="material-icons book">import_contacts</i>
+      </div>
+      <img src="assets/images/top-arrow-help.png" />
+      <div class="text">Get Help</div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!allowUse">
+  <div class="takeover-popup-1" *ngIf="selfOpen">
+    <div class="takeover-logo">
+      <img src="https://cdn.filestackcontent.com/HawBu2E1SGmH8drhezqQ">
+    </div>
+    <div class="takeover-inner-1">
+      <div class="takeover-inneer-cell">
+        <img src="https://cdn.filestackcontent.com/fjWlLpyaR82vT85YkvnM">
+        <p>This interactive content piece is being edited in another tab or browser. To prevent overwriting, we recommended
+          to either continue in the same tab or to take over from the previous session.</p>
+        <button class="btn btn-info" type="button" (click)="takeOver()">Take Over From Previous Session</button>
+      </div>
+    </div>
+  </div>
+  <div class="takeover-popup-1" *ngIf="!selfOpen">
+    <div class="takeover-logo">
+      <img src="https://cdn.filestackcontent.com/HawBu2E1SGmH8drhezqQ">
+    </div>
+    <div class="takeover-inner-1">
+      <div class="takeover-inneer-cell">
+        <img src="https://cdn.filestackcontent.com/fjWlLpyaR82vT85YkvnM">
+        <p>{{userName}} is already editing this {{getLockText()}},
+        </p>
+        <button class="btn btn-info" type="button" (click)="takeOver()">Take Over From {{userName}}</button>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<!-- Start: downgrade Plan Modal -->
+<div id="downgrade" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog">
+    <div class="modal-content modal-bg">
+      <div class="modal-header">
+        <button type="button" class="close btn-close hide" data-dismiss="modal" aria-label="Close">
+          <i class="material-icons">close</i>
+        </button>
+        <h5 class="modal-title">YOU ARE USING PREMIUM FEATURES</h5>
+      </div>
+      <div class="modal-body col-md-12 col-sm-12 col-xs-12 np">
+        <div class="modal-body-inner">
+          <div class="np col-md-8 modal-left">
+            <div class="sub-title">To make any changes in this calculator, either upgrade or turn off the premium features used
+            </div>
+            <div class="cust-text-outer">
+              <!--<div class="cust-text" ><i class="material-icons">check</i> External Scripts <span>Essentials</span></div>-->
+              <div class="cust-text" *ngFor="let feature of featuresToDisable">
+                <i class="material-icons">check</i> {{feature}}</div>
+            </div>
+          </div>
+          <div class="col-md-3 np modal-right">
+            <div class="modal-right-inner">
+              <p>
+                Upgrade now
+                <br>to continue
+                <br>using
+                <br> the premium
+                <br> features
+              </p>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer col-md-12 np">
+        <div class=" btn-position">
+          <button type="button" class="btn btn-red-outline btn-hover upgradeBtns" (click)="turnOffFeatures()">
+            <span class="ttn">Turn off and continue</span>
+          </button>
+        </div>
+        <span class="text-or">Or</span>
+        <a type="button" class="btn btn-red btn-hover upgradeBtns" data-dismiss="modal" aria-label="Close" [routerLink]="['/settings/membership']">
+          upgrade now
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End:downgrade Plan Modal -->

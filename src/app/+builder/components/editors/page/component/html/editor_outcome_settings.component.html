@@ -1,0 +1,54 @@
+<div class="settings-tab" >
+  <div class="" *ngIf="(_outcomeService.getSelectedFormula())">
+    <div class="type-details share" *ngIf="editorControl.share_links.visible">
+      <span class="form-label"> Social Sharing Buttons:</span>
+      <div class="col-xs-12 no-padding">
+        <label class="ch-icon ic">
+          <input type="checkbox" (click)="toggleSocialIcon('facebook')" name="icon-select" id="ic1" [checked]="isSocialChecked('facebook')">
+          <label for="ic1"><i class="fa fa-facebook"></i> </label>
+        </label>
+        <label class="ch-icon ic">
+          <input type="checkbox" (click)="toggleSocialIcon('twitter')" name="icon-select" id="ic2" [checked]="isSocialChecked('twitter')">
+          <label for="ic2"><i class="fa fa-twitter"></i> </label>
+        </label>
+        <label class="ch-icon ic">
+          <input type="checkbox" (click)="toggleSocialIcon('linkedin')" name="icon-select" id="ic3" [checked]="isSocialChecked('linkedin')">
+          <label for="ic3"><i class="fa fa-linkedin"></i> </label>
+        </label>
+        <label class="ch-icon ic">
+          <input type="checkbox" (click)="toggleSocialIcon('email')" name="icon-select" id="ic5" [checked]="isSocialChecked('email')">
+          <label for="ic5">Email </label>
+        </label>
+      </div>
+    </div>
+    <div class="type-details" *ngIf="editorControl.result_disclaimer.order">
+      <span class="form-label" [class.no-margin]="editorControl.result_disclaimer.visible === false">Add Text or Disclaimer</span>
+      <div class="switch">
+        <label>
+          <input type="checkbox" (click)="toggleDisclaimer();callGA('DISCLAIMER')" [checked]="editorControl.result_disclaimer.visible" (change)="onChangeDisclaimer(editorControl)">
+          <span class="lever"></span>
+        </label>
+      </div>
+      <div class="type-details hide"  *ngIf="editorControl.result_disclaimer.visible">
+        <label class="check form-label" style="margin-bottom:5px;">
+          <input type="checkbox" value="Value1" name="check_dis_1" id="check_dis_1" [checked]="editorControl.result_disclaimer.disclaimer_pages.landing" (change)="editorControl.result_disclaimer.disclaimer_pages.landing = !editorControl.result_disclaimer.disclaimer_pages.landing">
+          <label for="check_dis_1"> </label> Welcome Screen
+        </label>
+        <label class="check form-label" style="margin-bottom:5px;">
+          <input type="checkbox" value="Value1" name="check_dis_2" id="check_dis_2" [checked]="editorControl.result_disclaimer.disclaimer_pages.question" (change)="editorControl.result_disclaimer.disclaimer_pages.question = !editorControl.result_disclaimer.disclaimer_pages.question">
+          <label for="check_dis_2"> </label> Questionnaire
+        </label>
+        <label class="check form-label" style="margin-bottom:5px;">
+          <input type="checkbox" value="Value1" [disabled]="!isDisclaimers && editorControl.result_disclaimer.visible" name="check_dis_3" id="check_dis_3" [checked]="editorControl.result_disclaimer.disclaimer_pages.result" (change)="editorControl.result_disclaimer.disclaimer_pages.result = !editorControl.result_disclaimer.disclaimer_pages.result">
+          <label for="check_dis_3"> </label> Result Page
+        </label>
+      </div>
+      <div class="col-xs-12 no-padding div-check" *ngIf="editorControl.result_disclaimer.visible">
+        <input placeholder="Add Text" type="text" class="detail-text" [(ngModel)]="editorControl.result_disclaimer.props.title">
+      </div>
+    </div>
+  </div>
+    <div class="type-details no-content" *ngIf="(!(_outcomeService.getSelectedFormula()))"><div class="blank-recomm" >Add an Outcome to view its Properties</div></div>
+
+</div>
+

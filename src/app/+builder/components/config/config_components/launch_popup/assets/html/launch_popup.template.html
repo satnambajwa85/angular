@@ -1,0 +1,253 @@
+<div class="web-page-design">
+    <div class="web-page-header">
+        <ul class="three-dots">
+            <li class="red"></li>
+            <li class="yellow"></li>
+            <li class="green"></li>
+        </ul>
+        <div class="url-space">
+            <p>http://yourwebsite.com</p>
+        </div>
+    </div>
+    <div class="web-page-content">
+        <div class="row">
+            <div class="width50 left-part">
+                <div class="big-strip strips"></div>
+                <div class="strips"></div>
+                <div class="strips"></div>
+                <div class="strips"></div>
+                <div class="launch-btn-box">
+                    <div class="launch-outer">
+                        <div class="popover-part">
+                            <a id="popupButton" [style.borderRadius.px]="embedBorderRadius" [style.fontSize.px]="embedFontSize" [style.background]="isButton?this.jsonBuilderHelper.getJSONBuilt().embedBgColor:''"
+                                [style.color]="isButton?this.jsonBuilderHelper.getJSONBuilt().embedTextColor:this.jsonBuilderHelper.getJSONBuilt().embedLinkColor"
+                                [href]="(iFrameUrl)" *ngIf="!isDrawer" (click)="togglePopup()" class="fancybox-effects-d fancybox fancybox.iframe btn btn-basic"
+                                [class.no-border]="!isButton">{{jsonBuilderHelper.getJSONBuilt().embedTitle}}</a>
+                            <a id="drawerButton" (click)="toggleDrawer()" [style.borderRadius.px]="embedBorderRadius" [style.fontSize.px]="embedFontSize"
+                                [style.background]="isButton?this.jsonBuilderHelper.getJSONBuilt().embedBgColor:''" [style.color]="isButton?this.jsonBuilderHelper.getJSONBuilt().embedTextColor:this.jsonBuilderHelper.getJSONBuilt().embedLinkColor"
+                                *ngIf="isDrawer" class="btn btn-basic" [class.no-border]="!isButton">{{jsonBuilderHelper.getJSONBuilt().embedTitle}}</a>
+                            <div class="custom-popover">
+                                <h4>{{isButton?'Button':'Link'}}</h4>
+                                <ul>
+                                    <li>
+                                        <label>Text</label>
+                                        <div class="buttonlink">
+                                            <input type="text" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedTitle" placeholder="Add text here" class="custom-input"
+                                            />
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <label>Text Color</label>
+                                        <div class="buttonlink">
+                                            <span class="get-btn btn-color" id="embed-text-color">
+                                                <span class="btn-color-picker" [style.background]="isButton?this.jsonBuilderHelper.getJSONBuilt().embedTextColor:this.jsonBuilderHelper.getJSONBuilt().embedLinkColor"></span>
+                                            </span>
+                                            <input type="text" class="disabled custom-input" (change)="updateColor($event, 'embedLinkColor')" value='{{textColor}}' />
+
+                                        </div>
+                                    </li>
+                                    <li class=" " [class.hide]="!isButton">
+                                        <label>Button Color</label>
+                                        <div class="buttonlink">
+                                            <span class="btn-color" id="embed-btn-color">
+                                                <span class="btn-color-picker" [style.background]="jsonBuilderHelper.getJSONBuilt().embedBgColor"></span>
+                                            </span>
+                                            <input type="text" class="disabled custom-input" (change)="updateColor($event, 'embedBgColor')" value='{{bgColor}}' />
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <label>Font Size</label>
+                                        <span>
+                                            <div class="range-slider custom-slider">
+                                                <input class="range-slider__range" (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedFontSize"
+                                                    type="range" value="12" min="12" max="30" />
+                                                <span class="range-slider__value">{{jsonBuilderHelper.getJSONBuilt().embedFontSize}}px</span>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <label>Border Radius</label>
+                                        <span>
+                                            <div class="range-slider custom-slider">
+                                                <input class="range-slider__range" (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedBorderRadius"
+                                                    type="range" value="0" min="0" max="100" />
+                                                <span class="range-slider__value">{{jsonBuilderHelper.getJSONBuilt().embedBorderRadius}}px</span>
+                                            </div>
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <label class="label-convert">Convert to button
+                                            <span class="webpage-info" data-content="Turn on to convert link into a button">
+                                                <i class="material-icons support_icon dropdown-link">help</i>
+                                            </span>
+                                            <span class="logo-branding-outer">
+                                                <div class="switch">
+                                                    <div class="onoffswitch">
+                                                        <input class="onoffswitch-checkbox" id="myonoffswitch30" type="checkbox" (change)="isButton=!isButton;updateEmbedCode();"
+                                                            [checked]="isButton" />
+                                                        <label class="onoffswitch-label" for="myonoffswitch30">
+                                                            <span class="onoffswitch-inner"></span>
+                                                            <span class="onoffswitch-switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <p>Click to preview popup</p>
+                    </div>
+                </div>
+            </div>
+            <div class="width50 right-part">
+                <div class="xx-large-strip strips"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="custom-row">
+    <div class="web-page-sub-section-left">
+        <div class="web-page-sub-section">
+            <h4>Settings</h4>
+            <div class="web-page-sub-section-content">
+                <div class="popup-mode">
+                    <label>Popup Mode</label>
+                    <ul>
+                        <li class="ripple-dark">
+                            <input type="radio" id="f-option" name="selector2" (change)="isDrawer=false;updateEmbedCode();" [checked]="!isDrawer">
+                            <label for="f-option" class="check">
+                                <img src="https://cdn.filestackcontent.com/oCNA05WS3GwmTbYX7yn2" />
+                                <p>Classic</p>
+                            </label>
+                        </li>
+                        <li class="ripple-dark">
+                            <input type="radio" id="f-option2" name="selector2" (change)="isDrawer=true;isLDrawer=true;updateEmbedCode();" [checked]="isDrawer && isLDrawer">
+                            <label for="f-option2" class="check">
+                                <img src="https://cdn.filestackcontent.com/PBcvjT9Rhi6PEIXB8IGG" />
+                                <p>Drawer (L)</p>
+                            </label>
+                        </li>
+                        <li class="ripple-dark">
+                            <input id="p-option2" name="selector2" type="radio" (change)="isDrawer=true;isLDrawer=false;updateEmbedCode();" [checked]="isDrawer && !isLDrawer">
+                            <label class="check" for="p-option2">
+                                <img src="https://cdn.filestackcontent.com/Z45pnQBoQdWcRU6YU7NM">
+                                <p>Drawer (R)</p>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+                <div class="seamless logo-branding-outer" *ngIf="headerVisible()" [class.hide]="tempName === 'template-eight'">
+                    <label>Show Header
+                        <span class="webpage-info" [attr.data-content]="headerHelpText">
+                            <i class="material-icons support_icon dropdown-link">help</i>
+                        </span>
+                    </label>
+                    <div class="switch">
+                        <div class="onoffswitch">
+                            <input (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedHeader" class="onoffswitch-checkbox"
+                                id="myonoffswitch202" type="checkbox" />
+                            <label class="onoffswitch-label" for="myonoffswitch202">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="seamless logo-branding-outer" *ngIf="footerVisible()" [class.hide]="tempName === 'template-eight'">
+                    <label>Show Footer
+                        <span class="webpage-info" [attr.data-content]="footerHelpText">
+                            <i class="material-icons support_icon dropdown-link">help</i>
+                        </span>
+                    </label>
+                    <div class="switch">
+                        <div class="onoffswitch">
+                            <input (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedFooter" class="onoffswitch-checkbox"
+                                id="myonoffswitch212" type="checkbox" />
+                            <label class="onoffswitch-label" for="myonoffswitch212">
+                                <span class="onoffswitch-inner"></span>
+                                <span class="onoffswitch-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="logo-branding-outer SCHEDULING-block">
+                <h4>SCHEDULING </h4>
+                <div class="switch right">
+                    <div class="onoffswitch">
+                        <input class="onoffswitch-checkbox" (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedScheduling"
+                            id="SCHEDULING" type="checkbox">
+                        <label class="onoffswitch-label" for="SCHEDULING">
+                            <span class="onoffswitch-inner"></span>
+                            <span class="onoffswitch-switch"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="SCHEDULING-content" *ngIf="jsonBuilderHelper.getJSONBuilt().embedScheduling">
+                    <div class="scheduling">
+                        <input type="radio" (change)="updateScheduling('timed')" [checked]="jsonBuilderHelper.getJSONBuilt().embedTimed" id="Timed"
+                            name="schedule" />
+                        <label for="Timed"> Timed (Control exactly when your popup appears.)</label>
+                        <div class="show-exact" *ngIf="jsonBuilderHelper.getJSONBuilt().embedTimed">
+                            <div class="show-exact-row">
+                                <p>Show exactly after</p>
+                                <div class="div-drop">
+                                    <input type="number" (change)="updateEmbedCode()" name="timeValue" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedTimeValue">
+                                    <select name="timeFormat" (change)="updateEmbedCode()" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedTimeFormat">
+                                        <option value="0">Secs</option>
+                                        <option value="1">Mins</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="show-exact-row">
+                                <p>Repeat After</p>
+                                <div class="div-drop">
+                                    <input type="number" (change)="updateEmbedCode()" name="cookieTimeValue" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedCookieDays">
+                                    <label class="def-lab">Days</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="scheduling">
+                        <input type="radio" (change)="updateScheduling('exit')" [checked]="jsonBuilderHelper.getJSONBuilt().embedExit" id="Timed1"
+                            name="schedule" />
+                        <label for="Timed1"> Exit Intent</label>
+                        <div class="show-exact" *ngIf="jsonBuilderHelper.getJSONBuilt().embedExit">
+                            <p class="full">Show before a user leaves your page</p>
+                            <div class="show-exact-row">
+                            <p>Repeat After</p>
+                            <div class="div-drop">
+                                <input type="number" (change)="updateEmbedCode()" name="cookieTimeValue" [(ngModel)]="jsonBuilderHelper.getJSONBuilt().embedCookieDays">
+                                <label class="def-lab">Days</label>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="web-page-sub-section-right">
+        <div class="web-page-sub-section">
+            <h4>GEt Code</h4>
+            <!-- <div *ngIf="jsonBuilderHelper.isClipboardSupported">
+                <a href="javascript:void(0);" (click)="embedSelect('codePop')" class="custom-btn embed2 codePop_Copy ripple-dark">Copy</a>
+            </div> -->
+            <div class="emebed-code-part" (click)="embedSel('codePop_Copy')">
+                <pre>
+                    <code  class="codePop">{{iframeData}}</code>
+                </pre>
+            </div>
+            <div class="sub-section-footer" *ngIf="jsonBuilderHelper.isClipboardSupported">
+                <a href="javascript:void(0);" (click)="embedSelect('codePop')" class="custom-btn embed2 codePop_Copy ripple-dark btn-hover">Copy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="config-template-tabs new-email-outr launch-popup-parent"></div>
+<iframe id="drawerIframe" class="hide" style="background:#fff;z-index:99999; width:57%; height:100vh; position:fixed; float:left; top:0; left:0;"
+    [src]="(iFrameUrl) | safeUrl "></iframe>
+<a title="Close" class="drawer-close hide" id="close-drawer" (click)="drawerClose()" href="javascript:;"></a>
+<div class="fancybox-drawer hide"></div>
