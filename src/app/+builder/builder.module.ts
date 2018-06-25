@@ -80,9 +80,7 @@ import { BuilderErrorHandleModule, BuilderErrorHandleService } from './../../sha
     // Core builder components
     BuilderParentComponent, BuilderComponent, FormulaPopComponent,
     ComponentManagerComponent, GraphPopComponent, LogicJumpComponent, TablePopComponent,
-
     // Configure Section in builder.
-
     ComponentConfigManagerComponent, ConfigComponent, PromotionChecklistComponent,
     ConfigShareCalculatorComponent, ConfigSettingsComponent, ConfigLaunchPopupComponent,
     ConfigEmbeddedCodeComponent, ConfigEmailComponent, OpinionEmailComponent,
