@@ -1,0 +1,167 @@
+<div *ngIf="!isAutoLogin" class="col-md-12 col-sm-12 col-xs-12 np grad-bg login-outer">
+  <button id="login-close" class="close btn-close" type="button" (click)="closeLogin()"><i class="material-icons">close</i></button>
+  <div class="login-inner">
+    <div class="col-md-12 col-sm-12 col-xs-12 np text-center">
+      <img class="login-logo" src="assets/images/white-logo.png" alt="Logo">
+      <div id="login-heading" class="main-heading">
+        <h1>Welcome Back</h1>
+        <span>Please Login to Continue</span>
+      </div>
+    </div>
+    <div class="col-md-12 col-sm-12 col-xs-12 np">
+      <form class="form-outer">
+        <div class="form-inner">
+          <div id="main-login">
+            <div class="col-md-7 col-sm-7 col-xs-12 np form-left">
+              <div class="form-left-inner">
+                <h4>Sign In</h4>
+                <div class="social-icons">
+                  <img class="" src="assets/images/icon-g+.png" (click)="signUpWithAuth('google')" alt="Google Plus">
+                  <img class="" src="assets/images/icon-fb1.png" (click)="signUpWithAuth('facebook')" alt="Facebook">
+                  <img class="" src="assets/images/icon-in1.png" (click)="signUpWithAuth('linkedIn')" alt="LinkedIn">
+                </div>
+                <div class="border-overlay"><span>OR</span></div>
+                <form [formGroup]="loginForm" id="form" (ngSubmit)="onSubmit()">
+                  <div *ngIf="isLoginError" class="alert alert-danger custom-alert">
+                    <i class="material-icons">report_problem</i>
+                    <span id="server-error-msg">{{ErrorMsg}}</span>
+                  </div>
+                  <!-- <h3 class="col-md-12 col-sm-12 col-xs-12 np">Sign Up</h3> -->
+                  <div class="form-group" [ngClass]="emailValidation">
+                    <input id="email" type="text" class="form-control" name="email" placeholder="Your work email" formControlName="email"
+                           tabindex="1"/>
+                    <!-- <span class="input-icon-msg"><i class="material-icons">check</i></span> -->
+                    <span class="input-icon-msg">
+                                         <div class="popover-block"
+                                              *ngIf="(loginForm.controls.email.dirty && !loginForm.controls.email.valid)">
+                                              <span *ngIf="loginForm.controls.email.errors.required">
+                                                  Email is required.
+                                              </span>
+                                      <span *ngIf="loginForm.controls.email.errors.checkmail">
+                                                  Invalid Email.
+                                              </span>
+                                  </div>
+                                  </span>
+                  </div>
+                  <div class="form-group form-group-last" [ngClass]="passwordValidation">
+                    <input id="password" type="password" class="form-control" name="password" placeholder="Password"
+                           formControlName="password" tabindex="1"/>
+                    <!-- <span class="input-icon-msg"><i class="material-icons">check</i></span> -->
+                    <span class="input-icon-msg">
+                                          <!-- <i class="material-icons">close</i> -->
+                                         <div class="popover-block"
+                                              *ngIf="(loginForm.controls.password.dirty && !loginForm.controls.password.valid)">
+                                              <span *ngIf="loginForm.controls.password.errors.required">
+                                                 Password is required.
+                                              </span>
+                              <span *ngIf="loginForm.controls.password.errors.minlength">
+                                                  Min 8 character is required.
+                                              </span>
+                          </div>
+                          </span>
+                    <a href="javascript:void(0)" class="forgot-link" (click)="forgetPassword()">Forgot Password ?</a>
+                  </div>
+                  <button (click)="callGA()" type="submit" [disabled]="!loginForm.valid" class="btn btn-red-filled btn-hover"
+                          id='loginSubmit'>Login
+                  </button>
+                  <p class="already-signedUp">Logging in for the first time?
+                    <a href="javascript:void(0)" (click)="signUp()" class="text-red">Sign up</a> instead
+                  </p>
+                </form>
+              </div>
+            </div>
+            <div class="col-md-5 col-sm-5 col-xs-12 np form-right">
+              <div class="form-right-inner">
+                <img class="" src="assets/images/user-testimonial.png" alt="User Testimonial">
+                <h5 class="user-name">Amy D.</h5>
+                <h6 class="user-profile">Manager @ Learn2</h6>
+                <p class="user-testimonial">“I really like how easy it is to build calculators! It helps us stand out & is great for
+                  capturing data on new leads.” </p>
+              </div>
+            </div>
+          </div>
+          <div id="paymentFailed-setup-cc" class="hide">
+            <form [formGroup]="setupPaymentForm" (submit)="paymentSetup()">
+              <div class="col-md-7 col-sm-7 col-xs-12 np form-left">
+                <h4>Payment Details
+                  <span class="cc-msg">
+                    Your card on file was invalid or blank. Please update your billing details with a valid card to continue your Outgrow subscription
+                     <img src="assets/images/smile-new.png" alt="img"/> 
+                  </span>
+                </h4>
+                <div class="alert alert-danger custom-alert" *ngIf="isError">
+                  <i class="material-icons">report_problem</i>
+                  <span id="server-error-msg">{{ErrorMsg}}</span>
+                </div>
+                <span class="payment-icons pull-right" *ngIf="card">
+                  <img id="login_cardType" src="assets/images/payment-icons/icon-{{card}}-cc.png" alt="img"/>
+                </span>
+                <div class="form-group">
+                  <label class="cc-label">Card No.</label>
+                  <span class="cc-input">
+                    <input type="text" pattern="[0-9]*" size="4" maxlength="4" class="cc-number" placeholder="XXXX" id="login_cardNumber1"
+                           name="cardNumber1" formControlName="cardNumber1">
+                    <input type="text" pattern="[0-9]*" size="4" maxlength="4" class="cc-number" placeholder="XXXX" id="login_cardNumber2"
+                           name="cardNumber2" formControlName="cardNumber2">
+                    <input type="text" pattern="[0-9]*" size="4" maxlength="4" class="cc-number" placeholder="XXXX" id="login_cardNumber3"
+                           name="cardNumber3" formControlName="cardNumber3">
+                    <input type="text" pattern="[0-9]*" size="4" maxlength="4" class="cc-number cc-number-last" placeholder="XXXX"
+                           id="login_cardNumber4" name="cardNumber4" formControlName="cardNumber4">
+                  </span>
+                </div>
+                <div class="form-group">
+                  <label class="cc-label">Card Holder Name</label>
+                  <input type="text" placeholder="Card Holder Name" class="cc-name col-xs-12" id="login_nameOnCard" name="nameOnCard"
+                         formControlName="nameOnCard">
+                </div>
+                <div class="form-group col-sm-12 np">
+                  <div class="col-sm-6 col-xs-8 np">
+                    <label class="cc-label">Validity</label>
+                    <input type="text" pattern="[0-9]*" placeholder="MM" maxlength="2" class="cc-exp" id="login_cardMonth" name="cardMonth"
+                           formControlName="cardMonth">
+                    <span class="separator">/</span>
+                    <input type="text" pattern="[0-9]*" placeholder="YYYY" maxlength="4" class="cc-exp cc-exp-last" id="login_cardYear"
+                           name="cardYear" formControlName="cardYear">
+                  </div>
+                  <div class="col-sm-6 col-xs-4 np">
+                    <label class="cc-label">Cvv No.</label>
+                    <input type="password" size="4" maxlength="4" class="cvv-number" placeholder="XXX" name="cvv" id="login_cvv"
+                           formControlName="cvv">
+                  </div>
+                </div>
+                <div class="col-md-12 btn-outer">
+                  <button type="submit" id="login_btnPaymentSetup" class="btn btn-grey btn-chk" [disabled]="setupPaymentForm.invalid">
+                    Save
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-5 col-sm-5 col-xs-12 np form-right">
+                <div class="form-right-inner">
+                  <span class="block">
+                    <i class="material-icons">public</i>
+                    Join a community of over <span class="font_newbold">3K digital marketers on</span> Outgrow from over <span class="font_newbold">50 countries</span> around the world!
+                  </span>
+                  <span class="block">
+                    <i class="material-icons">verified_user</i>
+                    <span class="font_newbold">Secure payment gateway</span> with over $10 billion in global online transactions
+                  </span>
+                  <span class="block">
+                    <i class="material-icons">dialpad</i>
+                    450+ reviews from customers averaging over <span class="font_newbold">4.9 out of 5 stars!</span>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </form>
+      <div class="tc-outr">
+        <span class="toc-text">Our <a class="" href="https://outgrow.co/tos/" target="_blank">T&C </a> and <a class="" target="_blank"
+                                                                                                              href="https://outgrow.co/privacy-policy/">Privacy Policy</a> applies to all Outgrow users.</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="preloader" *ngIf="preloader && !isAutoLogin">
+  <div class="status">&nbsp;</div>
+</div>
